@@ -39,6 +39,18 @@
   .examples-box summary { cursor: pointer; color: var(--muted); font-size: 13px; }
   .examples button { width: auto; background: var(--chip); font-size: 12px; padding: 4px 8px; cursor: pointer; }
   #status { margin-top: 10px; color: var(--muted); min-height: 1.4em; }
+  /* while a question is being answered: a thin ring in the accent colour that spins, in the status line and,
+     larger, over the map */
+  .spinner { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 8px;
+             border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+             border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .map-busy { position: absolute; inset: 0; z-index: 800; display: flex; flex-direction: column; gap: 12px;
+              align-items: center; justify-content: center; background: #00000026; pointer-events: none;
+              color: #fff; font-weight: 600; text-shadow: 0 1px 3px #000a; }
+  .map-busy[hidden] { display: none; }
+  .map-busy .spinner { width: 48px; height: 48px; border-width: 4px; margin: 0;
+                       border-color: #ffffff55; border-top-color: #fff; }
   #status.err { color: #dc2626; }
   .facts { margin-top: 8px; }
   /* the tab hangs from the tile box's bottom edge, flush with its right side, like a folder tab */
@@ -119,7 +131,7 @@
     openai/gpt-oss-120b (open weights) via Hugging Face. Answers come from automated maps and can be wrong.
   </div>
 </aside>
-<div id="map"></div>
+<div id="map"><div id="busy" class="map-busy" hidden><div class="spinner"></div>Asking the map…</div></div>
 <div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
   <div class="modal-box">
     <div class="modal-head">
@@ -157,6 +169,31 @@ legend.addTo(map);
 // "Match information": a tab at the bottom right of every study-tile box; it opens that tile's details in a modal
 const infoModal = document.getElementById("info-modal");
 let LAST = null;  // the last answer and its question: { d, question }
+// the examples list starts open on a wide screen and collapsed on a small one
+document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
+// each tile's match image, drawn to a canvas so a click on the map can tell whether it hit a shown place
+let tileHits = [];
+function hitCanvas(t) {
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement("canvas");
+    c.width = img.width; c.height = img.height;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    tileHits.push({ t, ctx, w: img.width, h: img.height });
+  };
+  img.src = "data:image/png;base64," + t.png;
+}
+map.on("click", e => {
+  const { lat, lng } = e.latlng;
+  for (const h of tileHits) {
+    const [w, s, ee, n] = h.t.bounds;
+    if (lng < w || lng > ee || lat < s || lat > n) continue;
+    const x = Math.min(h.w - 1, Math.floor((lng - w) / (ee - w) * h.w));
+    const y = Math.min(h.h - 1, Math.floor((n - lat) / (n - s) * h.h));
+    if (h.ctx.getImageData(x, y, 1, 1).data[3] > 0) { openInfo(h.t); return; }
+  }
+});
 function closeInfo() { infoModal.hidden = true; }
 // a tile's tab is never wider than its box: the longest label that fits the box's on-screen width, else hidden.
 // It hangs from the bottom-right corner of the part of the box that is on screen, so zooming or panning in never
@@ -294,7 +331,7 @@ function openInfo(t) {
 
 function render(d, question) {
   overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
-  tileTabs = [];
+  tileTabs = []; tileHits = [];
   const f = d.facts;
   let busiest = null;
   // open on the tile with the most matches in passing NASA POWER cells when there are any, else the most matches
@@ -302,6 +339,7 @@ function render(d, question) {
   const anyGreen = d.tiles.some(t => green(t) > 0);
   d.tiles.forEach(t => {
     L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: matchOpacity() }).addTo(overlays);
+    if (t.count > 0) hitCanvas(t);
     if (t.count > 0 && t.match_bounds) {
       const key = x => anyGreen ? green(x) : x.count;
       if (!busiest || key(t) > key(busiest)) busiest = t;
@@ -349,7 +387,7 @@ function render(d, question) {
   const st = document.getElementById("status");
   st.className = "";
   st.textContent = f.shown_pixels
-    ? `${f.shown_pixels.toLocaleString()} places matched. Click "Match information" on a tile for details.`
+    ? `${f.shown_pixels.toLocaleString()} places matched. Click a red place, or "Match information" on a tile, for details.`
     : `No places matched. Click "Match information" on a tile to see why.`;
   LAST = { d, question };
 }
@@ -411,7 +449,9 @@ if (STATIC) {
   });
   document.getElementById("go").onclick = async () => {
     const btn = document.getElementById("go"), st = document.getElementById("status");
-    btn.disabled = true; st.className = ""; st.textContent = "Searching…";
+    const busy = document.getElementById("busy");
+    btn.disabled = true; st.className = "";
+    st.innerHTML = '<span class="spinner"></span>Asking the map…'; busy.hidden = false;
     const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
                    method: document.getElementById("method").value };
     try {
@@ -420,7 +460,7 @@ if (STATIC) {
       if (!r.ok) throw new Error(d.detail || "Search failed");
       render(d, body.question);
     } catch (e) { st.className = "err"; st.textContent = e.message; }
-    btn.disabled = false;
+    busy.hidden = true; btn.disabled = false;
   };
 }
 </script>
