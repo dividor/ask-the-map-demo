@@ -1,0 +1,10 @@
+# Only what the Dockerfile copies is sent to the build
+*
+!pyproject.toml
+!uv.lock
+!README.md
+!src/
+!configs/
+!deploy/
+src/**/__pycache__/
+deploy/**/.DS_Store

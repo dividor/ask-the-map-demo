@@ -227,3 +227,6 @@ __marimo__/
 PLAN.md
 # demo screenshots and GIF frames taken while checking the page (not part of the record)
 outputs/figures/demo_frames/
+
+# staged data for the container image (scripts/deploy_azure.sh); never committed
+deploy/

@@ -33,7 +33,7 @@ repository, and `outputs/results/` holds what they produced.
 
 - [Quick start](#quick-start)
 - [Accounts and credentials](#accounts-and-credentials)
-- [The demo](#the-demo)
+- [The demo](#the-demo) and [hosting it](#hosting-the-demo)
 - [The pipeline](#the-pipeline)
 - [How it works](#how-it-works)
 - [Repository layout](#repository-layout)
@@ -121,6 +121,25 @@ A static version of the page, with pre-answered questions and no server or langu
 uv run python -m http.server 8766 --directory site     # http://127.0.0.1:8766
 ```
 
+### Hosting the demo
+
+The demo runs as one container: the code with CPU-only PyTorch, the demo data, the NASA POWER daily data and
+the text encoder baked in (about 5 GB), and the Hugging Face token supplied at run time as a secret. `Dockerfile`
+builds it; `scripts/deploy_azure.sh` deploys it to Azure Container Apps on the consumption plan, which scales to
+zero when nobody is using it (the first visitor after idle waits about a minute while the tiles and encoder
+load):
+
+```bash
+az login
+scripts/deploy_azure.sh        # stages the data under deploy/, builds in the registry, creates the app
+```
+
+Every name comes from a variable with a default (`AZ_RESOURCE_GROUP`, `AZ_LOCATION`, `AZ_REGISTRY`, `AZ_APP`,
+`AZ_CPU`, `AZ_MEMORY`, `AZ_DATA_ROOT`; see the script's header). The container listens on all interfaces only
+because the image sets `ASKMAP_HOST=0.0.0.0`; run locally, the server stays on `127.0.0.1`. The demo has no
+login, so put a spend cap on the token it uses: every question costs a fraction of a cent on the Hugging Face
+router.
+
 ## The pipeline
 
 Everything is built by numbered notebooks under `notebooks/`, run in order. `scripts/run_pipeline.sh` runs them
@@ -182,7 +201,9 @@ configs/        the experiment's settings: study areas, land classes, captions, 
 docs/           set-up guides (Earth Engine)
 notebooks/      the pipeline, numbered in the order it was built; each keeps its outputs
 outputs/        what the notebooks produced: results (JSON, CSV), figures, and saved language-model replies
-scripts/        run_pipeline.sh, check_setup.py, the code-quality gate, the AETHER stage-1 scripts
+scripts/        run_pipeline.sh, check_setup.py, deploy_azure.sh, the code-quality gate, the AETHER
+                stage-1 scripts
+Dockerfile      the demo server as a container (see "Hosting the demo")
 site/           the static demo page built by notebook 17
 src/askmap/     the Python package; src/askmap/demo/ is the FastAPI demo server and its page
 tests/          unit tests (pytest)

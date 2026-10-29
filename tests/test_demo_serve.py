@@ -3,7 +3,7 @@ import pytest
 
 from askmap.config import PROJECT_ROOT, load_config
 from askmap.demo.engine import UserError
-from askmap.demo.serve import load_tiles, make_planner, page_examples
+from askmap.demo.serve import load_tiles, make_planner, page_examples, server_host
 
 CFG = load_config(PROJECT_ROOT / "configs" / "feasibility.yaml")
 
@@ -70,3 +70,9 @@ def test_planner_names_the_area_validates_and_caches_by_question(tmp_path):
     )
     with pytest.raises(UserError):
         invalid("rice", "minnesota")
+
+
+def test_server_listens_on_localhost_unless_told_otherwise():
+    assert server_host({}) == "127.0.0.1"
+    assert server_host({"ASKMAP_HOST": ""}) == "127.0.0.1"
+    assert server_host({"ASKMAP_HOST": "0.0.0.0"}) == "0.0.0.0"
