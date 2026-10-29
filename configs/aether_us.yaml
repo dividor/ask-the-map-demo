@@ -118,7 +118,6 @@ demo:
     - {question: "wetlands more than 500 m from any cropland", area: north_carolina}
     - {question: "developed land in the half of the study area with the most cooling degree days in summer 2022",
        area: north_carolina}
-    - {question: "cotton fields", area: north_carolina}
   # land maps for every class: one_vs_rest (notebook 12), multinomial (A5, notebook 20) or context_more (A7,
   # notebook 23; chosen by Matt after A7, a post hoc decision: see PLAN.md)
   land_method: context_more

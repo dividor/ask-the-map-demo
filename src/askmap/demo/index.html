@@ -58,14 +58,17 @@
   #status.err { color: #dc2626; }
   .facts { margin-top: 8px; }
   /* the tab hangs from the tile box's bottom edge, flush with its right side, like a folder tab */
-  .tile-tab-wrap { transform: translate(-100%, -1px); }
+  .tile-tab-wrap { transform: translate(calc(-100% + 1px), -1px); }
   /* when the box's bottom edge is off screen, the tab sits inside the visible part of the box instead */
-  .tile-tab-wrap.inside { transform: translate(-100%, -100%); }
+  .tile-tab-wrap.inside { transform: translate(calc(-100% + 1px), -100%); }
   .tile-tab-wrap.inside .tile-tab { border-radius: 6px 0 0 0; }
   .tile-tab { width: 100%; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
               padding: 4px 9px 5px; border-radius: 0 0 6px 6px; cursor: pointer; box-shadow: 0 2px 4px #0004;
               white-space: nowrap; }
   .tile-tab:hover { background: #f1efe9; }
+  /* the label inside the bottom-right corner of a NASA POWER cell that meets the climate conditions */
+  .cell-tag { transform: translate(-100%, -100%); width: max-content; background: #22c55e; color: #052e16;
+              font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px 0 0 0; white-space: nowrap; }
   .modal { position: fixed; inset: 0; background: #00000073; display: flex; align-items: center;
            justify-content: center; z-index: 2000; }
   .modal[hidden] { display: none; }
@@ -217,9 +220,10 @@ function sizeTabs() {
     if (width <= 0 || bottom <= Math.max(ne.y, 0)) { wrap.hidden = true; return; }
     marker.setLatLng(map.containerPointToLatLng([right, bottom]));
     wrap.classList.toggle("inside", bottom < sw.y);
-    wrap.style.width = width + "px";  // the tab spans the box's visible width
+    const span = width + 2;  // the box's visible width plus its 2 px line
+    wrap.style.width = span + "px";
     wrap.hidden = false;
-    const fits = texts.find(x => { btn.textContent = x; return btn.scrollWidth <= width && btn.offsetWidth <= width; });
+    const fits = texts.find(x => { btn.textContent = x; return btn.scrollWidth <= span; });
     if (fits === undefined) wrap.hidden = true;
   });
 }
@@ -376,6 +380,10 @@ function render(d, question) {
       : { color: "#f3f4f6", weight: 3, dashArray: "10 6", fillColor: "#000000", fillOpacity: 0.3 })
       .bindTooltip(c.pass ? "NASA POWER cell: meets the climate conditions" : "NASA POWER cell: does not meet them")
       .addTo(cells);
+    if (c.pass) {
+      L.marker([c.bounds[1], c.bounds[2]], { interactive: false, icon: L.divIcon({ className: "", iconSize: null,
+          html: '<div class="cell-tag">NASA POWER</div>' }) }).addTo(cells);
+    }
   });
   // 20 km tiles tens of km apart: fitting them all makes 90 m places invisible, so open on the tile with the most
   // matches. A NASA POWER cell (~50 km) is larger than that view, so for a question with climate conditions open on
