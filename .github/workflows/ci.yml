@@ -6,7 +6,9 @@ on:
   pull_request:
     branches: [ main ]
 
-permissions: {}
+# the workflow token only reads the repository (needed for checkout on a private repository)
+permissions:
+  contents: read
 
 jobs:
   code-quality:
