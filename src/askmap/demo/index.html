@@ -36,10 +36,12 @@
   button.go { margin-top: 12px; background: var(--accent); color: #fff; border: none; font-weight: 600;
               cursor: pointer; }
   button.go:disabled { opacity: .6; cursor: wait; }
-  .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  /* the example questions as equal-width boxes */
+  .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 6px; margin-top: 6px; }
   .examples-box { margin-top: 6px; }
   .examples-box summary { cursor: pointer; color: var(--muted); font-size: 13px; }
-  .examples button { width: auto; background: var(--chip); font-size: 12px; padding: 4px 8px; cursor: pointer; }
+  .examples button { width: 100%; height: 100%; text-align: left; background: var(--chip); font-size: 12px;
+                     padding: 5px 8px; cursor: pointer; }
   #status { margin-top: 10px; color: var(--muted); min-height: 1.4em; }
   /* while a question is being answered: a thin ring in the accent colour that spins, in the status line and,
      larger, over the map */
@@ -56,11 +58,11 @@
   #status.err { color: #dc2626; }
   .facts { margin-top: 8px; }
   /* the tab hangs from the tile box's bottom edge, flush with its right side, like a folder tab */
-  .tile-tab-wrap { transform: translate(-100%, -1px); width: max-content; }
+  .tile-tab-wrap { transform: translate(-100%, -1px); }
   /* when the box's bottom edge is off screen, the tab sits inside the visible part of the box instead */
   .tile-tab-wrap.inside { transform: translate(-100%, -100%); }
   .tile-tab-wrap.inside .tile-tab { border-radius: 6px 0 0 0; }
-  .tile-tab { width: auto; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
+  .tile-tab { width: 100%; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
               padding: 4px 9px 5px; border-radius: 0 0 6px 6px; cursor: pointer; box-shadow: 0 2px 4px #0004;
               white-space: nowrap; }
   .tile-tab:hover { background: #f1efe9; }
@@ -215,7 +217,7 @@ function sizeTabs() {
     if (width <= 0 || bottom <= Math.max(ne.y, 0)) { wrap.hidden = true; return; }
     marker.setLatLng(map.containerPointToLatLng([right, bottom]));
     wrap.classList.toggle("inside", bottom < sw.y);
-    btn.style.maxWidth = width + "px";
+    wrap.style.width = width + "px";  // the tab spans the box's visible width
     wrap.hidden = false;
     const fits = texts.find(x => { btn.textContent = x; return btn.scrollWidth <= width && btn.offsetWidth <= width; });
     if (fits === undefined) wrap.hidden = true;
