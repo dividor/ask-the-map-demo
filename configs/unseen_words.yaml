@@ -1,0 +1,78 @@
+# Amendment A6: does the shared (aligned) space find land types it never saw in training? (PLAN.md, A6)
+# Fixed before any model output was computed.
+
+overpass:
+  url: https://overpass-api.de/api/interpreter
+  user_agent: "ask-the-map/0.1 (research feasibility study)"
+  timeout_s: 180
+  retries: 8          # the public server answered 502 'at capacity' on the first run (29 Oct)
+  wait_s: 60
+  pause_s: 10
+  # Overpass filters; each is asked for the element types listed (nodes are points, ways are lines or areas)
+  selectors:
+    - {filter: '["aeroway"~"^(aerodrome|runway)$"]', types: [way, relation]}
+    - {filter: '["railway"="rail"]', types: [way]}
+    - {filter: '["highway"~"^(motorway|trunk|primary|track)$"]', types: [way]}
+    - {filter: '["amenity"~"^(parking|school|place_of_worship|hospital)$"]', types: [way, relation]}
+    - {filter: '["power"="line"]', types: [way]}
+    - {filter: '["power"="generator"]["generator:source"="wind"]', types: [node, way]}
+    - {filter: '["man_made"~"^(silo|mast|petroleum_well|dyke)$"]', types: [node, way]}
+    - {filter: '["landuse"~"^(orchard|vineyard|landfill|greenhouse_horticulture|plant_nursery|religious)$"]',
+       types: [way, relation]}
+    - {filter: '["building"="greenhouse"]', types: [way]}
+    - {filter: '["leisure"="stadium"]', types: [way, relation]}
+    - {filter: '["waterway"~"^(stream|ditch|drain|dam)$"]', types: [way]}
+    - {filter: '["natural"="tree_row"]', types: [way]}
+
+# A cell (the demo's 90 m grid = the centre of every 3rd 30 m pixel) is in the answer key if its centre lies inside
+# a matching area, within line_buffer_m of a matching line, or within point_buffer_m of a matching point.
+line_buffer_m: 30     # a line within 30 m of the cell centre touches its 30 m pixel (half-diagonal 21 m)
+point_buffer_m: 60    # turbine pads, silos, masts and well pads are tens of metres across
+min_cells: 20         # a word is scored in an area only if its answer key has >= 20 valid cells there
+
+# Never-seen words: plain phrases as a user would type them. "check" = terms that must not occur (whole words,
+# any case) in any training caption; a word whose check term occurs is dropped before scoring.
+unseen:
+  airport: {text: "an airport", check: [airport], kinds: [area, line],
+            match: [{aeroway: [aerodrome, runway]}]}
+  railway: {text: "a railway line", check: [railway, rail, railroad], kinds: [line], match: [{railway: [rail]}]}
+  highway: {text: "a highway", check: [highway], kinds: [line], match: [{highway: [motorway, trunk, primary]}]}
+  dirt_track: {text: "a dirt track", check: [dirt track, track], kinds: [line], match: [{highway: [track]}]}
+  wind_turbines: {text: "wind turbines", check: [wind turbine, wind turbines, turbine], kinds: [point, area],
+                  match: [{power: [generator], "generator:source": [wind]}]}
+  power_lines: {text: "power lines", check: [power line, power lines], kinds: [line], match: [{power: [line]}]}
+  parking: {text: "a parking lot", check: [parking], kinds: [area], match: [{amenity: [parking]}]}
+  school: {text: "a school", check: [school], kinds: [area], match: [{amenity: [school]}]}
+  church: {text: "a church", check: [church], kinds: [area],
+           match: [{amenity: [place_of_worship]}, {landuse: [religious]}]}
+  hospital: {text: "a hospital", check: [hospital], kinds: [area], match: [{amenity: [hospital]}]}
+  orchard: {text: "an orchard", check: [orchard], kinds: [area], match: [{landuse: [orchard]}]}
+  vineyard: {text: "a vineyard", check: [vineyard], kinds: [area], match: [{landuse: [vineyard]}]}
+  landfill: {text: "a landfill", check: [landfill], kinds: [area], match: [{landuse: [landfill]}]}
+  greenhouses: {text: "greenhouses", check: [greenhouse, greenhouses], kinds: [area],
+                match: [{landuse: [greenhouse_horticulture]}, {building: [greenhouse]}]}
+  plant_nursery: {text: "a plant nursery", check: [nursery], kinds: [area], match: [{landuse: [plant_nursery]}]}
+  grain_elevator: {text: "a grain elevator", check: [grain elevator, elevator, silo], kinds: [point, area],
+                   match: [{man_made: [silo]}]}
+  stadium: {text: "a sports stadium", check: [stadium], kinds: [area], match: [{leisure: [stadium]}]}
+  creek: {text: "a creek", check: [creek, stream], kinds: [line], match: [{waterway: [stream]}]}
+  ditch: {text: "a drainage ditch", check: [ditch, drainage], kinds: [line], match: [{waterway: [ditch, drain]}]}
+  tree_row: {text: "a row of trees", check: [row of trees, tree row, shelterbelt], kinds: [line],
+             match: [{natural: [tree_row]}]}
+  radio_mast: {text: "a radio mast", check: [mast, radio], kinds: [point, area], match: [{man_made: [mast]}]}
+  oil_well: {text: "an oil well", check: [oil well, petroleum], kinds: [point], match: [{man_made: [petroleum_well]}]}
+  dam: {text: "a dam", check: [dam], kinds: [line, area], match: [{waterway: [dam]}]}
+  levee: {text: "a levee", check: [levee, dyke, dike], kinds: [line], match: [{man_made: [dyke]}]}
+
+# Reference group: the 23 OpenStreetMap tags used in training (outputs/results/10_osm_used.csv), each queried with
+# its first training word and scored against its training rule (configs/aether_us.yaml osm.vocab, rasterised from
+# notebook 10's saved Overpass replies exactly as in training: areas only).
+reference_from: outputs/results/10_osm_used.csv
+
+control:
+  block_cells: 16     # block shuffle: 16 x 16 cells (1.44 km) moved to random positions within each tile
+  seed: 0
+
+bootstrap:
+  n: 2000
+  seed: 0

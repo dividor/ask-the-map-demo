@@ -1,0 +1,144 @@
+# Ask-the-map feasibility check, embedding design (amendment A1, 2026-10-28): settings fixed before any results.
+# See PLAN.md.
+
+grid:
+  tile_size_m: 20000
+  res_m: 30
+
+land_year: 2024          # AlphaEarth, CDL and the solar-farm cut-off all refer to this year
+
+# Areas. "seen" areas have training and test tiles; "extra" areas only add training tiles (more places and
+# climates); "heldout" areas are test-only states never used in training (land or climate).
+areas:
+  north_dakota:
+    role: seen
+    question_area: north_dakota
+    train_tiles: {Stutsman: [-99.00, 46.95], Barnes: [-98.05, 46.95], Wells: [-99.65, 47.55]}
+    test_tiles: {Kidder: [-99.80, 46.95], Foster: [-98.90, 47.45], Eddy: [-98.90, 47.75]}
+    # Earth Engine (AlphaEarth, CDL) + National Wetlands Inventory (NWI) wetlands and water. Until 2026-10-28 these
+    # tiles came from September's cached Earth Engine rasters; notebook 15 checks the rebuild gives the same arrays.
+    source: earth_engine_nwi
+    nwi_url: https://documentst.ecosphere.fws.gov/wetlands/data/State-Downloads/ND_geodatabase_wetlands.zip
+    nwi_zip: raw/ND_geodatabase_wetlands.zip      # relative to ASKMAP_DATA_ROOT
+    nwi_gdb: ND_geodatabase_wetlands.gdb
+    nwi_layer: ND_Wetlands
+  north_carolina:
+    role: seen
+    question_area: north_carolina
+    train_tiles: {NC1: [-79.51, 34.76], NC2: [-78.08, 35.10], NC3: [-77.53, 36.47]}
+    test_tiles: {NC4: [-78.00, 35.45], NC5: [-78.14, 35.83], NC6: [-77.08, 36.40]}
+    source: earth_engine
+  # extra training places: Plains farm country (fixed county-seat points) and south-eastern solar clusters
+  # (densest 20 km squares of USPVDB farms built by 2023 in the state, at least 40 km apart; chosen from counts only)
+  south_dakota: {role: extra, source: earth_engine, train_tiles: {SD1: [-96.80, 44.30], SD2: [-98.20, 44.40]}}
+  nebraska: {role: extra, source: earth_engine, train_tiles: {NE1: [-97.60, 40.87], NE2: [-99.10, 40.70]}}
+  kansas: {role: extra, source: earth_engine, train_tiles: {KS1: [-97.60, 38.80], KS2: [-100.90, 37.97]}}
+  virginia: {role: extra, source: earth_engine,
+             train_tiles: {VA1: [-77.98, 37.45], VA2: [-76.73, 36.89], VA3: [-77.76, 38.32]}}
+  south_carolina: {role: extra, source: earth_engine, train_tiles: {SC1: [-80.05, 34.30], SC2: [-81.27, 33.73]}}
+  # held-out states (same rule for solar clusters); North Dakota questions are asked in Minnesota, North Carolina
+  # questions in Georgia
+  minnesota: {role: heldout, question_area: north_dakota, source: earth_engine,
+              test_tiles: {MN1: [-92.80, 45.54], MN2: [-94.08, 45.56], MN3: [-92.61, 44.28]}}
+  georgia: {role: heldout, question_area: north_carolina, source: earth_engine,
+            test_tiles: {GA1: [-83.27, 30.90], GA2: [-84.29, 32.64], GA3: [-81.74, 32.34]}}
+
+uspvdb:
+  url: https://energy.usgs.gov/uspvdb/assets/data/uspvdbGeoJSON.zip
+  member: uspvdb_v4_0_20260414.geojson
+  last_year: 2023          # farms with p_year <= 2023 are "existing"; farms from 2024 on are left out of scoring
+
+classes:
+  # One leaf list for every area. Wetland: NWI in North Dakota, CDL 190/195 elsewhere. Solar farm: USPVDB.
+  cropland_ranges: [[1, 35], [38, 58], [204, 254]]
+  leaves: [corn, soybeans, spring_wheat, sunflower, canola, cotton, other_crop, hay, grassland, fallow, forest,
+           developed, water, wetland, solar_farm, other]
+  cdl:
+    corn: [1]
+    soybeans: [5]
+    spring_wheat: [23]
+    sunflower: [6]
+    canola: [31]
+    cotton: [2]
+    hay: [36, 37]
+    grassland: [176]
+    fallow: [61]
+    forest: [141, 142, 143]
+    developed: [121, 122, 123, 124]
+    water: [111]
+    wetland_cdl: [190, 195]
+  groups:
+    cropland: [corn, soybeans, spring_wheat, sunflower, canola, cotton, other_crop]
+
+power:
+  merra2_daily: s3://nasa-power/merra2/temporal/power_merra2_daily_temporal_lst.zarr
+  syn1deg_daily: s3://nasa-power/syn1deg/temporal/power_syn1deg_daily_temporal_lst.zarr
+  start: "2001-01-01"
+  end: "2025-12-31"
+  merra2_vars: [T2M, T2M_MAX, T2M_MIN, PRECTOTCORR, GWETROOT, WS50M, RH2M]
+  low_wind_sun_pct: 10
+  # the climate "universe": every land POWER cell in these boxes (cells in held-out states are used only at test)
+  boxes:
+    plains: {lat_min: 36.0, lat_max: 49.5, lon_min: -104.0, lon_max: -91.0}
+    southeast: {lat_min: 30.0, lat_max: 39.5, lon_min: -85.5, lon_max: -75.5}
+  heldout_states: [MN, GA]
+  states_url: https://www2.census.gov/geo/tiger/GENZ2023/shp/cb_2023_us_state_20m.zip
+
+# Areas a question can name (labels shown to the language model). Minnesota and Georgia are held-out states.
+question_areas:
+  north_dakota: "North Dakota study area (Prairie Pothole farm country)"
+  north_carolina: "North Carolina study area (eastern Piedmont and Coastal Plain, many solar farms)"
+  minnesota: "Minnesota study area (farm country with solar farms)"
+  georgia: "Georgia study area (Coastal Plain and Piedmont, solar farms)"
+heldout_pools: {north_dakota: minnesota, north_carolina: georgia}
+
+# Main method, step 1: an open language model writes the plan (OpenAI-compatible API, Hugging Face router).
+# Model ids are pinned to the provider that answered the A2 connection probe.
+llm:
+  base_url: https://router.huggingface.co/v1
+  models:
+    main: "openai/gpt-oss-120b:groq"
+    large: "zai-org/GLM-5.3:nscale"        # a newer large open model (information)
+    small: "openai/gpt-oss-20b:groq"       # small enough to run on the Mac (information)
+  temperature: 0
+  max_tokens: 4000          # reasoning models spend part of the budget on thinking
+  transport_retries: 3      # HTTP / network errors only; a malformed plan is never re-asked
+  retry_wait_s: 10
+  workers: 4
+
+# Main method, step 2: land classes from AlphaEarth (random forest trained on all training tiles)
+classifier:
+  trees: 100
+  min_samples_leaf: 2
+  per_class: 20000
+  seed: 0
+  solar_handful: 10         # solar farms built by 2023 in the training tiles used to teach "solar_farm"
+
+# "Places like this point" (information): AlphaEarth cosine minus this weight x distance between standardised
+# long-term POWER climate summaries
+like_point:
+  examples: 5
+  climate_weight: 0.1
+
+# Comparison arm (a): CLIP-style search over text, AlphaEarth and the POWER summary vector
+text_encoder: BAAI/bge-small-en-v1.5
+sampling:
+  train_pixels_per_tile: 5000        # half uniform, half spread evenly over the tile's leaf classes
+  captions_per_location: 6
+  climate_only_captions_per_cell: 30
+  seed: 0
+model:
+  dim: 128
+  hidden: 512
+  dropout: 0.1
+  temperature: 0.05
+  lr: 0.001
+  weight_decay: 0.0001
+  batch: 512
+  epochs: 12
+  seed: 0
+
+scoring:
+  min_truth: 50            # questions with fewer true pixels in a pool's test tiles are reported, not scored
+  bootstrap: 2000
+  seed: 0

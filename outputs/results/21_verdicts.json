@@ -1,0 +1,49 @@
+{
+ "never_seen_words_kept": [
+  "airport",
+  "railway",
+  "highway",
+  "dirt_track",
+  "wind_turbines",
+  "power_lines",
+  "parking",
+  "school",
+  "church",
+  "hospital",
+  "orchard",
+  "vineyard",
+  "landfill",
+  "greenhouses",
+  "plant_nursery",
+  "grain_elevator",
+  "stadium",
+  "creek",
+  "ditch",
+  "tree_row",
+  "radio_mast",
+  "oil_well",
+  "dam",
+  "levee"
+ ],
+ "dropped_by_V0": {},
+ "eligible_pairs": 46,
+ "eligible_words": 17,
+ "K6_control_median_ratio": 1.416,
+ "K6_pass": true,
+ "U1_median_ratio": 2.113,
+ "U1_lo": 1.613,
+ "U1_hi": 7.784,
+ "U1": "PASS",
+ "trained_median_ratio": 17.241,
+ "trained_lo": 6.641,
+ "trained_hi": 33.099,
+ "difference_never_seen_minus_trained": [
+  -15.129,
+  -31.139,
+  -3.309
+ ],
+ "median_AP_minus_chance": {
+  "never-seen": 0.0069,
+  "trained": 0.0623
+ }
+}

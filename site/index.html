@@ -1,0 +1,257 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask the Map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  :root { --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1f; --muted: #66666b; --line: #dcdcd8; --accent: #c2410c;
+          --chip: #f1efe9; --pass: #15803d; --fail: #9ca3af; }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) { --bg: #161616; --panel: #1f1f1f; --text: #ececec; --muted: #a3a3a3;
+      --line: #333; --accent: #fb923c; --chip: #2a2a2a; --pass: #4ade80; --fail: #6b7280; }
+  }
+  :root[data-theme="dark"] { --bg: #161616; --panel: #1f1f1f; --text: #ececec; --muted: #a3a3a3; --line: #333;
+    --accent: #fb923c; --chip: #2a2a2a; --pass: #4ade80; --fail: #6b7280; }
+  * { box-sizing: border-box; }
+  body { margin: 0; font: 14px/1.45 system-ui, -apple-system, Segoe UI, sans-serif; background: var(--bg);
+         color: var(--text); display: grid; grid-template-columns: minmax(300px, 380px) 1fr; height: 100vh; }
+  aside { background: var(--panel); border-right: 1px solid var(--line); padding: 16px; overflow-y: auto; }
+  h1 { font-size: 18px; margin: 0 0 4px; }
+  h2 { font-size: 13px; margin: 14px 0 4px; }
+  p.sub { margin: 0 0 14px; color: var(--muted); }
+  label { display: block; font-weight: 600; margin: 12px 0 4px; }
+  textarea, select, button { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--line);
+         border-radius: 6px; background: var(--bg); color: var(--text); }
+  textarea { min-height: 70px; resize: vertical; }
+  button.go { margin-top: 12px; background: var(--accent); color: #fff; border: none; font-weight: 600;
+              cursor: pointer; }
+  button.go:disabled { opacity: .6; cursor: wait; }
+  .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+  .examples button { width: auto; background: var(--chip); font-size: 12px; padding: 4px 8px; cursor: pointer; }
+  #status { margin-top: 10px; color: var(--muted); min-height: 1.4em; }
+  #status.err { color: #dc2626; }
+  .facts { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .facts table { width: 100%; border-collapse: collapse; }
+  .facts td, .facts th { padding: 2px 4px 2px 0; vertical-align: top; text-align: left; }
+  .facts th { font-weight: 600; color: var(--muted); font-size: 12px; }
+  .facts td.n, .facts th.n { text-align: right; font-variant-numeric: tabular-nums; }
+  .plan-words { background: var(--chip); padding: 8px; border-radius: 6px; margin: 0 0 8px; }
+  .empty { border-left: 3px solid var(--accent); padding: 6px 8px; background: var(--chip); border-radius: 0 6px 6px 0; }
+  .pass { color: var(--pass); font-weight: 600; } .fail { color: var(--fail); }
+  .small { font-size: 12px; color: var(--muted); }
+  details summary { cursor: pointer; color: var(--muted); margin-top: 10px; }
+  pre { white-space: pre-wrap; word-break: break-word; background: var(--chip); padding: 8px; border-radius: 6px;
+        font-size: 12px; }
+  .credits { margin-top: 16px; font-size: 11px; color: var(--muted); border-top: 1px solid var(--line); padding-top: 8px; }
+  .credits a { color: inherit; }
+  .map-legend { background: var(--panel); color: var(--text); font: 12px/1.6 system-ui, sans-serif; padding: 6px 9px;
+                border-radius: 6px; border: 1px solid var(--line); }
+  .map-legend .sw { display: inline-block; width: 14px; height: 10px; margin-right: 6px; vertical-align: -1px;
+                    box-sizing: border-box; border-radius: 2px; }
+  .count-label { background: var(--accent); color: #fff; font: 600 12px/1 system-ui, sans-serif; padding: 4px 6px;
+                 border-radius: 10px; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
+  #map { height: 100vh; }
+  @media (max-width: 760px) { body { grid-template-columns: 1fr; grid-template-rows: auto 60vh; height: auto; }
+    aside { border-right: none; border-bottom: 1px solid var(--line); } #map { height: 60vh; } }
+</style>
+</head>
+<body data-mode="static">
+<aside>
+  <h1>Ask the map</h1>
+  <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
+     in four study areas (a feasibility demo).</p>
+  <div id="live-controls">
+    <label for="q">Question</label>
+    <textarea id="q">wetlands next to crop fields</textarea>
+    <div class="examples" id="examples"></div>
+    <label for="area">Study area</label>
+    <select id="area"></select>
+    <label for="method">Method</label>
+    <select id="method">
+      <option value="best">Best combination (from the stage 3 tests)</option>
+      <option value="aligned">Aligned space (text vs embeddings)</option>
+      <option value="classifier">Classifier per class + language model plan</option>
+    </select>
+    <div id="methodnote" class="sub"></div>
+    <button class="go" id="go">Search</button>
+  </div>
+  <div id="static-controls" hidden>
+    <label for="preset">Question (answered in advance)</label>
+    <select id="preset"></select>
+  </div>
+  <div id="status"></div>
+  <div class="facts" id="facts"></div>
+  <div class="credits">
+    Data: AlphaEarth Foundations Satellite Embedding (Google and Google DeepMind), USDA NASS Cropland Data Layer,
+    USFWS National Wetlands Inventory, USGS/LBNL US Large-Scale Solar PV Database, NASA POWER (NASA Langley
+    Research Center), &copy; OpenStreetMap contributors. Imagery: USGS The National Map. Language model:
+    openai/gpt-oss-120b (open weights) via Hugging Face. Answers come from automated maps and can be wrong.
+  </div>
+</aside>
+<div id="map"></div>
+<script>
+const STATIC = document.body.dataset.mode === "static";
+const map = L.map("map").setView([40, -90], 5);
+const osm = L.tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png",
+  { maxZoom: 18, attribution: "&copy; <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a> contributors" });
+const sat = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}",
+  { maxZoom: 18, maxNativeZoom: 16, attribution: "Imagery: USGS The National Map" });
+sat.addTo(map);
+const overlays = L.layerGroup().addTo(map), labels = L.layerGroup().addTo(map),
+      cells = L.layerGroup().addTo(map), outlines = L.layerGroup().addTo(map);
+L.control.layers({ "Satellite (USGS)": sat, "OpenStreetMap": osm },
+                 { "Matched places": overlays, "Counts per tile": labels, "NASA POWER cells": cells }).addTo(map);
+const legend = L.control({ position: "bottomleft" });
+legend.onAdd = () => {
+  const div = L.DomUtil.create("div", "map-legend");
+  div.innerHTML =
+    '<div><span class="sw" style="background:#e63c14"></span>Matched places (90 m)</div>' +
+    '<div><span class="sw" style="border:1px dashed #fff;background:#0006"></span>Study tile (20 km)</div>' +
+    '<div><span class="sw" style="border:3px solid #22c55e;background:#22c55e2e"></span>NASA POWER cell, meets climate</div>' +
+    '<div><span class="sw" style="border:2px dashed #9ca3af;background:#0000004d"></span>NASA POWER cell, does not</div>';
+  return div;
+};
+legend.addTo(map);
+let META = null;
+
+function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
+function box(b) { return [[b[1], b[0]], [b[3], b[2]]]; }
+function fmt(v) {
+  if (Number.isInteger(v)) return v.toLocaleString();
+  return Math.abs(v) >= 100 ? v.toFixed(0) : Math.abs(v) >= 10 ? v.toFixed(1) : v.toFixed(2);
+}
+
+function showArea(name, fit = true) {
+  outlines.clearLayers();
+  const a = META.areas[name];
+  const all = a.tiles.map(t => box(t.bounds));
+  all.forEach(b => L.rectangle(b, { color: "#ffffff", weight: 1, fill: false, dashArray: "4", interactive: false }).addTo(outlines));
+  // no animation: a later zoom (to the matches) must not be overtaken by this one finishing
+  if (fit) map.fitBounds(L.latLngBounds(all.flat()), { animate: false });
+}
+
+function render(d) {
+  overlays.clearLayers(); labels.clearLayers(); cells.clearLayers();
+  const f = d.facts;
+  let busiest = null;
+  d.tiles.forEach(t => {
+    L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: 1 }).addTo(overlays);
+    if (t.count > 0 && t.match_bounds) {
+      if (!busiest || t.count > busiest.count) busiest = t;
+      const b = t.match_bounds, c = [(b[1] + b[3]) / 2, (b[0] + b[2]) / 2];
+      L.marker(c, { icon: L.divIcon({ className: "", html: `<span class="count-label">${t.count.toLocaleString()} places</span>`,
+                                      iconSize: null }) })
+        .bindTooltip(`Tile ${esc(t.name)}: click to zoom to its matches`)
+        .on("click", () => map.fitBounds(box(t.match_bounds), { padding: [30, 30], maxZoom: 14 }))
+        .addTo(labels);
+    }
+  });
+  const pcells = d.power_cells || [];
+  pcells.forEach(c => {
+    // pass: green edge and tint; fail: light dashed edge and a dark shade, so both read on satellite imagery
+    L.rectangle(box(c.bounds), c.pass
+      ? { color: "#22c55e", weight: 3, fillColor: "#22c55e", fillOpacity: 0.18 }
+      : { color: "#f3f4f6", weight: 3, dashArray: "10 6", fillColor: "#000000", fillOpacity: 0.3 })
+      .bindTooltip(c.pass ? "NASA POWER cell: meets the climate conditions" : "NASA POWER cell: does not meet them")
+      .addTo(cells);
+  });
+  // 20 km tiles tens of km apart: fitting them all makes 90 m places invisible, so open on the tile with the most
+  // matches; the count labels on the other tiles zoom to them when clicked. A NASA POWER cell (~50 km) is larger
+  // than that view, so for a question with climate conditions open on the POWER cells around the matches instead,
+  // so the cells' edges are visible; with no matches, open on all the area's POWER cells.
+  const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
+  const near = busiest ? pcells.filter(c => overlaps(c.bounds, busiest.match_bounds)) : pcells;
+  if (near.length) map.fitBounds(L.latLngBounds(near.flatMap(c => box(c.bounds))), { padding: [20, 20], animate: false });
+  else if (busiest) map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
+  else showArea(d.area);
+  const many = d.tiles.filter(t => t.count > 0).length > 1;
+
+  const st = document.getElementById("status");
+  st.className = "";
+  st.textContent = (f.rule === "every step"
+    ? `${f.shown_pixels.toLocaleString()} places (90 m cells) meet every step of the plan (${d.seconds} s, method: ${d.used}).`
+    : `The ${f.rule} most similar places are shown: ${f.shown_pixels.toLocaleString()} 90 m cells (${d.seconds} s, method: ${d.used}).`)
+    + (many ? " The map opens on the tile with the most matches; click a count label to jump to another tile." : "");
+
+  let h = "";
+  if (f.plan_words) h += `<p class="plan-words">${esc(f.plan_words)}</p>`;
+  if (f.empty_reason) h += `<p class="empty"><b>No places found.</b> ${esc(f.empty_reason)}</p>`;
+  if (f.steps) {
+    h += "<h2>Places left after each step</h2><table><tr><th>Step</th><th class=\"n\">Places</th></tr>" +
+      f.steps.map((s, i) => `<tr><td>${i ? "+ " : ""}${esc(s.label)}</td><td class="n">${s.places.toLocaleString()}</td></tr>`).join("") +
+      "</table><p class=\"small\">Land comes from AlphaEarth classifiers (probability above 0.5); climate from NASA POWER, one value per ~50 km grid cell.</p>";
+  }
+  (f.climate || []).forEach(c => {
+    h += `<h2>NASA POWER: ${esc(c.quantity)}</h2><table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
+      `<th class="n">Needs ${c.op === ">=" ? "≥" : "≤"}</th><th></th></tr>` +
+      c.cells.map(x => `<tr><td>${x.lat.toFixed(2)}, ${x.lon.toFixed(2)}</td><td class="n">${fmt(x.value)}</td>` +
+        `<td class="n">${fmt(x.threshold)}</td><td class="${x.pass ? "pass" : "fail"}">${x.pass ? "meets" : "no"}</td></tr>`).join("") +
+      `</table><p class="small">Unit: ${esc(c.unit)}.</p>`;
+  });
+  if (f.land_of_shown_pixels.length) {
+    h += "<h2>Official land cover of the places shown</h2><table>" +
+      f.land_of_shown_pixels.map(x => `<tr><td>${esc(x.class.replace(/_/g, " "))}</td><td class="n">${(x.share * 100).toFixed(1)}%</td></tr>`).join("") +
+      "</table><p class=\"small\">From the USDA crop map, the wetland inventory (North Dakota) and the solar-farm database: a check on the automated answer.</p>";
+  }
+  if (f.share_meeting_climate_conditions !== undefined && f.share_meeting_climate_conditions !== null && f.rule !== "every step")
+    h += `<p>${(f.share_meeting_climate_conditions * 100).toFixed(0)}% of the places shown meet the plan's NASA POWER conditions.</p>`;
+  if (d.plan) h += "<details><summary>The language model's plan (JSON)</summary><pre>" + esc(JSON.stringify(d.plan, null, 1)) + "</pre></details>";
+  document.getElementById("facts").innerHTML = h;
+}
+
+function setupAreas(m) {
+  const sel = document.getElementById("area");
+  Object.entries(m.areas).forEach(([k, a]) => { const o = document.createElement("option"); o.value = k; o.textContent = a.label; sel.appendChild(o); });
+  sel.onchange = () => { overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); };
+  return sel;
+}
+
+if (STATIC) {
+  document.getElementById("live-controls").hidden = true;
+  document.getElementById("static-controls").hidden = false;
+  fetch("data/meta.json").then(r => r.json()).then(m => {
+    META = m;
+    const pre = document.getElementById("preset");
+    m.answers.forEach((a, i) => { const o = document.createElement("option"); o.value = i;
+      o.textContent = `${a.question} (${m.areas[a.area].label})`; pre.appendChild(o); });
+    const load = async () => {
+      const a = m.answers[+pre.value];
+      document.getElementById("status").textContent = "Loading…";
+      const d = await (await fetch("data/" + a.file)).json();
+      showArea(a.area, false);   // outlines only; render() sets the view
+      render(d);
+    };
+    pre.onchange = load; load();
+  });
+} else {
+  fetch("/api/meta").then(r => r.json()).then(m => {
+    META = m;
+    const sel = setupAreas(m);
+    const ex = document.getElementById("examples");
+    m.examples.forEach(t => { const b = document.createElement("button"); b.textContent = t; b.onclick = () => { document.getElementById("q").value = t; }; ex.appendChild(b); });
+    const msel = document.getElementById("method"), note = document.getElementById("methodnote");
+    [...msel.options].forEach(o => { if (m.not_ready[o.value]) o.textContent += " (not ready yet)"; });
+    const explain = () => { const why = m.not_ready[msel.value]; note.textContent = why ? "Not ready yet: " + why : ""; };
+    msel.onchange = explain; explain();
+    showArea(sel.value);
+  });
+  document.getElementById("go").onclick = async () => {
+    const btn = document.getElementById("go"), st = document.getElementById("status");
+    btn.disabled = true; st.className = ""; st.textContent = "Searching…";
+    const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
+                   method: document.getElementById("method").value };
+    try {
+      const r = await fetch("/api/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.detail || "Search failed");
+      render(d);
+    } catch (e) { st.className = "err"; st.textContent = e.message; }
+    btn.disabled = false;
+  };
+}
+</script>
+</body>
+</html>

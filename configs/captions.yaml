@@ -1,0 +1,133 @@
+# Caption vocabulary and wording, fixed before training (amendment A1). The first wording of each list is the one
+# used to render questions "worded like the captions" (split S1/S3/S4).
+
+prefixes: ["Show ", "", "Find ", "Places with "]
+area_phrase: ["in the {area} study area", "in {area}"]
+area_names: {north_dakota: North Dakota, north_carolina: North Carolina, south_dakota: South Dakota,
+             nebraska: Nebraska, kansas: Kansas, virginia: Virginia, south_carolina: South Carolina,
+             minnesota: Minnesota, georgia: Georgia}
+
+land:
+  cropland: ["cropland", "crop fields", "farmland under annual crops"]
+  corn: ["corn fields", "corn", "maize fields"]
+  soybeans: ["soybean fields", "soybeans", "fields of soybeans"]
+  spring_wheat: ["spring wheat", "spring wheat fields", "wheat fields (spring wheat)"]
+  sunflower: ["sunflower fields", "sunflowers", "fields of sunflowers"]
+  canola: ["canola fields", "canola", "fields of canola"]
+  cotton: ["cotton fields", "cotton", "fields of cotton"]
+  other_crop: ["other annual crops", "fields of other crops", "minor annual crops"]
+  hay: ["hay land", "hay and alfalfa fields", "hayfields"]
+  grassland: ["grassland and pasture", "grazing land", "grassland"]
+  fallow: ["fallow or idle cropland", "idle cropland", "fallow fields"]
+  forest: ["forest", "woodland", "forested land"]
+  developed: ["developed land", "built-up land", "towns, buildings and roads"]
+  water: ["open water", "lakes and ponds", "water"]
+  wetland: ["wetlands", "marsh and wet meadow", "wetland areas"]
+  solar_farm: ["existing solar farms", "solar farms", "utility-scale solar farms"]
+union_join: [" or ", " and "]       # two land classes: "corn fields or soybean fields"
+
+near:
+  classes:
+    wetland: ["a wetland", "wetlands", "any wetland"]
+    water: ["open water", "a lake or pond", "any open water"]
+    developed: ["developed land", "buildings or roads", "built-up land"]
+    forest: ["forest", "woodland", "trees"]
+    cropland: ["cropland", "crop fields", "farmed land"]
+    grassland: ["grassland and pasture", "grassland", "pasture"]
+    solar_farm: ["an existing solar farm", "a solar farm", "solar farms"]
+  distances_m: [30, 100, 200, 300, 500, 1000, 2000]
+  near_templates: ["within {d} of {c}", "less than {d} from {c}", "no more than {d} away from {c}"]
+  far_templates: ["more than {d} from any {c}", "at least {d} away from {c}", "not within {d} of {c}"]
+  union_prob: 0.1
+
+patch:
+  sizes_ha: [10, 20, 40]
+  classes: [grassland, hay, cropland, forest, fallow]
+  templates: ["in patches of at least {h} ha", "in blocks of {h} ha or more", "forming areas of at least {h} ha"]
+
+climate_year:
+  # history rank within the cell's own 2001-2025 record
+  variables:
+    PRECTOTCORR: {stat: total, words: ["rainfall", "rain", "precipitation"], high: wettest, low: driest}
+    GWETROOT: {stat: mean, words: ["root-zone soil wetness", "root-zone soil moisture", "deep soil moisture"],
+               high: wettest, low: driest}
+    T2M: {stat: mean, words: ["mean temperature", "average temperature", "temperature"], high: hottest,
+          low: coolest}
+  seasons:
+    AMJ: {months: [4, 5, 6], words: ["April-June", "spring (April-June)", "April to June"]}
+    AM: {months: [4, 5], words: ["April-May", "April and May", "April to May"]}
+    MJJAS: {months: [5, 6, 7, 8, 9], words: ["May-September", "the growing season (May-September)",
+                                             "the grazing season (May-September)"]}
+    JJA: {months: [6, 7, 8], words: ["June-August", "summer (June-August)", "June to August"]}
+    JJ: {months: [6, 7], words: ["June-July", "June and July", "June to July"]}
+    JA: {months: [7, 8], words: ["July-August", "July and August", "July to August"]}
+    JUL: {months: [7], words: ["July", "the month of July", "July"]}
+    AUG: {months: [8], words: ["August", "the month of August", "August"]}
+    SEP: {months: [9], words: ["September", "the month of September", "September"]}
+  pcts: [10, 20]
+  templates: ["where {season} {year} {var} was in the {adj} {p}% of years since 2001",
+              "with {var} in {season} {year} among the {adj} {p}% of 2001-2025",
+              "where {season} {year} was one of the {adj} {p}% for {var} since 2001"]
+
+heat_days:
+  thresholds_c: [30, 32, 35]
+  seasons: [JUL, JJA]
+  min_days: [3, 5, 10, 15, 20, 31]
+  templates: ["where {season} {year} had at least {n} days with a daily maximum above {t} C",
+              "with {n} or more days over {t} C in {season} {year}",
+              "where the daily maximum topped {t} C on at least {n} days in {season} {year}"]
+
+rain_total:
+  seasons: [AMJ, JJA]
+  at_least_mm: [200, 250, 300]
+  at_most_mm: [100, 150]
+  templates_at_least: ["where {season} {year} rainfall was at least {mm} mm", "with {mm} mm or more of rain in {season} {year}",
+                       "that got at least {mm} mm of rain in {season} {year}"]
+  templates_at_most: ["where {season} {year} rainfall was {mm} mm or less", "with no more than {mm} mm of rain in {season} {year}",
+                      "that got at most {mm} mm of rain in {season} {year}"]
+
+gdd:
+  at_most: [1200, 1300, 1400]
+  at_least: [1400, 1600]
+  templates_at_most: ["with fewer than {g} growing degree days (base 10 C) from May to September {year}",
+                      "where May-September {year} had at most {g} growing degree days (base 10 C)",
+                      "with {g} or fewer growing degree days in May-September {year}"]
+  templates_at_least: ["with at least {g} growing degree days (base 10 C) from May to September {year}",
+                       "where May-September {year} had {g} or more growing degree days (base 10 C)",
+                       "with more than {g} growing degree days in May-September {year}"]
+
+climate_long:
+  # long-term (2001-2025 average) tiers relative to all cells of the climate universe used in training
+  variables:
+    ALLSKY_SFC_SW_DWN: {months: all, stat: mean, words: ["average yearly sunlight", "yearly sunshine", "solar resource"],
+                        high: sunniest, low: cloudiest}
+    GDD10: {months: MJJAS, stat: total, words: ["growing degree days (May-September)", "growing-season heat units",
+                                                "growing degree days"], high: "highest", low: "lowest"}
+    HDD18: {months: all, stat: total, words: ["heating degree days", "heating demand", "yearly heating degree days"],
+            high: "highest", low: "lowest"}
+    CDD18: {months: all, stat: total, words: ["cooling degree days", "cooling demand", "yearly cooling degree days"],
+            high: "highest", low: "lowest"}
+    LOW_WIND_SUN: {months: all, stat: total, words: ["low-wind, low-sun days", "days with little wind and sun",
+                                                     "calm, dark days"], high: "most", low: "fewest"}
+    GWETROOT: {months: MJJAS, stat: mean, words: ["May-September root-zone soil wetness", "growing-season soil moisture",
+                                                  "summer root-zone wetness"], high: wettest, low: driest}
+    T2M: {months: MJJAS, stat: mean, words: ["May-September mean temperature", "growing-season temperature",
+                                             "summer warmth"], high: warmest, low: coolest}
+  tiers: {third: 33.3, half: 50}
+  templates: ["in the {adj} {tier} of places by {var} over 2001-2025",
+              "among the {tier} of places with the {adj} {var} (2001-2025 average)",
+              "in the {adj} {tier} of the region for {var}, 2001-2025"]
+  sunlight_at_least: [4.4, 4.6, 4.8]
+  sunlight_templates: ["where average sunlight over 2001-2025 is at least {x} kWh per square metre per day",
+                       "with long-term sunlight of {x} kWh/m2/day or more",
+                       "where the 2001-2025 solar resource is at least {x} kWh per square metre per day"]
+
+composition:
+  # probabilities of the extra fact in a training caption (at most one extra fact)
+  none: 0.2
+  near: 0.3
+  patch: 0.1
+  climate_year: 0.25     # split evenly over history-rank, heat-day, rain-total and GDD families
+  climate_long: 0.15
+  area_phrase_prob: 0.3
+  land_union_prob: 0.15

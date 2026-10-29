@@ -1,0 +1,571 @@
+{
+ "land.cropland": [
+  "agricultural fields",
+  "arable land",
+  "farmed acreage",
+  "annual crop land",
+  "planting area"
+ ],
+ "land.corn": [
+  "sweet corn acres",
+  "field corn plots",
+  "maize acreage",
+  "corn belt",
+  "corn planting area"
+ ],
+ "land.soybeans": [
+  "soybean acres",
+  "soybean planting area",
+  "soybean cropland",
+  "soybean plots",
+  "soybean farm land"
+ ],
+ "land.spring_wheat": [
+  "spring wheat acreage",
+  "spring wheat planting",
+  "spring wheat cropland",
+  "spring wheat farms",
+  "spring wheat belt"
+ ],
+ "land.sunflower": [
+  "sunflower acres",
+  "sunflower planting area",
+  "sunflower cropland",
+  "sunflower farms",
+  "sunflower plots"
+ ],
+ "land.canola": [
+  "canola acres",
+  "canola planting area",
+  "canola cropland",
+  "canola farms",
+  "canola plots"
+ ],
+ "land.cotton": [
+  "cotton acres",
+  "cotton planting area",
+  "cotton cropland",
+  "cotton farms",
+  "cotton plots"
+ ],
+ "land.other_crop": [
+  "miscellaneous annual crops",
+  "varied crop fields",
+  "supplemental annual crops",
+  "diverse crop acreage",
+  "additional annual crops"
+ ],
+ "land.hay": [
+  "hay production area",
+  "hay acreage",
+  "hay and forage fields",
+  "hay cultivation land",
+  "hay farms"
+ ],
+ "land.grassland": [
+  "pastureland",
+  "grass-covered fields",
+  "grazing acreage",
+  "grass and pasture area",
+  "herbaceous land"
+ ],
+ "land.fallow": [
+  "resting farmland",
+  "unused cropland",
+  "land left fallow",
+  "temporarily idle fields",
+  "fallow acreage"
+ ],
+ "land.forest": [
+  "tree-covered area",
+  "timberland",
+  "forest stand",
+  "wooded region",
+  "forested terrain"
+ ],
+ "land.developed": [
+  "urbanized area",
+  "constructed land",
+  "built environment",
+  "settlement land",
+  "man\u2011made landscape"
+ ],
+ "land.water": [
+  "standing water bodies",
+  "surface water",
+  "freshwater bodies",
+  "water surfaces",
+  "ponds and lakes"
+ ],
+ "land.wetland": [
+  "bogs and swamps",
+  "wetland habitats",
+  "marshy areas",
+  "wetland zones",
+  "floodplain wetlands"
+ ],
+ "land.solar_farm": [
+  "solar power sites",
+  "large solar installations",
+  "solar energy farms",
+  "photovoltaic farms",
+  "solar array fields"
+ ],
+ "near.classes.wetland": [
+  "a marsh",
+  "wetland area",
+  "any wetland zone",
+  "a bog",
+  "any marshland"
+ ],
+ "near.classes.water": [
+  "a water body",
+  "any lake",
+  "any pond",
+  "a standing water area",
+  "any surface water"
+ ],
+ "near.classes.developed": [
+  "urban area",
+  "constructed zone",
+  "built environment",
+  "settlement area",
+  "man\u2011made land"
+ ],
+ "near.classes.forest": [
+  "tree stand",
+  "wooded area",
+  "forested region",
+  "timber area",
+  "tree canopy"
+ ],
+ "near.classes.cropland": [
+  "agricultural land",
+  "planting fields",
+  "farm acreage",
+  "cultivated land",
+  "arable fields"
+ ],
+ "near.classes.grassland": [
+  "grazing area",
+  "grass-covered land",
+  "pastureland",
+  "herbaceous field",
+  "grass terrain"
+ ],
+ "near.classes.solar_farm": [
+  "a solar installation",
+  "solar site",
+  "a photovoltaic farm",
+  "solar array",
+  "a solar power site"
+ ],
+ "prefixes": [
+  "Locate ",
+  "Display ",
+  "Search for ",
+  "Identify ",
+  "List "
+ ],
+ "near.near_templates": [
+  "inside {d} of {c}",
+  "within a {d} radius of {c}",
+  "no farther than {d} from {c}",
+  "up to {d} away from {c}",
+  "within {d} distance of {c}"
+ ],
+ "near.far_templates": [
+  "beyond {d} from {c}",
+  "greater than {d} away from {c}",
+  "over {d} distant from {c}",
+  "more than {d} distant to {c}",
+  "outside a {d} buffer around {c}"
+ ],
+ "patch.templates": [
+  "in clusters of at least {h} ha",
+  "in parcels of {h} ha or larger",
+  "covering areas of minimum {h} ha",
+  "in sections of at least {h} hectares",
+  "in zones of {h} ha or more"
+ ],
+ "climate_year.templates": [
+  "where {season} {year} {var} ranked in the {adj} {p}% of years since 2001",
+  "when {season} {year} {var} fell within the {adj} {p}% of the record since 2001",
+  "where {season} {year} {var} was among the {adj} {p}% of years dating back to 2001",
+  "in {season} {year} when {var} hit the {adj} {p}% of historic years since 2001",
+  "where {season} {year} {var} placed in the {adj} {p}% of all years from 2001 onward"
+ ],
+ "heat_days.templates": [
+  "where {season} {year} recorded at least {n} days with a high above {t}\u202fC",
+  "when {season} {year} had {n}+ days where the max temperature exceeded {t}\u202fC",
+  "where the daily peak topped {t}\u202fC on a minimum of {n} days in {season} {year}",
+  "in {season} {year} with {n} or more days reaching above {t}\u202fC",
+  "when {season} {year} saw at least {n} days with max temps over {t}\u202fC"
+ ],
+ "rain_total.templates_at_least": [
+  "where {season} {year} rainfall was at least {mm}\u202fmm",
+  "when {season} {year} received {mm}\u202fmm or more of rain",
+  "in {season} {year} with a minimum of {mm}\u202fmm of precipitation",
+  "where {season} {year} saw at least {mm}\u202fmm of rain",
+  "when {season} {year} got {mm}\u202fmm or higher in rainfall"
+ ],
+ "rain_total.templates_at_most": [
+  "where {season} {year} rainfall was {mm}\u202fmm or less",
+  "when {season} {year} received no more than {mm}\u202fmm of rain",
+  "in {season} {year} with a maximum of {mm}\u202fmm of precipitation",
+  "where {season} {year} saw at most {mm}\u202fmm of rain",
+  "when {season} {year} got {mm}\u202fmm or fewer millimetres of rain"
+ ],
+ "gdd.templates_at_most": [
+  "with fewer than {g} growing degree days (base 10\u202f\u00b0C) from May to September {year}",
+  "where May\u2011September {year} recorded at most {g} GDD (base 10\u202f\u00b0C)",
+  "with {g} or fewer growing degree days in the May\u2011Sept {year} period",
+  "when the May\u2011Sept {year} season had under {g} GDD (base 10\u202f\u00b0C)",
+  "where the May\u2011September {year} total did not exceed {g} growing degree days"
+ ],
+ "gdd.templates_at_least": [
+  "with at least {g} growing degree days (base 10\u202f\u00b0C) from May to September {year}",
+  "where May\u2011September {year} had {g} or more GDD (base 10\u202f\u00b0C)",
+  "with {g}+ growing degree days in the May\u2011Sept {year} window",
+  "when the May\u2011Sept {year} season reached a minimum of {g} GDD (base 10\u202f\u00b0C)",
+  "where the May\u2011September {year} total was no less than {g} growing degree days"
+ ],
+ "climate_long.templates": [
+  "in the {adj} {tier} of locations by {var} over 2001\u20112025",
+  "among the {tier} of sites with the {adj} {var} (2001\u20112025 average)",
+  "in the {adj} {tier} of the region for {var}, 2001\u20112025",
+  "within the {adj} {tier} of areas ranked by {var} from 2001 to 2025",
+  "among the {tier} of places showing the {adj} {var} across 2001\u20112025"
+ ],
+ "climate_long.sunlight_templates": [
+  "where average sunlight over 2001\u20112025 is at least {x}\u202fkWh\u202fm\u207b\u00b2\u202fday\u207b\u00b9",
+  "with long\u2011term solar exposure of {x}\u202fkWh/m\u00b2/day or higher",
+  "where the 2001\u20112025 solar resource reaches a minimum of {x}\u202fkWh per square metre per day",
+  "when average sunshine from 2001\u20112025 meets or exceeds {x}\u202fkWh\u202fm\u207b\u00b2\u202fday\u207b\u00b9",
+  "with a 2001\u20112025 mean sunlight of {x}\u202fkWh/m\u00b2/day or more"
+ ],
+ "climate_year.variables.PRECTOTCORR.words": [
+  "total rain",
+  "rainfall amount",
+  "precipitation total",
+  "rainfall volume",
+  "wet precipitation"
+ ],
+ "climate_year.variables.GWETROOT.words": [
+  "subsurface soil moisture",
+  "soil water content in root zone",
+  "root-depth moisture",
+  "soil wetness at root depth",
+  "deep-root soil water"
+ ],
+ "climate_year.variables.T2M.words": [
+  "average air temperature",
+  "mean air temp",
+  "temperature average",
+  "typical temperature",
+  "overall temperature"
+ ],
+ "climate_year.seasons.AMJ.words": [
+  "April through June",
+  "Apr-Jun",
+  "spring months Apr-Jun",
+  "the period Apr-Jun",
+  "April\u2011June span"
+ ],
+ "climate_year.seasons.AM.words": [
+  "April through May",
+  "Apr-May",
+  "April\u2011May period",
+  "spring (Apr-May)",
+  "April\u2011May span"
+ ],
+ "climate_year.seasons.MJJAS.words": [
+  "May through September",
+  "May\u2011Sept",
+  "May\u2011September period",
+  "late spring to early fall (May\u2011Sep)",
+  "the May\u2011Sept stretch"
+ ],
+ "climate_year.seasons.JJA.words": [
+  "June through August",
+  "Jun-Aug",
+  "June\u2011August period",
+  "summer months Jun\u2011Aug",
+  "June\u2011August span"
+ ],
+ "climate_year.seasons.JJ.words": [
+  "June through July",
+  "Jun-Jul",
+  "June\u2011July period",
+  "early summer (Jun\u2011Jul)",
+  "June\u2011July span"
+ ],
+ "climate_year.seasons.JA.words": [
+  "July through August",
+  "Jul-Aug",
+  "July\u2011August period",
+  "late summer (Jul\u2011Aug)",
+  "July\u2011August span"
+ ],
+ "climate_year.seasons.JUL.words": [
+  "July month",
+  "Jul",
+  "the seventh month",
+  "mid\u2011year month July",
+  "July period"
+ ],
+ "climate_year.seasons.AUG.words": [
+  "August month",
+  "Aug",
+  "the eighth month",
+  "August (calendar month)",
+  "mid\u2011summer month August"
+ ],
+ "climate_year.seasons.SEP.words": [
+  "September month",
+  "Sep",
+  "the ninth month",
+  "September (calendar month)",
+  "early fall month September"
+ ],
+ "climate_long.variables.ALLSKY_SFC_SW_DWN.words": [
+  "annual solar radiation",
+  "year\u2011round sunlight",
+  "total yearly sun",
+  "annual sunshine amount",
+  "solar energy per year"
+ ],
+ "climate_long.variables.GDD10.words": [
+  "heat units for growth (May\u2011Sep)",
+  "crop\u2011development degree days (May\u2011Sep)",
+  "growing season temperature sum",
+  "May\u2011September GDD",
+  "agricultural heat accumulation (May\u2011Sep)"
+ ],
+ "climate_long.variables.HDD18.words": [
+  "cold\u2011weather degree days",
+  "energy\u2011use heating days",
+  "annual heating degree count",
+  "heating load days",
+  "temperature\u2011based heating days"
+ ],
+ "climate_long.variables.CDD18.words": [
+  "air\u2011conditioning degree days",
+  "heat\u2011stress degree days",
+  "annual cooling degree count",
+  "cooling load days",
+  "temperature\u2011based cooling days"
+ ],
+ "climate_long.variables.LOW_WIND_SUN.words": [
+  "still, cloudy days",
+  "light\u2011wind, low\u2011sunlight days",
+  "quiet, overcast days",
+  "low breeze and low sun days",
+  "calm and dim days"
+ ],
+ "climate_long.variables.GWETROOT.words": [
+  "May\u2011Sep root\u2011zone moisture",
+  "root\u2011depth soil water (May\u2011Sep)",
+  "soil wetness in root zone during growing season",
+  "summer root\u2011zone water content",
+  "growing season root\u2011zone wetness"
+ ],
+ "climate_long.variables.T2M.words": [
+  "May\u2011Sep average temperature",
+  "temperature during growing months",
+  "summer average temp",
+  "mean air temp (May\u2011Sep)",
+  "growing season mean temperature"
+ ],
+ "osm.osm_farmland": [
+  "cropland",
+  "tilled fields",
+  "row crops",
+  "planting area",
+  "agri fields"
+ ],
+ "osm.osm_meadow": [
+  "grassland",
+  "pasture meadow",
+  "field meadow",
+  "open meadow",
+  "hayfield"
+ ],
+ "osm.osm_grass": [
+  "tall grass",
+  "short grass",
+  "grass cover",
+  "green turf",
+  "grass sward"
+ ],
+ "osm.osm_forest": [
+  "timber stand",
+  "tree canopy",
+  "forest tract",
+  "coniferous area",
+  "deciduous woods"
+ ],
+ "osm.osm_scrub": [
+  "bush thicket",
+  "shrub thicket",
+  "scrubby area",
+  "brushy land",
+  "low shrub"
+ ],
+ "osm.osm_residential": [
+  "single\u2011family lots",
+  "neighborhood",
+  "housing development",
+  "subdivision",
+  "residential parcels"
+ ],
+ "osm.osm_industrial": [
+  "manufacturing zone",
+  "industrial park",
+  "plant complex",
+  "industrial site",
+  "production facilities"
+ ],
+ "osm.osm_commercial": [
+  "business district",
+  "shopping center",
+  "office park",
+  "commercial strip",
+  "retail zone"
+ ],
+ "osm.osm_quarry": [
+  "stone pit",
+  "rock extraction site",
+  "aggregate pit",
+  "mineral quarry",
+  "quarry pit"
+ ],
+ "osm.osm_cemetery": [
+  "memorial park",
+  "final resting place",
+  "interment site",
+  "burial field",
+  "cemetery grounds"
+ ],
+ "osm.osm_farmyard": [
+  "barn complex",
+  "farm structures",
+  "agricultural buildings",
+  "farmstead area",
+  "ranch buildings"
+ ],
+ "osm.osm_construction": [
+  "development lot",
+  "building zone",
+  "construction zone",
+  "site under development",
+  "worksite area"
+ ],
+ "osm.osm_recreation": [
+  "playfield",
+  "sports complex",
+  "recreation field",
+  "community park",
+  "open recreation area"
+ ],
+ "osm.osm_golf": [
+  "golf fairway",
+  "golf greens",
+  "golf layout",
+  "golf property",
+  "golf facility"
+ ],
+ "osm.osm_reserve": [
+  "conservation area",
+  "preserve",
+  "protected habitat",
+  "wildlife preserve",
+  "nature sanctuary"
+ ],
+ "osm.osm_wetland": [
+  "marsh area",
+  "bog land",
+  "floodplain wetland",
+  "wet meadow",
+  "swampy ground"
+ ],
+ "osm.osm_swamp": [
+  "cypress swamp",
+  "marshy swamp",
+  "wet swamp",
+  "boggy area",
+  "swamp terrain"
+ ],
+ "osm.osm_water": [
+  "standing water",
+  "surface water",
+  "water body",
+  "freshwater area",
+  "water surface"
+ ],
+ "osm.osm_pond": [
+  "farm pond",
+  "water pond",
+  "ponded area",
+  "pond water",
+  "small water body"
+ ],
+ "osm.osm_lake": [
+  "large lake",
+  "freshwater lake",
+  "lake basin",
+  "natural lake",
+  "man\u2011made lake"
+ ],
+ "osm.osm_river": [
+  "river waterway",
+  "river course",
+  "river stretch",
+  "watercourse",
+  "river flow"
+ ],
+ "osm.osm_wastewater": [
+  "wastewater facility",
+  "sewage treatment plant",
+  "effluent treatment site",
+  "wastewater treatment works",
+  "sewage processing plant"
+ ],
+ "osm.osm_solar": [
+  "photovoltaic farm",
+  "solar field",
+  "solar generation site",
+  "PV installation",
+  "solar energy site"
+ ],
+ "osm_new.power=plant": [
+  "electric generating station",
+  "energy facility",
+  "power generation site",
+  "utility plant",
+  "electric plant",
+  "generation station",
+  "energy production facility",
+  "power station"
+ ],
+ "osm_new.leisure=resort": [
+  "vacation spot",
+  "holiday resort",
+  "recreation complex",
+  "leisure destination",
+  "tourist resort",
+  "vacation retreat",
+  "recreation resort",
+  "holiday getaway"
+ ],
+ "osm_new.man_made=clearcut": [
+  "clearcut area",
+  "logged clearing",
+  "harvested timber site",
+  "deforested plot",
+  "clear\u2011cut zone",
+  "timber harvest area",
+  "forest clearing",
+  "cutover land"
+ ]
+}

@@ -1,0 +1,77 @@
+{
+ "X": {
+  "X1": {
+   "pass": false,
+   "F1": 0.46685082872928174,
+   "true_px": 6955,
+   "pred_px": 2457
+  },
+  "X2": {
+   "pass": false,
+   "F1": 0.3175300647548566,
+   "true_px": 14414,
+   "pred_px": 2882
+  },
+  "by_pool": {
+   "north_dakota": [
+    1.0,
+    0,
+    0
+   ],
+   "north_carolina": [
+    0.46685082872928174,
+    6955,
+    2457
+   ],
+   "minnesota": [
+    0.0,
+    6063,
+    0
+   ],
+   "georgia": [
+    0.48891658506187124,
+    8351,
+    2882
+   ]
+  }
+ },
+ "K": {
+  "pass": true,
+  "mean_excess": -0.0004523130271582147,
+  "seconds": 27
+ },
+ "handful": [
+  400143,
+  400589,
+  400786,
+  401123,
+  401220,
+  401373,
+  401937,
+  402411,
+  403526,
+  404556
+ ],
+ "training_farms": 58,
+ "handful_pixels": 1076,
+ "training_pixels_per_class": {
+  "corn": 20000,
+  "soybeans": 20000,
+  "spring_wheat": 20000,
+  "sunflower": 1697,
+  "canola": 4715,
+  "cotton": 20000,
+  "other_crop": 20000,
+  "hay": 20000,
+  "grassland": 20000,
+  "fallow": 20000,
+  "forest": 20000,
+  "developed": 20000,
+  "water": 20000,
+  "wetland": 20000,
+  "solar_farm": 1076,
+  "other": 20000
+ },
+ "minutes": 1.4,
+ "maps_MB": 2.8
+}

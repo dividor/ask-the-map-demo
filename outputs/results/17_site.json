@@ -1,0 +1,99 @@
+{
+ "questions": [
+  {
+   "question": "wetlands next to crop fields",
+   "area": "north_dakota",
+   "places": 1287,
+   "top official class": "wetland 26%",
+   "plan": "Wetland, within 30 m of cropland.",
+   "empty reason": ""
+  },
+  {
+   "question": "corn fields where July 2021 had at least 5 days above 35 C",
+   "area": "north_dakota",
+   "places": 21364,
+   "top official class": "corn 86%",
+   "plan": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER).",
+   "empty reason": ""
+  },
+  {
+   "question": "corn fields where July 2021 had at least 5 days above 35 C",
+   "area": "north_carolina",
+   "places": 0,
+   "top official class": "",
+   "plan": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER).",
+   "empty reason": "No NASA POWER cell in this area meets \"July 2021 had at least 5 days with daily high temperature above 35 \u00b0C\": the closest cell had 2 against a threshold of 5 (days)."
+  },
+  {
+   "question": "grassland near an existing solar farm",
+   "area": "north_carolina",
+   "places": 2047,
+   "top official class": "grassland 46%",
+   "plan": "Grassland, within 100 m of solar farm.",
+   "empty reason": ""
+  },
+  {
+   "question": "cropland where spring 2022 was one of the wettest 10% since 2001",
+   "area": "north_dakota",
+   "places": 52545,
+   "top official class": "soybeans 47%",
+   "plan": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER).",
+   "empty reason": ""
+  },
+  {
+   "question": "hay fields within 200 m of a wetland",
+   "area": "minnesota",
+   "places": 10756,
+   "top official class": "grassland 70%",
+   "plan": "Hay, within 200 m of wetland.",
+   "empty reason": ""
+  },
+  {
+   "question": "soybean fields more than 300 m from any wetland or open water",
+   "area": "minnesota",
+   "places": 11449,
+   "top official class": "soybeans 85%",
+   "plan": "Soybeans, more than 300 m from any wetland or water.",
+   "empty reason": ""
+  },
+  {
+   "question": "forest within 500 m of a solar farm",
+   "area": "georgia",
+   "places": 19304,
+   "top official class": "forest 53%",
+   "plan": "Forest, within 500 m of solar farm.",
+   "empty reason": ""
+  },
+  {
+   "question": "grassland where summer 2022 rainfall was in the driest 10% of summers since 2001",
+   "area": "north_dakota",
+   "places": 22856,
+   "top official class": "grassland 77%",
+   "plan": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER).",
+   "empty reason": ""
+  },
+  {
+   "question": "wetlands within 100 m of developed land",
+   "area": "north_carolina",
+   "places": 25951,
+   "top official class": "forest 38%",
+   "plan": "Wetland, within 100 m of developed.",
+   "empty reason": ""
+  }
+ ],
+ "files": [
+  "site/data/q01.json",
+  "site/data/q02.json",
+  "site/data/q03.json",
+  "site/data/q04.json",
+  "site/data/q05.json",
+  "site/data/q06.json",
+  "site/data/q07.json",
+  "site/data/q08.json",
+  "site/data/q09.json",
+  "site/data/q10.json",
+  "site/data/meta.json",
+  "site/index.html"
+ ],
+ "MB": 0.7
+}

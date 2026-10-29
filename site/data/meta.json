@@ -1,0 +1,184 @@
+{
+ "areas": {
+  "north_dakota": {
+   "label": "North Dakota study area",
+   "tiles": [
+    {
+     "name": "Kidder",
+     "bounds": [
+      -99.93630454368912,
+      46.855824320368924,
+      -99.66436684803458,
+      47.04370310717989
+     ]
+    },
+    {
+     "name": "Foster",
+     "bounds": [
+      -99.03606747904666,
+      47.35665963146258,
+      -98.7644519308618,
+      47.5431986564047
+     ]
+    },
+    {
+     "name": "Eddy",
+     "bounds": [
+      -99.03696185695298,
+      47.6563289727743,
+      -98.76409296874478,
+      47.84306605578736
+     ]
+    }
+   ]
+  },
+  "north_carolina": {
+   "label": "North Carolina study area",
+   "tiles": [
+    {
+     "name": "NC4",
+     "bounds": [
+      -78.13025566610177,
+      35.345154707299265,
+      -77.87000249968051,
+      35.55438256235204
+     ]
+    },
+    {
+     "name": "NC5",
+     "bounds": [
+      -78.27059371307278,
+      35.72545056963691,
+      -78.00930017620165,
+      35.93440333139301
+     ]
+    },
+    {
+     "name": "NC6",
+     "bounds": [
+      -77.21253023988207,
+      36.29464362717328,
+      -76.94728021789408,
+      36.50508533233878
+     ]
+    }
+   ]
+  },
+  "minnesota": {
+   "label": "Minnesota study area",
+   "tiles": [
+    {
+     "name": "MN1",
+     "bounds": [
+      -92.93246510299643,
+      45.446822719694104,
+      -92.66781403047435,
+      45.63284104469291
+     ]
+    },
+    {
+     "name": "MN2",
+     "bounds": [
+      -94.21082165129391,
+      45.46791058550338,
+      -93.9494488115412,
+      45.65157936325891
+     ]
+    },
+    {
+     "name": "MN3",
+     "bounds": [
+      -92.74029516576525,
+      44.187030837322794,
+      -92.48006581024633,
+      44.372854341982645
+     ]
+    }
+   ]
+  },
+  "georgia": {
+   "label": "Georgia study area",
+   "tiles": [
+    {
+     "name": "GA1",
+     "bounds": [
+      -83.38812320489242,
+      30.798776165350084,
+      -83.15207025247383,
+      31.0011690717484
+     ]
+    },
+    {
+     "name": "GA2",
+     "bounds": [
+      -84.40961563918951,
+      32.53970513530312,
+      -84.17039162857063,
+      32.73979358065155
+     ]
+    },
+    {
+     "name": "GA3",
+     "bounds": [
+      -81.8617118662658,
+      32.23774650934598,
+      -81.61848778426821,
+      32.44204905937207
+     ]
+    }
+   ]
+  }
+ },
+ "answers": [
+  {
+   "question": "wetlands next to crop fields",
+   "area": "north_dakota",
+   "file": "q01.json"
+  },
+  {
+   "question": "corn fields where July 2021 had at least 5 days above 35 C",
+   "area": "north_dakota",
+   "file": "q02.json"
+  },
+  {
+   "question": "corn fields where July 2021 had at least 5 days above 35 C",
+   "area": "north_carolina",
+   "file": "q03.json"
+  },
+  {
+   "question": "grassland near an existing solar farm",
+   "area": "north_carolina",
+   "file": "q04.json"
+  },
+  {
+   "question": "cropland where spring 2022 was one of the wettest 10% since 2001",
+   "area": "north_dakota",
+   "file": "q05.json"
+  },
+  {
+   "question": "hay fields within 200 m of a wetland",
+   "area": "minnesota",
+   "file": "q06.json"
+  },
+  {
+   "question": "soybean fields more than 300 m from any wetland or open water",
+   "area": "minnesota",
+   "file": "q07.json"
+  },
+  {
+   "question": "forest within 500 m of a solar farm",
+   "area": "georgia",
+   "file": "q08.json"
+  },
+  {
+   "question": "grassland where summer 2022 rainfall was in the driest 10% of summers since 2001",
+   "area": "north_dakota",
+   "file": "q09.json"
+  },
+  {
+   "question": "wetlands within 100 m of developed land",
+   "area": "north_carolina",
+   "file": "q10.json"
+  }
+ ]
+}

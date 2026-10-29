@@ -1,0 +1,50 @@
+{
+ "questions": [
+  {
+   "question": "wetlands next to crop fields",
+   "area": "north_dakota",
+   "seconds": 1.48,
+   "plan_words": "Wetland, within 100 m of cropland.",
+   "predicted": 7636,
+   "true": 3148,
+   "both": 2126,
+   "precision": 0.2784180199057098,
+   "recall": 0.6753494282083863,
+   "f1": 0.3942878338278932,
+   "D2a": false,
+   "D2b": true
+  },
+  {
+   "question": "corn fields where July 2021 had at least 5 days above 35 C",
+   "area": "north_dakota",
+   "seconds": 1.73,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER).",
+   "predicted": 21364,
+   "true": 18959,
+   "both": 18282,
+   "precision": 0.8557386257255196,
+   "recall": 0.9642913655783533,
+   "f1": 0.906777769511197,
+   "D2a": true,
+   "D2b": true
+  },
+  {
+   "question": "grassland near an existing solar farm",
+   "area": "north_carolina",
+   "seconds": 0.97,
+   "plan_words": "Grassland, within 100 m of solar farm.",
+   "predicted": 2047,
+   "true": 192,
+   "both": 141,
+   "precision": 0.06888128969223253,
+   "recall": 0.734375,
+   "f1": 0.12594908441268424,
+   "D2a": false,
+   "D2b": true
+  }
+ ],
+ "D2a": false,
+ "D2b": true,
+ "empty_case_message": true,
+ "minutes": 0.3
+}

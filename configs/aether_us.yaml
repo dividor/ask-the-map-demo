@@ -1,0 +1,125 @@
+# A3 stages 2-4: AETHER's recipe on US farm country with NASA POWER and OpenStreetMap (PLAN.md amendment A3.2).
+# Fixed before any stage 2 data or result.
+
+osm:
+  url: https://overpass-api.de/api/interpreter
+  user_agent: "ask-the-map/0.1 (research feasibility study)"   # the server rejects the default one (HTTP 406)
+  keys: [landuse, natural, leisure, wetland, water, man_made, power]
+  timeout_s: 180
+  retries: 3
+  wait_s: 30
+  pause_s: 5                  # between tiles, to be polite to the public server
+  min_train_px: 1000          # a tag is used only if it covers >= 1,000 pixels (90 ha) of the training tiles
+  join: ["mapped in OpenStreetMap as", "tagged as", "where the map shows"]
+  vocab:
+    osm_farmland: {match: [{landuse: [farmland]}], words: ["farmland", "farm fields", "agricultural land"]}
+    osm_meadow: {match: [{landuse: [meadow]}], words: ["meadow", "hay meadow", "meadowland"]}
+    osm_grass: {match: [{landuse: [grass]}, {natural: [grassland]}], words: ["grass", "grassy land", "open grass"]}
+    osm_forest: {match: [{landuse: [forest]}, {natural: [wood]}], words: ["woods", "a forest", "woodland"]}
+    osm_scrub: {match: [{natural: [scrub, heath]}], words: ["scrub", "shrubland", "brush"]}
+    osm_residential: {match: [{landuse: [residential]}], words: ["housing", "a residential area", "homes"]}
+    osm_industrial: {match: [{landuse: [industrial]}, {man_made: [works]}],
+                     words: ["industry", "an industrial area", "factories"]}
+    osm_commercial: {match: [{landuse: [commercial, retail]}], words: ["shops and offices", "a commercial area",
+                                                                      "retail land"]}
+    osm_quarry: {match: [{landuse: [quarry]}], words: ["a quarry", "a gravel pit or quarry", "a mine or quarry"]}
+    osm_cemetery: {match: [{landuse: [cemetery]}], words: ["a cemetery", "a graveyard", "burial ground"]}
+    osm_orchard: {match: [{landuse: [orchard, vineyard]}], words: ["an orchard", "orchards or vineyards",
+                                                                   "fruit trees"]}
+    osm_farmyard: {match: [{landuse: [farmyard]}], words: ["a farmyard", "farm buildings", "a farmstead"]}
+    osm_construction: {match: [{landuse: [construction, brownfield, greenfield]}],
+                       words: ["a construction site", "land being built on", "a building site"]}
+    osm_landfill: {match: [{landuse: [landfill]}], words: ["a landfill", "a dump", "a waste site"]}
+    osm_recreation: {match: [{landuse: [recreation_ground]}, {leisure: [park, pitch, playground, sports_centre]}],
+                     words: ["a park or sports ground", "a park", "recreation grounds"]}
+    osm_golf: {match: [{leisure: [golf_course]}], words: ["a golf course", "golf links", "a golf club"]}
+    osm_reserve: {match: [{leisure: [nature_reserve]}], words: ["a nature reserve", "protected land",
+                                                                "a wildlife area"]}
+    osm_wetland: {match: [{natural: [wetland]}], words: ["a wetland", "wet ground", "a mapped wetland"]}
+    osm_marsh: {match: [{wetland: [marsh, reedbed, wet_meadow, fen]}], words: ["a marsh", "marshland",
+                                                                               "a reedy marsh"]}
+    osm_swamp: {match: [{wetland: [swamp, bog]}], words: ["a swamp", "swampland", "a wooded swamp"]}
+    osm_water: {match: [{natural: [water]}, {landuse: [reservoir, basin]}], words: ["water", "a body of water",
+                                                                                    "open water"]}
+    osm_pond: {match: [{water: [pond, basin, lagoon, wastewater]}], words: ["a pond", "ponds", "a small pond"]}
+    osm_lake: {match: [{water: [lake, reservoir, oxbow]}], words: ["a lake", "a lake or reservoir",
+                                                                   "a reservoir"]}
+    osm_river: {match: [{water: [river, canal, stream_pool]}], words: ["a river", "a river channel",
+                                                                       "a canal or river"]}
+    osm_wastewater: {match: [{man_made: [wastewater_plant]}], words: ["a wastewater plant", "a sewage works",
+                                                                      "a treatment plant"]}
+    osm_solar: {match: [{power: [plant, generator], "plant:source": [solar]},
+                        {power: [plant, generator], "generator:source": [solar]}],
+                words: ["a solar power plant", "solar panels", "a solar array"]}
+    osm_substation: {match: [{power: [substation]}], words: ["an electrical substation", "a substation",
+                                                             "a power substation"]}
+    osm_military: {match: [{landuse: [military]}], words: ["military land", "a military base", "an army site"]}
+    osm_railway: {match: [{landuse: [railway]}], words: ["railway land", "a rail yard", "railway sidings"]}
+    osm_religious: {match: [{landuse: [religious]}], words: ["church grounds", "a place of worship",
+                                                             "religious grounds"]}
+
+captions:
+  per_location: 6
+  climate_only_per_cell: 30
+  osm_prob: 0.35              # chance that a location with any OSM tag gets an OSM fact in a caption
+  osm_only_prob: 0.4          # of those, share that are OSM-only captions ("a golf course"); the rest add a clause
+  seed: 0
+
+geo_input: [alphaearth, power_summary]   # AlphaEarth 64 values + A2's standardised POWER summary vector (907)
+
+model:                        # AETHER's best SatBird settings (experiment satbird_alignment/aef_s01)
+  layers: 3
+  hidden: 512
+  temperature: 0.07           # learnable, capped at 100
+  sigma: 0.1
+  lr: 0.001
+  weight_decay: 0.0
+  batch: 512
+  max_epochs: 60
+  plateau_patience: 10        # ReduceLROnPlateau on the validation loss, factor 0.1 (reconstruction, A3.1)
+  plateau_factor: 0.1
+  early_stop_patience: 15     # on the validation index, as their experiment
+  val_share: 0.1              # training locations held back for validation (random, seed 0)
+  seed: 0
+
+text_encoders:
+  clip: openai/clip-vit-large-patch14      # their frozen text encoder (text features, 768)
+  modern: Qwen/Qwen3-Embedding-0.6B        # C1 challenger (1024), no instruction prompt for captions or questions
+
+concepts:
+  near_distances_m: [100, 300]
+  near_classes: [wetland, water, solar_farm, forest, developed, cropland]
+  climate_year: 2022          # year-specific climate concepts: every fact for this year
+  min_positive_px: 50
+  max_positive_share: 0.95
+  bootstrap: 1000
+  seed: 0
+
+demo:
+  stride: 3                   # 90 m display grid (every 3rd pixel of the 30 m tiles)
+  areas: [north_dakota, north_carolina, minnesota, georgia]
+  examples:
+    - "wetlands next to crop fields"
+    - "corn fields where July 2021 had at least 5 days above 35 C"
+    - "grassland near an existing solar farm"
+  # clickable examples on the demo page (question + study area): the five of A4's ten that at least one method
+  # answers well (Check E in PLAN.md; notebooks 22 and 24 scored all ten), then the six North Carolina ones
+  # chosen in Check E2
+  page_examples:
+    - {question: "corn fields where July 2021 had at least 5 days above 35 C", area: north_dakota}
+    - {question: "cropland where spring 2022 was one of the wettest 10% since 2001", area: north_dakota}
+    - {question: "grassland where summer 2022 rainfall was in the driest 10% of summers since 2001", area: north_dakota}
+    - {question: "soybean fields more than 300 m from any wetland or open water", area: minnesota}
+    - {question: "forest within 500 m of a solar farm", area: georgia}
+    - {question: "Which corn fields had a heatwave during pollination in July 2022?", area: north_carolina}
+    - {question: "cropland where root-zone soil moisture in July 2010 was in the driest 10% since 2001",
+       area: north_carolina}
+    - {question: "cropland where spring 2017 was one of the wettest 10% since 2001", area: north_carolina}
+    - {question: "wetlands more than 500 m from any cropland", area: north_carolina}
+    - {question: "developed land in the half of the study area with the most cooling degree days in summer 2022",
+       area: north_carolina}
+    - {question: "cotton fields", area: north_carolina}
+  # land maps for every class: one_vs_rest (notebook 12), multinomial (A5, notebook 20) or context_more (A7,
+  # notebook 23; chosen by Matt after A7, a post hoc decision: see PLAN.md)
+  land_method: context_more
+  port: 8765

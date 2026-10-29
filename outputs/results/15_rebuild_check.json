@@ -1,0 +1,76 @@
+{
+ "downloads": {
+  "uspvdb_same_sha256": true,
+  "states_same_sha256": true,
+  "nwi_bytes": 1503003179,
+  "nwi_same_sha256_as_september": false
+ },
+ "nwi_rasters": [
+  {
+   "tile": "Stutsman",
+   "seconds": 7.9,
+   "identical": true
+  },
+  {
+   "tile": "Barnes",
+   "seconds": 7.2,
+   "identical": true
+  },
+  {
+   "tile": "Wells",
+   "seconds": 7.1,
+   "identical": true
+  },
+  {
+   "tile": "Kidder",
+   "seconds": 7.4,
+   "identical": true
+  },
+  {
+   "tile": "Foster",
+   "seconds": 6.8,
+   "identical": true
+  },
+  {
+   "tile": "Eddy",
+   "seconds": 7.0,
+   "identical": true
+  }
+ ],
+ "power": [
+  {
+   "box": "plains",
+   "seconds": 49,
+   "same_grid": true,
+   "variables_identical": {
+    "T2M": true,
+    "T2M_MAX": true,
+    "T2M_MIN": true,
+    "PRECTOTCORR": true,
+    "GWETROOT": true,
+    "WS50M": true,
+    "RH2M": true,
+    "ALLSKY_SFC_SW_DWN": true
+   }
+  },
+  {
+   "box": "southeast",
+   "seconds": 38,
+   "same_grid": true,
+   "variables_identical": {
+    "T2M": true,
+    "T2M_MAX": true,
+    "T2M_MIN": true,
+    "PRECTOTCORR": true,
+    "GWETROOT": true,
+    "WS50M": true,
+    "RH2M": true,
+    "ALLSKY_SFC_SW_DWN": true
+   }
+  }
+ ],
+ "nwi_identical": true,
+ "power_identical": true,
+ "minutes": 4.7,
+ "fresh_folder_MB": 1778
+}

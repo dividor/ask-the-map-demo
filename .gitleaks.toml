@@ -1,0 +1,14 @@
+title = "Gitleaks config for Ask the Map"
+
+[extend]
+useDefault = true
+
+[allowlist]
+  description = "Known false positives"
+  regexTarget = "line"
+  regexes = [
+    # detect-secrets' baseline stores SHA-1 hashes of the strings it audited, not the strings
+    '''"hashed_secret": "[0-9a-f]{40}"''',
+    # SHA-1 commit hashes of the pinned Hugging Face models are not secrets
+    '''PINNED_REVISIONS|"openai/clip-vit-large-patch14": "[0-9a-f]{40}"|"Qwen/Qwen3-Embedding-0.6B": "[0-9a-f]{40}"''',
+  ]

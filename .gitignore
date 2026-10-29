@@ -167,7 +167,7 @@ venv.bak/
 .ropeproject
 
 # mkdocs/Zensical documentation
-/site
+# /site is this project's static demo page, so it is tracked
 
 # mypy
 .mypy_cache/
@@ -218,3 +218,12 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# ask-the-map: local data, model caches and partial downloads live outside the repository
+*.part
+*.part.npz
+.DS_Store
+# PLAN.md is a private working log
+PLAN.md
+# demo screenshots and GIF frames taken while checking the page (not part of the record)
+outputs/figures/demo_frames/

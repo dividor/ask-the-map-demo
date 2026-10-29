@@ -1,0 +1,78 @@
+{
+ "tiles": [
+  {
+   "area": "north_dakota",
+   "tile": "Stutsman",
+   "seconds": 29.7,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_dakota",
+   "tile": "Barnes",
+   "seconds": 33.9,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_dakota",
+   "tile": "Wells",
+   "seconds": 42.4,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_dakota",
+   "tile": "Kidder",
+   "seconds": 37.8,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_dakota",
+   "tile": "Foster",
+   "seconds": 58.9,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_dakota",
+   "tile": "Eddy",
+   "seconds": 30.3,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "nwi_identical": true
+  },
+  {
+   "area": "north_carolina",
+   "tile": "NC4",
+   "seconds": 28.1,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "solar_identical": true
+  },
+  {
+   "area": "minnesota",
+   "tile": "MN1",
+   "seconds": 26.8,
+   "same_keys": true,
+   "ae_identical": true,
+   "cdl_identical": true,
+   "solar_identical": true
+  }
+ ],
+ "tiles_identical": true,
+ "minutes": 4.9
+}

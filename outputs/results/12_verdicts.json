@@ -1,0 +1,23 @@
+{
+ "encoder": "clip",
+ "C2": {
+  "n": 23,
+  "median_diff_AP_numbers_minus_aligned": 0.19289491139161885,
+  "lo": 0.06578282447523243,
+  "hi": 0.4181249119704611,
+  "median_AP_aligned": 0.28968077499151984,
+  "median_AP_numbers": 0.7374035610549866,
+  "numbers_win": true
+ },
+ "C3": {
+  "n": 40,
+  "median_diff_F1_classifier_minus_aligned": 0.1732440646855577,
+  "lo": 0.07765592641640395,
+  "hi": 0.252867524735137,
+  "median_F1_aligned": 0.26015978990881916,
+  "median_F1_classifier": 0.5619548616534145,
+  "median_F1_A2_alphaearth_maps": 0.48891658506187124,
+  "answer_key_F1": 1.0,
+  "winner": "classifier per tag"
+ }
+}

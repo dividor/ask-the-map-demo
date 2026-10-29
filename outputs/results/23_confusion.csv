@@ -1,0 +1,13 @@
+method,official,cells,mapped_as
+A5,grassland,51760,"grassland 73%, forest 11%, developed 8%, wetland 3%"
+A5,solar_farm,1591,"grassland 44%, solar_farm 30%, forest 16%, developed 7%"
+A5,forest,91132,"forest 73%, wetland 14%, grassland 9%, developed 3%"
+N,grassland,51760,"grassland 76%, forest 9%, developed 7%, wetland 2%"
+N,solar_farm,1591,"solar_farm 47%, grassland 38%, forest 10%, developed 3%"
+N,forest,91132,"forest 70%, wetland 14%, grassland 9%, other 3%"
+M,grassland,51760,"grassland 72%, forest 10%, developed 8%, wetland 4%"
+M,solar_farm,1591,"grassland 49%, solar_farm 34%, developed 12%, other_crop 2%"
+M,forest,91132,"forest 77%, wetland 12%, grassland 7%, developed 4%"
+NM,grassland,51760,"grassland 77%, forest 8%, developed 8%, wetland 2%"
+NM,solar_farm,1591,"grassland 49%, solar_farm 41%, developed 5%, fallow 2%"
+NM,forest,91132,"forest 77%, wetland 10%, grassland 8%, developed 4%"

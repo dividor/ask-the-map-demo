@@ -1,0 +1,427 @@
+# Questions and hand-written reference plans, fixed before any results (see PLAN.md).
+# Truth for each question = its reference plan run on the official layers (CDL 2024, NWI, USPVDB) + NASA POWER.
+
+sources:
+  power_summit_2025: "NASA POWER 2025 Global Community Summit report (users' talks and requests): https://power.larc.nasa.gov/global-community-summit/reports/power-2025-global-community-summit-summary-report.pdf"
+  nse_2026: "New Space Economy, Oct 2026, summary of a NASA POWER presentation (utilities, solar monitoring, rooftop solar, building design): https://newspaceeconomy.ca/2026/10/11/how-does-nasa-power-support-energy-and-building-decisions/"
+  power_poster_2026: "NASA POWER poster, May 2026 (energy, infrastructure, agriculture uses): https://ntrs.nasa.gov/citations/20260004310"
+  gao_21_241: "GAO-21-241 on USDA wetland conservation compliance (Swampbuster spot checks; risk-based selection recommended): https://www.gao.gov/products/gao-21-241"
+  fsa_lfp: "USDA FSA Livestock Forage Disaster Program (drought on grazing land); this repo's LFP work. Program page not re-checked: https://www.fsa.usda.gov/resources/programs/livestock-forage-disaster-program-lfp"
+  rma_pp: "USDA RMA prevented planting (planting prevented by excess wet weather); this repo's 1-in-4 work. Page not re-checked: https://www.rma.usda.gov/topics/prevented-planting"
+  rma_col: "USDA RMA Cause of Loss data (drought, heat, excess moisture), used in this repo's phase 0: https://www.rma.usda.gov/tools-reports/summary-business/cause-loss"
+
+personas:
+  nrcs: "NRCS wetland compliance staff (Swampbuster)"
+  fsa_pp: "FSA / RMA staff checking prevented-planting claims"
+  fsa_lfp: "FSA staff checking drought on grazing land (LFP)"
+  rma: "RMA crop-insurance analyst comparing losses with weather"
+  power_ag: "NASA POWER agroclimatology user (crop modelling, risk zoning)"
+  power_energy: "NASA POWER energy user (solar siting, utility planning)"
+  power_build: "NASA POWER buildings user (heating and cooling design)"
+
+queries:
+  # ---------------- North Dakota ----------------
+  - id: nd01
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show cropland within 100 m of a wetland."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}], climate: [], output: map}
+  - id: nd02
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show cropland within 30 m of a wetland."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 30, negate: false}], climate: [], output: map}
+  - id: nd03
+    persona: nrcs
+    source: gao_21_241
+    question: "How much cropland in the North Dakota study area is within 100 m of a wetland?"
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}], climate: [], output: area}
+  - id: nd04
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show cropland that is more than 300 m from any wetland or open water."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland, water], distance_m: 300, negate: true}], climate: [], output: map}
+  - id: nd05
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show wetlands within 100 m of cropland."
+    plan: {area: north_dakota, land: {classes: [wetland], min_patch_ha: null},
+           near: [{classes: [cropland], distance_m: 100, negate: false}], climate: [], output: map}
+  - id: nd06
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show corn or soybean fields within 100 m of a wetland, in places where April-June 2022 rainfall was among the wettest 20% of springs from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [corn, soybeans], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 20, history: [2001, 2025]}}], output: map}
+  - id: nd07
+    persona: fsa_pp
+    source: rma_pp
+    question: "In the North Dakota study area, show cropland where April-June 2022 rainfall was in the wettest 10% of springs from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd08
+    persona: fsa_pp
+    source: rma_pp
+    question: "In the North Dakota study area, show cropland where root-zone soil wetness in April-May 2022 was in the wettest 10% for those months, 2001-2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: GWETROOT, years: [2022, 2022], months: [4, 5], stat: mean, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd09
+    persona: fsa_pp
+    source: rma_pp
+    question: "How much cropland in the North Dakota study area got at least 250 mm of rain in April-June 2022?"
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: absolute, op: ">=", value: 250}}], output: area}
+  - id: nd10
+    persona: fsa_pp
+    source: rma_pp
+    question: "In the North Dakota study area, show fallow or idle cropland in places where April-June 2022 rainfall was in the wettest 10% of springs from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [fallow], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd11
+    persona: fsa_pp
+    source: rma_pp
+    question: "In the North Dakota study area, show cropland within 100 m of a wetland where April-June 2022 rainfall was in the wettest 10% of springs from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd12
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "In the North Dakota study area, show grassland and pasture where root-zone soil wetness over the 2021 grazing season (May-September) was in the driest 10% of 2001-2025."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null}, near: [],
+           climate: [{variable: GWETROOT, years: [2021, 2021], months: [5, 6, 7, 8, 9], stat: mean, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd13
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "How much grassland and pasture in the North Dakota study area had July-August 2021 rainfall in the driest 10% since 2001 (through 2025)?"
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2021, 2021], months: [7, 8], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: area}
+  - id: nd14
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "In the North Dakota study area, show grassland, pasture and hay land where June-August 2021 rainfall was 150 mm or less."
+    plan: {area: north_dakota, land: {classes: [grassland, hay], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2021, 2021], months: [6, 7, 8], stat: total, day_threshold: null,
+                      test: {kind: absolute, op: "<=", value: 150}}], output: map}
+  - id: nd15
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "In the North Dakota study area, show grassland and pasture where June-August 2021 had at least 15 days with a daily maximum above 32 C."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M_MAX, years: [2021, 2021], months: [6, 7, 8], stat: days_above, day_threshold: 32,
+                      test: {kind: absolute, op: ">=", value: 15}}], output: map}
+  - id: nd16
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "In the North Dakota study area, show grassland and pasture in the driest third of the study area, by average May-September root-zone soil wetness over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null}, near: [],
+           climate: [{variable: GWETROOT, years: [2001, 2025], months: [5, 6, 7, 8, 9], stat: mean, day_threshold: null,
+                      test: {kind: area_rank, side: low, pct: 33.3}}], output: map}
+  - id: nd17
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show corn fields where July 2021 had at least 5 days with a daily maximum above 35 C."
+    plan: {area: north_dakota, land: {classes: [corn], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M_MAX, years: [2021, 2021], months: [7], stat: days_above, day_threshold: 35,
+                      test: {kind: absolute, op: ">=", value: 5}}], output: map}
+  - id: nd18
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show soybean fields where August 2023 rainfall was in the driest 20% of Augusts from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [soybeans], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2023, 2023], months: [8], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 20, history: [2001, 2025]}}], output: map}
+  - id: nd19
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show spring wheat where June-July 2021 rainfall was in the driest 10% since 2001 (through 2025)."
+    plan: {area: north_dakota, land: {classes: [spring_wheat], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2021, 2021], months: [6, 7], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd20
+    persona: rma
+    source: rma_col
+    question: "How much cropland in the North Dakota study area had a 2021 growing season (May-September mean temperature) among the hottest 10% of 2001-2025?"
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M, years: [2021, 2021], months: [5, 6, 7, 8, 9], stat: mean, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: area}
+  - id: nd21
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show sunflower fields that had fewer than 1,300 growing degree days (base 10 C) from May to September 2019."
+    plan: {area: north_dakota, land: {classes: [sunflower], min_patch_ha: null}, near: [],
+           climate: [{variable: GDD10, years: [2019, 2019], months: [5, 6, 7, 8, 9], stat: total, day_threshold: null,
+                      test: {kind: absolute, op: "<=", value: 1300}}], output: map}
+  - id: nd22
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show canola fields where July 2021 had at least 3 days with a daily maximum above 30 C."
+    plan: {area: north_dakota, land: {classes: [canola], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M_MAX, years: [2021, 2021], months: [7], stat: days_above, day_threshold: 30,
+                      test: {kind: absolute, op: ">=", value: 3}}], output: map}
+  - id: nd23
+    persona: power_ag
+    source: power_summit_2025
+    question: "In the North Dakota study area, show cropland in the warmest half of the study area, by mean May-September temperature over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M, years: [2001, 2025], months: [5, 6, 7, 8, 9], stat: mean, day_threshold: null,
+                      test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nd24
+    persona: power_ag
+    source: power_summit_2025
+    question: "In the North Dakota study area, show corn fields in the third of the study area with the most growing degree days (base 10 C, May-September, averaged over 2001-2025)."
+    plan: {area: north_dakota, land: {classes: [corn], min_patch_ha: null}, near: [],
+           climate: [{variable: GDD10, years: [2001, 2025], months: [5, 6, 7, 8, 9], stat: total, day_threshold: null,
+                      test: {kind: area_rank, side: high, pct: 33.3}}], output: map}
+  - id: nd25
+    persona: power_ag
+    source: power_summit_2025
+    question: "In the North Dakota study area, show cropland where May-September 2024 rainfall was in the wettest 20% of years from 2001 to 2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2024, 2024], months: [5, 6, 7, 8, 9], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 20, history: [2001, 2025]}}], output: map}
+  - id: nd26
+    persona: power_build
+    source: nse_2026
+    question: "In the North Dakota study area, show developed land in the colder half of the study area, by yearly heating degree days (base 18.3 C) averaged over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [developed], min_patch_ha: null}, near: [],
+           climate: [{variable: HDD18, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], stat: total,
+                      day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nd27
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Dakota study area, show patches of grassland and pasture of at least 20 ha that are within 1 km of developed land."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: 20},
+           near: [{classes: [developed], distance_m: 1000, negate: false}], climate: [], output: map}
+  - id: nd28
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Dakota study area, show patches of grassland and pasture of at least 40 ha, more than 500 m from any wetland, in the sunnier half of the study area by average yearly sunlight over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: 40},
+           near: [{classes: [wetland], distance_m: 500, negate: true}],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nd29
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Dakota study area, show grassland and pasture in the third of the study area with the fewest low-wind, low-sun days over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null}, near: [],
+           climate: [{variable: LOW_WIND_SUN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: total, day_threshold: null, test: {kind: area_rank, side: low, pct: 33.3}}], output: map}
+  - id: nd30
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show open water within 300 m of cropland."
+    plan: {area: north_dakota, land: {classes: [water], min_patch_ha: null},
+           near: [{classes: [cropland], distance_m: 300, negate: false}], climate: [], output: map}
+  - id: nd31
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show hay land within 200 m of a wetland."
+    plan: {area: north_dakota, land: {classes: [hay], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 200, negate: false}], climate: [], output: map}
+  - id: nd32
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Dakota study area, show wetlands that are more than 100 m from any cropland."
+    plan: {area: north_dakota, land: {classes: [wetland], min_patch_ha: null},
+           near: [{classes: [cropland], distance_m: 100, negate: true}], climate: [], output: map}
+
+  # ---------------- North Carolina ----------------
+  - id: nc01
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show existing solar farms."
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null}, near: [], climate: [], output: map}
+  - id: nc02
+    persona: power_energy
+    source: nse_2026
+    question: "How much land do solar farms cover in the North Carolina study area?"
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null}, near: [], climate: [], output: area}
+  - id: nc03
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show grassland and pasture within 2 km of an existing solar farm."
+    plan: {area: north_carolina, land: {classes: [grassland], min_patch_ha: null},
+           near: [{classes: [solar_farm], distance_m: 2000, negate: false}], climate: [], output: map}
+  - id: nc04
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show patches of grassland and pasture of at least 10 ha within 2 km of an existing solar farm, in the sunnier half of the study area by average yearly sunlight over 2001-2025."
+    plan: {area: north_carolina, land: {classes: [grassland], min_patch_ha: 10},
+           near: [{classes: [solar_farm], distance_m: 2000, negate: false}],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nc05
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show cropland within 1 km of an existing solar farm."
+    plan: {area: north_carolina, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [solar_farm], distance_m: 1000, negate: false}], climate: [], output: map}
+  - id: nc06
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show solar farms in the cloudier half of the study area, by average yearly sunlight over 2001-2025."
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null}, near: [],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: low, pct: 50}}], output: map}
+  - id: nc07
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show solar farms within 100 m of forest."
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null},
+           near: [{classes: [forest], distance_m: 100, negate: false}], climate: [], output: map}
+  - id: nc08
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show solar farms where average sunlight over 2001-2025 is at least 4.6 kWh per square metre per day."
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null}, near: [],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: absolute, op: ">=", value: 4.6}}], output: map}
+  - id: nc09
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show solar farms in the third of the study area with the most low-wind, low-sun days over 2001-2025."
+    plan: {area: north_carolina, land: {classes: [solar_farm], min_patch_ha: null}, near: [],
+           climate: [{variable: LOW_WIND_SUN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: total, day_threshold: null, test: {kind: area_rank, side: high, pct: 33.3}}], output: map}
+  - id: nc10
+    persona: power_build
+    source: nse_2026
+    question: "In the North Carolina study area, show developed land in the half of the study area with the most cooling degree days (base 18.3 C, yearly, averaged over 2001-2025)."
+    plan: {area: north_carolina, land: {classes: [developed], min_patch_ha: null}, near: [],
+           climate: [{variable: CDD18, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], stat: total,
+                      day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nc11
+    persona: power_build
+    source: nse_2026
+    question: "In the North Carolina study area, show developed land where June-August 2024 had more than 30 days with a daily maximum above 32 C."
+    plan: {area: north_carolina, land: {classes: [developed], min_patch_ha: null}, near: [],
+           climate: [{variable: T2M_MAX, years: [2024, 2024], months: [6, 7, 8], stat: days_above, day_threshold: 32,
+                      test: {kind: absolute, op: ">=", value: 31}}], output: map}
+  - id: nc12
+    persona: rma
+    source: rma_col
+    question: "In the North Carolina study area, show cotton fields where August 2023 rainfall was in the driest 20% of Augusts from 2001 to 2025."
+    plan: {area: north_carolina, land: {classes: [cotton], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2023, 2023], months: [8], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 20, history: [2001, 2025]}}], output: map}
+  - id: nc13
+    persona: rma
+    source: rma_col
+    question: "In the North Carolina study area, show corn fields where June-July 2022 rainfall was in the driest 10% of years from 2001 to 2025."
+    plan: {area: north_carolina, land: {classes: [corn], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [6, 7], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nc14
+    persona: rma
+    source: rma_col
+    question: "In the North Carolina study area, show soybean fields where September 2024 rainfall was in the wettest 10% of Septembers from 2001 to 2025."
+    plan: {area: north_carolina, land: {classes: [soybeans], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2024, 2024], months: [9], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nc15
+    persona: nrcs
+    source: gao_21_241
+    question: "In the North Carolina study area, show cropland within 100 m of a wetland."
+    plan: {area: north_carolina, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}], climate: [], output: map}
+  - id: nc16
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show forest within 1 km of an existing solar farm."
+    plan: {area: north_carolina, land: {classes: [forest], min_patch_ha: null},
+           near: [{classes: [solar_farm], distance_m: 1000, negate: false}], climate: [], output: map}
+  - id: nc17
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show grassland, pasture and hay land more than 1 km from any developed land, in the sunnier half of the study area by average yearly sunlight over 2001-2025."
+    plan: {area: north_carolina, land: {classes: [grassland, hay], min_patch_ha: null},
+           near: [{classes: [developed], distance_m: 1000, negate: true}],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nc18
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show wetlands within 500 m of an existing solar farm."
+    plan: {area: north_carolina, land: {classes: [wetland], min_patch_ha: null},
+           near: [{classes: [solar_farm], distance_m: 500, negate: false}], climate: [], output: map}
+
+  # ---- added 2026-10-28 with amendment A1 (before any results): more questions that combine conditions ----
+  - id: nd33
+    persona: fsa_pp
+    source: rma_pp
+    question: "In the North Dakota study area, show cropland within 100 m of a wetland where root-zone soil wetness in April-May 2022 was in the wettest 10% for those months, 2001-2025."
+    plan: {area: north_dakota, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}],
+           climate: [{variable: GWETROOT, years: [2022, 2022], months: [4, 5], stat: mean, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd34
+    persona: fsa_lfp
+    source: fsa_lfp
+    question: "In the North Dakota study area, show grassland and pasture more than 300 m from open water where June-August 2021 rainfall was in the driest 10% since 2001 (through 2025)."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: null},
+           near: [{classes: [water], distance_m: 300, negate: true}],
+           climate: [{variable: PRECTOTCORR, years: [2021, 2021], months: [6, 7, 8], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nd35
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show corn fields within 300 m of a wetland where July 2021 had at least 5 days with a daily maximum above 35 C."
+    plan: {area: north_dakota, land: {classes: [corn], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 300, negate: false}],
+           climate: [{variable: T2M_MAX, years: [2021, 2021], months: [7], stat: days_above, day_threshold: 35,
+                      test: {kind: absolute, op: ">=", value: 5}}], output: map}
+  - id: nd36
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Dakota study area, show patches of grassland and pasture of at least 20 ha in the sunnier half of the study area by average yearly sunlight over 2001-2025."
+    plan: {area: north_dakota, land: {classes: [grassland], min_patch_ha: 20}, near: [],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nd37
+    persona: rma
+    source: rma_col
+    question: "In the North Dakota study area, show soybean fields where April-June 2022 rainfall was in the wettest 10% of springs from 2001 to 2025 and the May-September 2021 mean temperature was among the hottest 10% of 2001-2025."
+    plan: {area: north_dakota, land: {classes: [soybeans], min_patch_ha: null}, near: [],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [4, 5, 6], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}},
+                     {variable: T2M, years: [2021, 2021], months: [5, 6, 7, 8, 9], stat: mean, day_threshold: null,
+                      test: {kind: history_rank, side: high, pct: 10, history: [2001, 2025]}}], output: map}
+  - id: nc19
+    persona: power_energy
+    source: nse_2026
+    question: "In the North Carolina study area, show cropland within 1 km of an existing solar farm in the sunnier half of the study area by average yearly sunlight over 2001-2025."
+    plan: {area: north_carolina, land: {classes: [cropland], min_patch_ha: null},
+           near: [{classes: [solar_farm], distance_m: 1000, negate: false}],
+           climate: [{variable: ALLSKY_SFC_SW_DWN, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                      stat: mean, day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nc20
+    persona: power_build
+    source: nse_2026
+    question: "In the North Carolina study area, show developed land within 500 m of forest in the half of the study area with the most cooling degree days (base 18.3 C, yearly, averaged over 2001-2025)."
+    plan: {area: north_carolina, land: {classes: [developed], min_patch_ha: null},
+           near: [{classes: [forest], distance_m: 500, negate: false}],
+           climate: [{variable: CDD18, years: [2001, 2025], months: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], stat: total,
+                      day_threshold: null, test: {kind: area_rank, side: high, pct: 50}}], output: map}
+  - id: nc21
+    persona: rma
+    source: rma_col
+    question: "In the North Carolina study area, show corn fields within 100 m of a wetland where June-July 2022 rainfall was in the driest 10% of years from 2001 to 2025."
+    plan: {area: north_carolina, land: {classes: [corn], min_patch_ha: null},
+           near: [{classes: [wetland], distance_m: 100, negate: false}],
+           climate: [{variable: PRECTOTCORR, years: [2022, 2022], months: [6, 7], stat: total, day_threshold: null,
+                      test: {kind: history_rank, side: low, pct: 10, history: [2001, 2025]}}], output: map}

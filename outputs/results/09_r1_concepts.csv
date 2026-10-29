@@ -1,0 +1,88 @@
+seed,name,group,val_av,index
+12345,bio_2_max,Bioclim,True,0.3156818449497223
+12345,bio_3_max,Bioclim,True,0.008058680221438408
+12345,bio_5_max,Bioclim,True,-0.06708724796772003
+12345,bio_6_max,Bioclim,True,-0.07756975293159485
+12345,bio_11_max,Bioclim,True,-0.2200137972831726
+12345,bio_12_max,Bioclim,True,-0.007648285944014788
+12345,bio_13_max,Bioclim,True,0.16518563032150269
+12345,bio_14_max,Bioclim,True,0.018513325601816177
+12345,bio_15_max,Bioclim,True,0.17367427051067352
+12345,bio_16_max,Bioclim,True,0.1497412472963333
+12345,bio_17_max,Bioclim,True,-0.0049268631264567375
+12345,bio_18_max,Bioclim,True,0.4375680983066559
+12345,bio_19_max,Bioclim,True,-0.0251445434987545
+12345,bdticm_max,Soil,False,-0.06503409892320633
+12345,cecsol_max,Soil,False,-0.03134215623140335
+12345,clyppt_max,Soil,True,0.11971281468868256
+12345,orcdrc_max,Soil,False,-0.05354965478181839
+12345,phihox_max,Soil,True,0.30975866317749023
+12345,sltppt_max,Soil,True,-0.15374206006526947
+12345,sndppt_max,Soil,True,-0.11734285950660706
+12345,dw_water_max,Dynamic World,True,0.6075232028961182
+12345,dw_trees_max,Dynamic World,True,0.3683732748031616
+12345,dw_grass_max,Dynamic World,True,0.613126277923584
+12345,dw_flooded_vegetation_max,Dynamic World,True,0.29993975162506104
+12345,dw_crops_max,Dynamic World,True,0.701932966709137
+12345,dw_shrub_and_scrub_max,Dynamic World,True,0.7175182700157166
+12345,dw_built_max,Dynamic World,True,0.8082123398780823
+12345,dw_bare_max,Dynamic World,True,0.6493581533432007
+12345,dw_snow_and_ice_max,Dynamic World,False,0.33618149161338806
+1,bio_2_max,Bioclim,True,0.35290417075157166
+1,bio_3_max,Bioclim,True,-0.000683156365994364
+1,bio_5_max,Bioclim,True,-0.040937282145023346
+1,bio_6_max,Bioclim,True,-0.09351012855768204
+1,bio_11_max,Bioclim,True,-0.23290352523326874
+1,bio_12_max,Bioclim,True,0.031211692839860916
+1,bio_13_max,Bioclim,True,0.23287327587604523
+1,bio_14_max,Bioclim,True,-0.024854689836502075
+1,bio_15_max,Bioclim,True,0.27174660563468933
+1,bio_16_max,Bioclim,True,0.14262840151786804
+1,bio_17_max,Bioclim,True,-0.017838129773736
+1,bio_18_max,Bioclim,True,0.6081991195678711
+1,bio_19_max,Bioclim,True,0.005940484814345837
+1,bdticm_max,Soil,False,0.0814642608165741
+1,cecsol_max,Soil,False,-0.02171843685209751
+1,clyppt_max,Soil,True,0.1212819516658783
+1,orcdrc_max,Soil,False,-0.05463021993637085
+1,phihox_max,Soil,True,0.25226181745529175
+1,sltppt_max,Soil,True,-0.1400883048772812
+1,sndppt_max,Soil,True,-0.11919891089200974
+1,dw_water_max,Dynamic World,True,0.7005224227905273
+1,dw_trees_max,Dynamic World,True,0.3323058485984802
+1,dw_grass_max,Dynamic World,True,0.5447707176208496
+1,dw_flooded_vegetation_max,Dynamic World,True,0.2976139783859253
+1,dw_crops_max,Dynamic World,True,0.701932966709137
+1,dw_shrub_and_scrub_max,Dynamic World,True,0.7256472110748291
+1,dw_built_max,Dynamic World,True,0.7754237055778503
+1,dw_bare_max,Dynamic World,True,0.6707054972648621
+1,dw_snow_and_ice_max,Dynamic World,False,0.34563761949539185
+2,bio_2_max,Bioclim,True,0.27616891264915466
+2,bio_3_max,Bioclim,True,0.0034306489396840334
+2,bio_5_max,Bioclim,True,-0.07214853167533875
+2,bio_6_max,Bioclim,True,-0.09606058895587921
+2,bio_11_max,Bioclim,True,-0.1932675838470459
+2,bio_12_max,Bioclim,True,-0.01126316748559475
+2,bio_13_max,Bioclim,True,0.1610073745250702
+2,bio_14_max,Bioclim,True,-0.02028963528573513
+2,bio_15_max,Bioclim,True,0.31062212586402893
+2,bio_16_max,Bioclim,True,0.11417701840400696
+2,bio_17_max,Bioclim,True,-0.013534373603761196
+2,bio_18_max,Bioclim,True,0.48110151290893555
+2,bio_19_max,Bioclim,True,-0.02911284565925598
+2,bdticm_max,Soil,False,0.14078260958194733
+2,cecsol_max,Soil,False,-0.029738204553723335
+2,clyppt_max,Soil,True,0.046747833490371704
+2,orcdrc_max,Soil,False,-0.05571078509092331
+2,phihox_max,Soil,True,0.5101603269577026
+2,sltppt_max,Soil,True,-0.1489230841398239
+2,sndppt_max,Soil,True,-0.11455878615379333
+2,dw_water_max,Dynamic World,True,0.6149094104766846
+2,dw_trees_max,Dynamic World,True,0.20413242280483246
+2,dw_grass_max,Dynamic World,True,0.6387596726417542
+2,dw_flooded_vegetation_max,Dynamic World,True,0.3332759737968445
+2,dw_crops_max,Dynamic World,True,0.7039791941642761
+2,dw_shrub_and_scrub_max,Dynamic World,True,0.72593754529953
+2,dw_built_max,Dynamic World,True,0.7920782566070557
+2,dw_bare_max,Dynamic World,True,0.6207435727119446
+2,dw_snow_and_ice_max,Dynamic World,False,0.35982176661491394

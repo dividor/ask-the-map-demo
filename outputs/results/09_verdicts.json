@@ -1,0 +1,60 @@
+{
+ "R1": {
+  "av_sub_per_seed": {
+   "1": 0.2439,
+   "2": 0.2335,
+   "12345": 0.2316
+  },
+  "av_sub_mean": 0.2363524313045976,
+  "av_sub_sem": 0.0038227364614799733,
+  "group_means_mean": {
+   "Bioclim": 0.0772,
+   "Dynamic World": 0.5895,
+   "Soil": 0.0472
+  },
+  "mean_of_group_means": 0.23797470211940938,
+  "test_only_concepts_mean": 0.07934701597938935,
+  "paper": 0.24,
+  "paper_groups": {
+   "Bioclim": 0.08,
+   "Dynamic World": 0.56,
+   "Soil": 0.03
+  },
+  "within_0_02": true,
+  "reading": "weak support that our set-up matches theirs"
+ },
+ "R1b": {
+  "pass": true,
+  "table": [
+   {
+    "seed": 12345,
+    "their_loss": 5.9048380851745605,
+    "our_loss": 5.9048380851745605,
+    "loss_rel_diff": 0.0,
+    "max_index_diff": 2.7460912987997688e-08,
+    "n_concepts": 29
+   },
+   {
+    "seed": 1,
+    "their_loss": 5.8969221115112305,
+    "our_loss": 5.8969221115112305,
+    "loss_rel_diff": 0.0,
+    "max_index_diff": 2.7460912987997688e-08,
+    "n_concepts": 29
+   },
+   {
+    "seed": 2,
+    "their_loss": 5.880202293395996,
+    "our_loss": 5.880202293395996,
+    "loss_rel_diff": 0.0,
+    "max_index_diff": 2.7954369374860732e-08,
+    "n_concepts": 29
+   }
+  ]
+ },
+ "text_check": {
+  "min_cosine": 0.9999997615814209,
+  "mean_cosine": 1.0,
+  "n": 29
+ }
+}

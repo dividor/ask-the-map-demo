@@ -1,0 +1,111 @@
+{
+ "request": {
+  "model": "openai/gpt-oss-120b:groq",
+  "messages": [
+   {
+    "role": "system",
+    "content": "You translate a user's question about land and climate into a plan in the query language below. Reply with the plan only: one JSON object that follows the language exactly, with no other text.\n\n# Query language\n\nA plan is one JSON object with exactly these keys:\n\n```\n{\n  \"area\": \"<study area name from the catalogue>\",\n  \"land\": {\"classes\": [\"<class>\", ...], \"min_patch_ha\": <number or null>},\n  \"near\": [ {\"classes\": [\"<class>\", ...], \"distance_m\": <number>, \"negate\": <true|false>}, ... ],\n  \"climate\": [ <condition>, ... ],\n  \"output\": \"map\" | \"area\"\n}\n```\n\nMeaning. The answer is the set of pixels (30 m) that satisfy every part (logical AND):\n\n- `land`: pixels of any of the listed classes (land as mapped for the catalogue's land year). If\n  `min_patch_ha` is a number, keep only connected patches of these classes at least that many hectares.\n- `near`: one entry per distance rule. `negate: false` keeps pixels within `distance_m` metres of any pixel of\n  the listed classes; `negate: true` keeps pixels that are NOT within that distance. Use `[]` if none.\n- `climate`: one entry per NASA POWER climate condition (see below). Use `[]` if none.\n- `output`: `\"map\"` to show the pixels; `\"area\"` when the question asks how much land (hectares).\n\nA climate condition:\n\n```\n{\n  \"variable\": \"<variable from the catalogue>\",\n  \"years\": [<first year>, <last year>],\n  \"months\": [<month numbers 1-12>],\n  \"stat\": \"mean\" | \"total\" | \"days_above\" | \"days_below\",\n  \"day_threshold\": <number, only for days_above / days_below, else null>,\n  \"test\": <test>\n}\n```\n\nFor each year in `years`, the stat is computed over that year's days in `months` (all within one calendar\nyear): `mean` of the daily values, `total` (sum) of the daily values, or the number of days whose daily value is\nstrictly above / below `day_threshold`. The condition's value is the average of these yearly values over\n`years`. It is computed for each NASA POWER grid cell (about 50 km) and applies to every pixel in that cell.\n\nThe test is one of:\n\n- `{\"kind\": \"absolute\", \"op\": \">=\" | \"<=\", \"value\": <number>}`: compare the value with a number (in the\n  variable's units, or days for `days_above`/`days_below`).\n- `{\"kind\": \"history_rank\", \"side\": \"high\" | \"low\", \"pct\": <0-100>, \"history\": [<first year>, <last year>]}`:\n  the cell's value is among the highest (`high`) or lowest (`low`) `pct` percent of that cell's own yearly\n  values for the same months over the `history` years. Use this for \"one of the wettest / driest / hottest\n  10% of springs since 2001\" and similar comparisons with a place's own past.\n- `{\"kind\": \"area_rank\", \"side\": \"high\" | \"low\", \"pct\": <0-100>}`: the cell's value is among the highest or\n  lowest `pct` percent of the study area's cells. Use this for \"the sunniest half of the study area\" and\n  similar comparisons between places.\n\nExamples.\n\n\"Show cropland within 100 m of a wetland in the North Dakota study area.\" ->\n`{\"area\": \"north_dakota\", \"land\": {\"classes\": [\"cropland\"], \"min_patch_ha\": null},\n  \"near\": [{\"classes\": [\"wetland\"], \"distance_m\": 100, \"negate\": false}], \"climate\": [], \"output\": \"map\"}`\n\n\"In the North Dakota study area, how much hay land had a June 2015 that was one of the 25% hottest Junes\n(mean daily temperature) since 2001?\" ->\n`{\"area\": \"north_dakota\", \"land\": {\"classes\": [\"hay\"], \"min_patch_ha\": null}, \"near\": [],\n  \"climate\": [{\"variable\": \"T2M\", \"years\": [2015, 2015], \"months\": [6], \"stat\": \"mean\", \"day_threshold\": null,\n  \"test\": {\"kind\": \"history_rank\", \"side\": \"high\", \"pct\": 25, \"history\": [2001, 2025]}}], \"output\": \"area\"}`\n\n\n# Catalogue\n\nLand is mapped for 2024. Climate data are daily, 2001-2025.\n\nStudy areas:\n- `north_dakota`: North Dakota study area (Prairie Pothole farm country)\n- `north_carolina`: North Carolina study area (eastern Piedmont and Coastal Plain, many solar farms)\n- `minnesota`: Minnesota study area (farm country with solar farms)\n- `georgia`: Georgia study area (Coastal Plain and Piedmont, solar farms)\n\nLand classes (the same in every area):\n- `corn`: corn (maize)\n- `soybeans`: soybeans\n- `spring_wheat`: spring wheat\n- `sunflower`: sunflower\n- `canola`: canola\n- `cotton`: cotton\n- `other_crop`: annual crops not listed separately\n- `hay`: hay land: alfalfa and other hay\n- `grassland`: grassland and pasture (grazing land)\n- `fallow`: fallow or idle cropland\n- `forest`: forest (deciduous, evergreen, mixed)\n- `developed`: developed land (buildings, roads, towns, open developed space)\n- `water`: open water\n- `wetland`: wetlands (marsh, wet meadow, wooded wetland)\n- `solar_farm`: existing utility-scale solar farms (built by the land year)\n- `cropland`: any annual crop (all crops below plus other annual crops)\n\nClimate variables (NASA POWER):\n- `T2M`: air temperature at 2 m, daily mean (C)\n- `T2M_MAX`: daily maximum air temperature at 2 m (C)\n- `T2M_MIN`: daily minimum air temperature at 2 m (C)\n- `PRECTOTCORR`: rainfall / precipitation (mm per day; use stat total for mm over a period)\n- `GWETROOT`: root-zone soil wetness (0 = dry to 1 = saturated)\n- `WS50M`: wind speed at 50 m (m/s)\n- `RH2M`: relative humidity at 2 m (%)\n- `ALLSKY_SFC_SW_DWN`: sunlight: all-sky solar radiation at the surface (kWh per m2 per day)\n- `GDD10`: growing degree days, base 10 C (degree-days per day; use stat total for a season's sum)\n- `HDD18`: heating degree days, base 18.3 C (degree-days per day; use stat total for a sum)\n- `CDD18`: cooling degree days, base 18.3 C (degree-days per day; use stat total for a sum)\n- `LOW_WIND_SUN`: 1 on a low-wind, low-sun day (50 m wind and sunlight both in the cell's lowest 10% of days), else 0 (use stat total to count such days)\n"
+   },
+   {
+    "role": "user",
+    "content": "In the North Dakota study area: fields where last winter had temp above 35C"
+   }
+  ],
+  "temperature": 0,
+  "max_tokens": 4000
+ },
+ "response": {
+  "id": "chatcmpl-1883085d-a013-43b0-8888-c2c29a42a26d",
+  "choices": [
+   {
+    "finish_reason": "stop",
+    "index": 0,
+    "logprobs": null,
+    "message": {
+     "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": { \"classes\": [\"cropland\"], \"min_patch_ha\": null },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M\",\n      \"years\": [2024, 2024],\n      \"months\": [1, 2],\n      \"stat\": \"mean\",\n      \"day_threshold\": null,\n      \"test\": { \"kind\": \"absolute\", \"op\": \">=\", \"value\": 35 }\n    }\n  ],\n  \"output\": \"map\"\n}",
+     "refusal": null,
+     "role": "assistant",
+     "annotations": null,
+     "audio": null,
+     "function_call": null,
+     "tool_calls": null,
+     "reasoning": "We need to translate the user's request into the query language.\n\nUser: \"In the North Dakota study area: fields where last winter had temp above 35C\"\n\nInterpretation: They want land fields (maybe any fields? \"fields\" could be cropland, hay, grassland? Probably any land class that is a field: maybe cropland, hay, grassland? But ambiguous. Could assume \"fields\" means any agricultural land (cropland, hay, grassland, maybe other_crop). Could also just use \"cropland\". But we need to decide.\n\nThe phrase \"last winter had temp above 35C\" - winter temperature above 35\u00b0C? That's extremely high. Probably they refer to mean temperature? Or maybe daily max? The variable T2M (mean) or T2M_MAX. \"temp above 35C\" could be mean temperature >35C. Use climate condition: variable T2M, years: last winter. \"last winter\" relative to now? The climate data up to 2025. Assuming current year maybe 2025? \"last winter\" could be the most recent winter season (Dec-Feb) of 2024-2025? Or maybe winter of previous year (2023-2024). Since we have years 2001-2025, we could pick the most recent full winter: 2024 (Dec 2023 - Feb 2024) or 2025 (Dec 2024 - Feb 2025). But we need a specific year range. Could interpret \"last winter\" as the winter of 2024 (i.e., Dec 2023, Jan 2024, Feb 2024). That would be year 2024 for months 12,1,2? However months across year boundary: The spec says months are within one calendar year. So we cannot span across years. So we need to pick a single year and months that represent winter. Could choose months 12 (December) of 2023 and months 1,2 of 2024, but not allowed. So maybe they intend winter as Jan-Feb of the most recent year (2024). So months 1,2 of 2024. Or maybe they consider winter as Dec-Feb but we can approximate with Jan and Feb.\n\nThus climate condition: variable T2M (mean daily temperature), years: [2024,2024] (or maybe 2025 if last winter is Dec 2024-Feb 2025, but months 12,1,2 not allowed). Let's choose year 2024, months [1,2] (January, February). Stat: mean. Test: absolute >= 35.\n\nBut mean temperature of 35C in Jan-Feb is unrealistic for North Dakota, but it's okay.\n\nLand: \"fields\". Could be any agricultural land: classes: [\"cropland\",\"hay\",\"grassland\",\"other_crop\",\"corn\",\"soybeans\",\"spring_wheat\",\"sunflower\",\"canola\",\"cotton\"] but cotton not in ND. Simpler: use \"cropland\". But \"fields\" could include \"grassland\". Might just use \"cropland\". The example earlier used \"cropland\". Let's use \"cropland\". Or maybe \"cropland\" includes all annual crops. The class \"cropland\" is defined as any annual crop (all crops below plus other annual crops). So that covers fields.\n\nThus land: classes [\"cropland\"], min_patch_ha null.\n\nNear: none.\n\nClimate: one condition as described.\n\nOutput: maybe they want map? The question: \"fields where last winter had temp above 35C\". They likely want map of those fields. So output \"map\".\n\nThus final JSON:\n\n{\n  \"area\": \"north_dakota\",\n  \"land\": {\"classes\": [\"cropland\"], \"min_patch_ha\": null},\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M\",\n      \"years\": [2024, 2024],\n      \"months\": [1,2],\n      \"stat\": \"mean\",\n      \"day_threshold\": null,\n      \"test\": {\"kind\": \"absolute\", \"op\": \">=\", \"value\": 35}\n    }\n  ],\n  \"output\": \"map\"\n}\n\nCheck format: JSON object with keys exactly. Ensure no trailing commas. Provide as single line or pretty? Probably fine.\n\nThus answer."
+    }
+   }
+  ],
+  "created": 1793304820,
+  "model": "openai/gpt-oss-120b",
+  "object": "chat.completion",
+  "metadata": null,
+  "moderation": null,
+  "service_tier": "on_demand",
+  "system_fingerprint": "fp_4a7bb72c24",
+  "usage": {
+   "completion_tokens": 1039,
+   "prompt_tokens": 1721,
+   "total_tokens": 2760,
+   "completion_tokens_details": {
+    "accepted_prediction_tokens": null,
+    "audio_tokens": null,
+    "reasoning_tokens": 907,
+    "rejected_prediction_tokens": null,
+    "text_tokens": null
+   },
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 1536,
+    "image_tokens": null,
+    "text_tokens": null
+   },
+   "queue_time": 0.22188836,
+   "prompt_time": 0.009432183,
+   "completion_time": 2.439017436,
+   "total_time": 2.448449619
+  },
+  "usage_breakdown": null,
+  "x_groq": {
+   "id": "req_01m64mqvv3e9xrne5dtjd83e28",
+   "seed": 504603818
+  }
+ },
+ "model_returned": "openai/gpt-oss-120b",
+ "provider": "groq",
+ "seconds": 3.0,
+ "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": { \"classes\": [\"cropland\"], \"min_patch_ha\": null },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M\",\n      \"years\": [2024, 2024],\n      \"months\": [1, 2],\n      \"stat\": \"mean\",\n      \"day_threshold\": null,\n      \"test\": { \"kind\": \"absolute\", \"op\": \">=\", \"value\": 35 }\n    }\n  ],\n  \"output\": \"map\"\n}",
+ "finish_reason": "stop",
+ "transport_attempts": 1,
+ "question": "In the North Dakota study area: fields where last winter had temp above 35C",
+ "plan": {
+  "area": "north_dakota",
+  "land": {
+   "classes": [
+    "cropland"
+   ],
+   "min_patch_ha": null
+  },
+  "near": [],
+  "climate": [
+   {
+    "variable": "T2M",
+    "years": [
+     2024,
+     2024
+    ],
+    "months": [
+     1,
+     2
+    ],
+    "stat": "mean",
+    "day_threshold": null,
+    "test": {
+     "kind": "absolute",
+     "op": ">=",
+     "value": 35
+    }
+   }
+  ],
+  "output": "map"
+ },
+ "error": null
+}

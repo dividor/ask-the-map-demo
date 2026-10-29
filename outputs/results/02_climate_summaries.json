@@ -1,0 +1,18 @@
+{
+ "cells": 849,
+ "long_term": [
+  849,
+  7
+ ],
+ "summary": [
+  849,
+  907
+ ],
+ "facts": 4006,
+ "minutes": 0.1,
+ "MB": {
+  "facts.npz": 0.35,
+  "long_term_z.npy": 0.02,
+  "enc_summary.npy": 3.08
+ }
+}

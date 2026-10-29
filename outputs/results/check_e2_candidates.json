@@ -1,0 +1,497 @@
+[
+ {
+  "question": "Which corn fields had a heatwave during pollination in July 2022?",
+  "area": "north_carolina",
+  "type": "heat (crop insurance)",
+  "persona": true,
+  "M1": {
+   "shown": 2984,
+   "true": 1541,
+   "precision": 0.38036193029490617,
+   "f1": 0.5016574585635359,
+   "hit": false,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 1175,
+   "true": 1541,
+   "precision": 0.9531914893617022,
+   "f1": 0.8247422680412371,
+   "hit": true,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 1465,
+   "true": 1541,
+   "precision": 0.8757679180887372,
+   "f1": 0.8536260811709914,
+   "hit": true,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.8536260811709914,
+  "chosen": true
+ },
+ {
+  "question": "corn fields where July 2022 had at least 5 days above 35 C",
+  "area": "north_carolina",
+  "type": "heat (crop insurance)",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9148793565683646,
+   "f1": 0.8340971585701191,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9142091152815014,
+   "f1": 0.8334860983806905,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 3514,
+   "true": 3562,
+   "precision": 0.85486624928856,
+   "f1": 0.8490672696438666,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.8490672696438666,
+  "chosen": false
+ },
+ {
+  "question": "cotton fields where summer 2022 was one of the hottest 10% since 2001",
+  "area": "north_carolina",
+  "type": "heat (crop insurance)",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 8257,
+   "precision": 0.9527479892761395,
+   "f1": 0.5058268837292056,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 8257,
+   "precision": 0.9504021447721179,
+   "f1": 0.5045814429321235,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 8134,
+   "true": 8257,
+   "precision": 0.8363658716498648,
+   "f1": 0.8300896833628211,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.8300896833628211,
+  "chosen": false
+ },
+ {
+  "question": "soybean fields where summer 2022 rainfall was in the driest 10% since 2001",
+  "area": "north_carolina",
+  "type": "drought (drought payments)",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 13758,
+   "precision": 0.7875335120643432,
+   "f1": 0.28073109544857244,
+   "hit": false,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2365,
+   "true": 13758,
+   "precision": 0.9708245243128965,
+   "f1": 0.28481051913415617,
+   "hit": false,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 13258,
+   "true": 13758,
+   "precision": 0.8029114496907528,
+   "f1": 0.7880515250222091,
+   "hit": true,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.7880515250222091,
+  "chosen": false
+ },
+ {
+  "question": "cropland where root-zone soil moisture in July 2010 was in the driest 10% since 2001",
+  "area": "north_carolina",
+  "type": "drought (drought payments)",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 24094,
+   "precision": 0.7945710455764075,
+   "f1": 0.1751237166703597,
+   "hit": false,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2618,
+   "true": 24094,
+   "precision": 0.9633307868601986,
+   "f1": 0.18882899071578316,
+   "hit": false,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 24082,
+   "true": 24094,
+   "precision": 0.9143343576114941,
+   "f1": 0.9141066090999668,
+   "hit": true,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.9141066090999668,
+  "chosen": true
+ },
+ {
+  "question": "cropland where spring 2017 was one of the wettest 10% since 2001",
+  "area": "north_carolina",
+  "type": "wet spring (prevented planting)",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 39847,
+   "precision": 0.9815683646112601,
+   "f1": 0.1367700964254862,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 39847,
+   "precision": 0.964142091152815,
+   "f1": 0.13434194858863907,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 39337,
+   "true": 39847,
+   "precision": 0.9216767928413453,
+   "f1": 0.9157405536472014,
+   "hit": true,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.9157405536472014,
+  "chosen": true
+ },
+ {
+  "question": "Where is cropland right up against wetlands?",
+  "area": "north_carolina",
+  "type": "wetland conservation",
+  "persona": true,
+  "M1": {
+   "shown": 0,
+   "true": 0,
+   "precision": null,
+   "f1": 1.0,
+   "hit": false,
+   "plan_words": "Cropland, within 30 m of wetland."
+  },
+  "M2": {
+   "shown": 0,
+   "true": 0,
+   "precision": null,
+   "f1": 1.0,
+   "hit": false,
+   "plan_words": "Cropland, within 30 m of wetland."
+  },
+  "M3": {
+   "shown": 0,
+   "true": 0,
+   "precision": null,
+   "f1": 1.0,
+   "hit": false,
+   "plan_words": "Cropland, within 30 m of wetland."
+  },
+  "passes": false,
+  "best_f1": null,
+  "chosen": false
+ },
+ {
+  "question": "cropland within 100 m of a wetland",
+  "area": "north_carolina",
+  "type": "wetland conservation",
+  "persona": false,
+  "M1": {
+   "shown": 452,
+   "true": 10182,
+   "precision": 0.6349557522123894,
+   "f1": 0.05397780703404175,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M2": {
+   "shown": 452,
+   "true": 10182,
+   "precision": 0.6349557522123894,
+   "f1": 0.05397780703404175,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M3": {
+   "shown": 10243,
+   "true": 10182,
+   "precision": 0.6115395880113248,
+   "f1": 0.6133659730722154,
+   "hit": true,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "passes": true,
+  "best_f1": 0.6133659730722154,
+  "chosen": false
+ },
+ {
+  "question": "wetlands more than 500 m from any cropland",
+  "area": "north_carolina",
+  "type": "wetland conservation",
+  "persona": false,
+  "M1": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M2": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M3": {
+   "shown": 4318,
+   "true": 3689,
+   "precision": 0.6470588235294118,
+   "f1": 0.6978893468215311,
+   "hit": true,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "passes": true,
+  "best_f1": 0.6978893468215311,
+  "chosen": true
+ },
+ {
+  "question": "Grassland near existing solar farms, in the sunnier part of the region",
+  "area": "north_carolina",
+  "type": "solar siting",
+  "persona": true,
+  "M1": {
+   "shown": 162,
+   "true": 178,
+   "precision": 0.2222222222222222,
+   "f1": 0.21176470588235294,
+   "hit": false,
+   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M2": {
+   "shown": 223,
+   "true": 178,
+   "precision": 0.2914798206278027,
+   "f1": 0.32418952618453867,
+   "hit": false,
+   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M3": {
+   "shown": 229,
+   "true": 178,
+   "precision": 0.388646288209607,
+   "f1": 0.43734643734643736,
+   "hit": false,
+   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+  },
+  "passes": false,
+  "best_f1": null,
+  "chosen": false
+ },
+ {
+  "question": "grassland or hay fields within 1 km of an existing solar farm",
+  "area": "north_carolina",
+  "type": "solar siting",
+  "persona": false,
+  "M1": {
+   "shown": 1312,
+   "true": 1432,
+   "precision": 0.13109756097560976,
+   "f1": 0.12536443148688048,
+   "hit": false,
+   "plan_words": "Grassland or hay, within 1000 m of solar farm."
+  },
+  "M2": {
+   "shown": 1312,
+   "true": 1432,
+   "precision": 0.13109756097560976,
+   "f1": 0.12536443148688048,
+   "hit": false,
+   "plan_words": "Grassland or hay, within 1000 m of solar farm."
+  },
+  "M3": {
+   "shown": 1519,
+   "true": 1432,
+   "precision": 0.4700460829493088,
+   "f1": 0.4839037614368011,
+   "hit": false,
+   "plan_words": "Grassland or hay, within 1000 m of solar farm."
+  },
+  "passes": false,
+  "best_f1": null,
+  "chosen": false
+ },
+ {
+  "question": "developed land in the half of the study area with the most cooling degree days in summer 2022",
+  "area": "north_carolina",
+  "type": "building energy",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 18011,
+   "precision": 0.8558981233243967,
+   "f1": 0.24329602286258634,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: total cooling degree days in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2685,
+   "true": 18011,
+   "precision": 0.9169459962756052,
+   "f1": 0.23792037108620023,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: total cooling degree days in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M3": {
+   "shown": 18528,
+   "true": 18011,
+   "precision": 0.7701316925734024,
+   "f1": 0.7810284901064616,
+   "hit": true,
+   "plan_words": "Developed, where June to August 2022: total cooling degree days in the highest 50% of this area's places (NASA POWER)."
+  },
+  "passes": true,
+  "best_f1": 0.7810284901064616,
+  "chosen": true
+ },
+ {
+  "question": "cotton fields",
+  "area": "north_carolina",
+  "type": "land and distance",
+  "persona": false,
+  "M1": {
+   "shown": 2984,
+   "true": 8257,
+   "precision": 0.9504021447721179,
+   "f1": 0.5045814429321235,
+   "hit": true,
+   "plan_words": "Cotton."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 8257,
+   "precision": 0.9504021447721179,
+   "f1": 0.5045814429321235,
+   "hit": true,
+   "plan_words": "Cotton."
+  },
+  "M3": {
+   "shown": 8134,
+   "true": 8257,
+   "precision": 0.8363658716498648,
+   "f1": 0.8300896833628211,
+   "hit": true,
+   "plan_words": "Cotton."
+  },
+  "passes": true,
+  "best_f1": 0.8300896833628211,
+  "chosen": true
+ },
+ {
+  "question": "forest more than 1 km from any developed land",
+  "area": "north_carolina",
+  "type": "land and distance",
+  "persona": false,
+  "M1": {
+   "shown": 60,
+   "true": 490,
+   "precision": 0.1,
+   "f1": 0.02181818181818182,
+   "hit": false,
+   "plan_words": "Forest, more than 1000 m from any developed."
+  },
+  "M2": {
+   "shown": 60,
+   "true": 490,
+   "precision": 0.1,
+   "f1": 0.02181818181818182,
+   "hit": false,
+   "plan_words": "Forest, more than 1000 m from any developed."
+  },
+  "M3": {
+   "shown": 1090,
+   "true": 490,
+   "precision": 0.21192660550458717,
+   "f1": 0.29240506329113924,
+   "hit": false,
+   "plan_words": "Forest, more than 1000 m from any developed."
+  },
+  "passes": false,
+  "best_f1": null,
+  "chosen": false
+ },
+ {
+  "question": "soybean fields within 200 m of forest",
+  "area": "north_carolina",
+  "type": "land and distance",
+  "persona": false,
+  "M1": {
+   "shown": 2207,
+   "true": 10048,
+   "precision": 0.7648391481649298,
+   "f1": 0.2754793961648307,
+   "hit": false,
+   "plan_words": "Soybeans, within 200 m of forest."
+  },
+  "M2": {
+   "shown": 2207,
+   "true": 10048,
+   "precision": 0.7648391481649298,
+   "f1": 0.2754793961648307,
+   "hit": false,
+   "plan_words": "Soybeans, within 200 m of forest."
+  },
+  "M3": {
+   "shown": 10012,
+   "true": 10048,
+   "precision": 0.6394326807830604,
+   "f1": 0.6382851445663011,
+   "hit": true,
+   "plan_words": "Soybeans, within 200 m of forest."
+  },
+  "passes": true,
+  "best_f1": 0.6382851445663011,
+  "chosen": false
+ }
+]

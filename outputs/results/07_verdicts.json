@@ -1,0 +1,429 @@
+{
+ "D0": {
+  "pass": false,
+  "median_F1": [
+   0.7814504994721027,
+   0.6438682022657152,
+   0.9238617847433087
+  ]
+ },
+ "K": {
+  "pass": true,
+  "mean_excess": -0.0004523130271582147,
+  "seconds": 27
+ },
+ "L1": {
+  "pass": true,
+  "median_F1": [
+   0.6847324216173432,
+   0.46685082872928174,
+   0.8067224794599567
+  ],
+  "n": 49
+ },
+ "L2": {
+  "pass": false,
+  "median_F1": [
+   0.48891658506187124,
+   0.4209734854708887,
+   0.6111189572348645
+  ],
+  "n": 40
+ },
+ "X1": {
+  "pass": false,
+  "F1": 0.46685082872928174,
+  "true_px": 6955,
+  "pred_px": 2457
+ },
+ "X2": {
+  "pass": false,
+  "F1": 0.3175300647548566,
+  "true_px": 14414,
+  "pred_px": 2882
+ },
+ "T1": {
+  "pass": true,
+  "median_F1": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "share_F1_ge_0.90": [
+   0.918918918918919,
+   0.8108108108108109,
+   1.0
+  ],
+  "n": 37
+ },
+ "T2": {
+  "pass": true,
+  "median_F1": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "n": 37
+ },
+ "T3": {
+  "pass": true,
+  "median_F1": [
+   1.0,
+   1.0,
+   1.0
+  ],
+  "n": 12
+ },
+ "E1": {
+  "pass": true,
+  "median_F1": [
+   0.6847324216173432,
+   0.3922700244840853,
+   0.8183337902527306
+  ],
+  "n": 37
+ },
+ "E2": {
+  "pass": true,
+  "median_F1": [
+   0.7171092780177202,
+   0.46685082872928174,
+   0.8125992160414004
+  ],
+  "n": 37
+ },
+ "E3": {
+  "pass": true,
+  "median_F1": [
+   0.5404761265846161,
+   0.13169373951168234,
+   0.7585255550857426
+  ],
+  "n": 12
+ },
+ "E4": {
+  "pass": true,
+  "median_F1": [
+   0.48891658506187124,
+   0.40004031693324793,
+   0.6105143705106368
+  ],
+  "n": 40
+ },
+ "C": {
+  "pass": false,
+  "median_diff_main_minus_clip": [
+   0.01502440565136598,
+   -0.04968914621992312,
+   0.28625869319853936
+  ],
+  "n": 37,
+  "clip_arm_valid": false
+ },
+ "error_split": {
+  "n": {
+   "S1": 37,
+   "S2": 37,
+   "S3": 12,
+   "S4": 40
+  },
+  "translation (plan on official maps)": {
+   "S1": 1.0,
+   "S2": 1.0,
+   "S3": 1.0,
+   "S4": 1.0
+  },
+  "land maps (reference plan on AlphaEarth maps)": {
+   "S1": 0.7229886774415201,
+   "S2": 0.7229886774415201,
+   "S3": 0.5404761265846161,
+   "S4": 0.48891658506187124
+  },
+  "end to end": {
+   "S1": 0.6847324216173432,
+   "S2": 0.7171092780177202,
+   "S3": 0.5404761265846161,
+   "S4": 0.48891658506187124
+  },
+  "embedding search, top-k F1": {
+   "S1": 0.46776190697027314,
+   "S2": 0.40558497833413576,
+   "S3": 0.26770135091665437,
+   "S4": 0.14332382637906035
+  },
+  "embedding search, AP": {
+   "S1": 0.4373458621674972,
+   "S2": 0.37611856326858395,
+   "S3": 0.23730510959466383,
+   "S4": 0.10620620293730962
+  },
+  "chance (median share)": {
+   "S1": 0.045017221524170446,
+   "S2": 0.045017221524170446,
+   "S3": 0.06698374950455807,
+   "S4": 0.025881179889490822
+  }
+ },
+ "models": [
+  {
+   "arm": "main",
+   "model": "openai/gpt-oss-120b:groq",
+   "split": "S1",
+   "n": 37,
+   "malformed": 2,
+   "exact_plan": 0.8378378378378378,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.6847324216173432,
+    0.3922700244840853,
+    0.8183337902527306
+   ],
+   "translation_diff_vs_main": NaN
+  },
+  {
+   "arm": "main",
+   "model": "openai/gpt-oss-120b:groq",
+   "split": "S2",
+   "n": 37,
+   "malformed": 1,
+   "exact_plan": 0.8108108108108109,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.7171092780177202,
+    0.46685082872928174,
+    0.8125992160414004
+   ],
+   "translation_diff_vs_main": NaN
+  },
+  {
+   "arm": "main",
+   "model": "openai/gpt-oss-120b:groq",
+   "split": "S3",
+   "n": 12,
+   "malformed": 0,
+   "exact_plan": 0.8333333333333334,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.5404761265846161,
+    0.13169373951168234,
+    0.7585255550857426
+   ],
+   "translation_diff_vs_main": NaN
+  },
+  {
+   "arm": "main",
+   "model": "openai/gpt-oss-120b:groq",
+   "split": "S4",
+   "n": 40,
+   "malformed": 1,
+   "exact_plan": 0.825,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.48891658506187124,
+    0.40004031693324793,
+    0.6105143705106368
+   ],
+   "translation_diff_vs_main": NaN
+  },
+  {
+   "arm": "large",
+   "model": "zai-org/GLM-5.3:nscale",
+   "split": "S1",
+   "n": 37,
+   "malformed": 2,
+   "exact_plan": 0.8648648648648649,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.6847324216173432,
+    0.46685082872928174,
+    0.8183337902527306
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "large",
+   "model": "zai-org/GLM-5.3:nscale",
+   "split": "S2",
+   "n": 37,
+   "malformed": 2,
+   "exact_plan": 0.8648648648648649,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.6055930428712698,
+    0.3922700244840853,
+    0.8183337902527306
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "large",
+   "model": "zai-org/GLM-5.3:nscale",
+   "split": "S3",
+   "n": 12,
+   "malformed": 0,
+   "exact_plan": 1.0,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.5404761265846161,
+    0.13169373951168234,
+    0.7585255550857426
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "large",
+   "model": "zai-org/GLM-5.3:nscale",
+   "split": "S4",
+   "n": 40,
+   "malformed": 1,
+   "exact_plan": 0.9,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.48891658506187124,
+    0.40004031693324793,
+    0.6103981475767438
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "small",
+   "model": "openai/gpt-oss-20b:groq",
+   "split": "S1",
+   "n": 37,
+   "malformed": 2,
+   "exact_plan": 0.8108108108108109,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.6055930428712698,
+    0.3922700244840853,
+    0.8179414308661807
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "small",
+   "model": "openai/gpt-oss-20b:groq",
+   "split": "S2",
+   "n": 37,
+   "malformed": 0,
+   "exact_plan": 0.8108108108108109,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.5253428741800835,
+    0.38874183871536966,
+    0.8124622361740991
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "small",
+   "model": "openai/gpt-oss-20b:groq",
+   "split": "S3",
+   "n": 12,
+   "malformed": 0,
+   "exact_plan": 1.0,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.5404761265846161,
+    0.13169373951168234,
+    0.7585255550857426
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  },
+  {
+   "arm": "small",
+   "model": "openai/gpt-oss-20b:groq",
+   "split": "S4",
+   "n": 40,
+   "malformed": 2,
+   "exact_plan": 0.85,
+   "translation_median": [
+    1.0,
+    1.0,
+    1.0
+   ],
+   "end_to_end_median": [
+    0.4879080741903243,
+    0.37320861165397073,
+    0.6072910067045506
+   ],
+   "translation_diff_vs_main": [
+    0.0,
+    0.0,
+    0.0
+   ]
+  }
+ ]
+}

@@ -1,0 +1,645 @@
+{
+ "K7": {
+  "max_abs_diff": 0.0,
+  "pass": true
+ },
+ "new_tiles": [
+  {
+   "tile": "R1",
+   "lon": -83.159,
+   "lat": 35.183,
+   "state": "NC",
+   "seconds": 0.1,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R2",
+   "lon": -95.064,
+   "lat": 39.857,
+   "state": "KS",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R3",
+   "lon": -100.205,
+   "lat": 44.619,
+   "state": "SD",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R4",
+   "lon": -76.873,
+   "lat": 37.313,
+   "state": "VA",
+   "seconds": 0.0,
+   "solar_px": 617,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R5",
+   "lon": -97.264,
+   "lat": 43.089,
+   "state": "SD",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R6",
+   "lon": -101.976,
+   "lat": 46.361,
+   "state": "ND",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R7",
+   "lon": -81.39,
+   "lat": 36.014,
+   "state": "NC",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "R8",
+   "lon": -101.421,
+   "lat": 42.289,
+   "state": "NE",
+   "seconds": 0.0,
+   "solar_px": 0,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F1",
+   "lon": -78.368,
+   "lat": 35.601,
+   "state": "NC",
+   "seconds": 0.0,
+   "solar_px": 393,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F2",
+   "lon": -81.876,
+   "lat": 34.994,
+   "state": "SC",
+   "seconds": 0.0,
+   "solar_px": 206,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F3",
+   "lon": -79.134,
+   "lat": 34.664,
+   "state": "NC",
+   "seconds": 0.0,
+   "solar_px": 406,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F4",
+   "lon": -79.745,
+   "lat": 35.547,
+   "state": "NC",
+   "seconds": 0.0,
+   "solar_px": 317,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F5",
+   "lon": -76.844,
+   "lat": 35.499,
+   "state": "NC",
+   "seconds": 0.0,
+   "solar_px": 498,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F6",
+   "lon": -79.97,
+   "lat": 36.107,
+   "state": "NC",
+   "seconds": 0.1,
+   "solar_px": 30,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F7",
+   "lon": -82.398,
+   "lat": 34.787,
+   "state": "SC",
+   "seconds": 0.0,
+   "solar_px": 46,
+   "missing_embedding_share": 0.0
+  },
+  {
+   "tile": "F8",
+   "lon": -80.732,
+   "lat": 32.565,
+   "state": "SC",
+   "seconds": 0.0,
+   "solar_px": 1584,
+   "missing_embedding_share": 0.0
+  }
+ ],
+ "fits": {
+  "N": {
+   "tiles": 17,
+   "features": 256,
+   "minutes": 2.0
+  },
+  "M": {
+   "tiles": 33,
+   "features": 64,
+   "minutes": 0.7
+  },
+  "NM": {
+   "tiles": 33,
+   "features": 256,
+   "minutes": 3.0
+  }
+ },
+ "macro_f1_A5": 0.6764609700595423,
+ "methods": {
+  "N": {
+   "macro_f1": 0.6799999014662829,
+   "L1_gain": 0.003538931406740553,
+   "L1_lo": -0.0037922756253127134,
+   "L1_hi": 0.012975074947127562,
+   "L1": false,
+   "L2_median_diff": -0.0024196837363814616,
+   "L2_lo": -0.008779847600548063,
+   "L2_hi": 0.0012702704838848389,
+   "L2_share_worse_by_0.10": 0.0,
+   "L2_median_f1": 0.7131495545057704,
+   "L2_median_f1_A5": 0.6935858655787777,
+   "L2": true,
+   "pass": false
+  },
+  "M": {
+   "macro_f1": 0.6839882665384778,
+   "L1_gain": 0.0075272964789354635,
+   "L1_lo": 0.0018009358920017704,
+   "L1_hi": 0.012353392931987593,
+   "L1": false,
+   "L2_median_diff": 0.004526050641335488,
+   "L2_lo": 0.0025318435500179537,
+   "L2_hi": 0.015699568406408414,
+   "L2_share_worse_by_0.10": 0.0,
+   "L2_median_f1": 0.707059338817794,
+   "L2_median_f1_A5": 0.6935858655787777,
+   "L2": true,
+   "pass": false
+  },
+  "NM": {
+   "macro_f1": 0.687174043393212,
+   "L1_gain": 0.010713073333669665,
+   "L1_lo": 0.0026045724328843333,
+   "L1_hi": 0.018597933829367967,
+   "L1": false,
+   "L2_median_diff": 0.003295038854124799,
+   "L2_lo": -0.0009754423876880414,
+   "L2_hi": 0.012866559945307054,
+   "L2_share_worse_by_0.10": 0.0,
+   "L2_median_f1": 0.7256668936265966,
+   "L2_median_f1_A5": 0.6935858655787777,
+   "L2": true,
+   "pass": false
+  }
+ },
+ "chosen": null,
+ "named_questions": {
+  "demo_grass_solar": {
+   "A5": {
+    "precision": 0.5370370370370371,
+    "f1": 0.3547400611620795,
+    "land": [
+     {
+      "class": "grassland",
+      "share": 0.546
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.25
+     },
+     {
+      "class": "developed",
+      "share": 0.13
+     },
+     {
+      "class": "forest",
+      "share": 0.074
+     }
+    ]
+   },
+   "N": {
+    "precision": 0.4786729857819905,
+    "f1": 0.4697674418604651,
+    "land": [
+     {
+      "class": "grassland",
+      "share": 0.526
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.223
+     },
+     {
+      "class": "developed",
+      "share": 0.147
+     },
+     {
+      "class": "forest",
+      "share": 0.081
+     },
+     {
+      "class": "wetland",
+      "share": 0.009
+     }
+    ]
+   },
+   "M": {
+    "precision": 0.4748201438848921,
+    "f1": 0.3687150837988827,
+    "land": [
+     {
+      "class": "grassland",
+      "share": 0.475
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.309
+     },
+     {
+      "class": "forest",
+      "share": 0.115
+     },
+     {
+      "class": "developed",
+      "share": 0.094
+     },
+     {
+      "class": "other",
+      "share": 0.007
+     }
+    ]
+   },
+   "NM": {
+    "precision": 0.3884297520661157,
+    "f1": 0.4078091106290672,
+    "land": [
+     {
+      "class": "grassland",
+      "share": 0.405
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.347
+     },
+     {
+      "class": "developed",
+      "share": 0.174
+     },
+     {
+      "class": "forest",
+      "share": 0.062
+     },
+     {
+      "class": "cotton",
+      "share": 0.004
+     }
+    ]
+   }
+  },
+  "demo_solar": {
+   "A5": {
+    "precision": 0.4587706146926537,
+    "f1": 0.43651925820256776,
+    "land": [
+     {
+      "class": "forest",
+      "share": 0.481
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.24
+     },
+     {
+      "class": "grassland",
+      "share": 0.223
+     },
+     {
+      "class": "developed",
+      "share": 0.025
+     },
+     {
+      "class": "wetland",
+      "share": 0.025
+     }
+    ]
+   },
+   "N": {
+    "precision": 0.5013333333333333,
+    "f1": 0.5063973063973064,
+    "land": [
+     {
+      "class": "forest",
+      "share": 0.509
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.188
+     },
+     {
+      "class": "grassland",
+      "share": 0.184
+     },
+     {
+      "class": "wetland",
+      "share": 0.083
+     },
+     {
+      "class": "developed",
+      "share": 0.027
+     }
+    ]
+   },
+   "M": {
+    "precision": 0.5816326530612245,
+    "f1": 0.46530612244897956,
+    "land": [
+     {
+      "class": "forest",
+      "share": 0.647
+     },
+     {
+      "class": "grassland",
+      "share": 0.249
+     },
+     {
+      "class": "wetland",
+      "share": 0.055
+     },
+     {
+      "class": "developed",
+      "share": 0.029
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.01
+     }
+    ]
+   },
+   "NM": {
+    "precision": 0.6655574043261231,
+    "f1": 0.5988023952095808,
+    "land": [
+     {
+      "class": "forest",
+      "share": 0.692
+     },
+     {
+      "class": "grassland",
+      "share": 0.205
+     },
+     {
+      "class": "wetland",
+      "share": 0.055
+     },
+     {
+      "class": "solar_farm",
+      "share": 0.025
+     },
+     {
+      "class": "developed",
+      "share": 0.02
+     }
+    ]
+   }
+  },
+  "demo_hay": {
+   "A5": {
+    "precision": 0.28225806451612906,
+    "f1": 0.3146067415730337,
+    "land": [
+     {
+      "class": "hay",
+      "share": 0.488
+     },
+     {
+      "class": "grassland",
+      "share": 0.444
+     },
+     {
+      "class": "developed",
+      "share": 0.032
+     },
+     {
+      "class": "corn",
+      "share": 0.016
+     },
+     {
+      "class": "wetland",
+      "share": 0.008
+     }
+    ]
+   },
+   "N": {
+    "precision": 0.3032258064516129,
+    "f1": 0.26704545454545453,
+    "land": [
+     {
+      "class": "grassland",
+      "share": 0.465
+     },
+     {
+      "class": "hay",
+      "share": 0.419
+     },
+     {
+      "class": "forest",
+      "share": 0.032
+     },
+     {
+      "class": "developed",
+      "share": 0.032
+     },
+     {
+      "class": "corn",
+      "share": 0.026
+     }
+    ]
+   },
+   "M": {
+    "precision": 0.2819672131147541,
+    "f1": 0.3426294820717131,
+    "land": [
+     {
+      "class": "hay",
+      "share": 0.515
+     },
+     {
+      "class": "grassland",
+      "share": 0.436
+     },
+     {
+      "class": "corn",
+      "share": 0.013
+     },
+     {
+      "class": "forest",
+      "share": 0.013
+     },
+     {
+      "class": "other",
+      "share": 0.013
+     }
+    ]
+   },
+   "NM": {
+    "precision": 0.30625,
+    "f1": 0.27450980392156865,
+    "land": [
+     {
+      "class": "hay",
+      "share": 0.412
+     },
+     {
+      "class": "grassland",
+      "share": 0.394
+     },
+     {
+      "class": "developed",
+      "share": 0.125
+     },
+     {
+      "class": "forest",
+      "share": 0.025
+     },
+     {
+      "class": "corn",
+      "share": 0.019
+     }
+    ]
+   }
+  }
+ },
+ "north_carolina_grass_solar": {
+  "A5": {
+   "precision": 0.32945736434108525,
+   "f1": 0.37777777777777777,
+   "predicted": 258,
+   "land": [
+    {
+     "class": "grassland",
+     "share": 0.36
+    },
+    {
+     "class": "solar_farm",
+     "share": 0.24
+    },
+    {
+     "class": "forest",
+     "share": 0.143
+    },
+    {
+     "class": "developed",
+     "share": 0.132
+    },
+    {
+     "class": "soybeans",
+     "share": 0.07
+    }
+   ]
+  },
+  "N": {
+   "precision": 0.3760330578512397,
+   "f1": 0.41935483870967744,
+   "predicted": 242,
+   "land": [
+    {
+     "class": "grassland",
+     "share": 0.405
+    },
+    {
+     "class": "solar_farm",
+     "share": 0.207
+    },
+    {
+     "class": "forest",
+     "share": 0.132
+    },
+    {
+     "class": "developed",
+     "share": 0.116
+    },
+    {
+     "class": "soybeans",
+     "share": 0.07
+    }
+   ]
+  },
+  "M": {
+   "precision": 0.2509505703422053,
+   "f1": 0.29010989010989013,
+   "predicted": 263,
+   "land": [
+    {
+     "class": "solar_farm",
+     "share": 0.365
+    },
+    {
+     "class": "grassland",
+     "share": 0.259
+    },
+    {
+     "class": "developed",
+     "share": 0.163
+    },
+    {
+     "class": "forest",
+     "share": 0.118
+    },
+    {
+     "class": "soybeans",
+     "share": 0.061
+    }
+   ]
+  },
+  "NM": {
+   "precision": 0.3286219081272085,
+   "f1": 0.391578947368421,
+   "predicted": 283,
+   "land": [
+    {
+     "class": "grassland",
+     "share": 0.35
+    },
+    {
+     "class": "solar_farm",
+     "share": 0.286
+    },
+    {
+     "class": "developed",
+     "share": 0.145
+    },
+    {
+     "class": "forest",
+     "share": 0.124
+    },
+    {
+     "class": "soybeans",
+     "share": 0.053
+    }
+   ]
+  }
+ },
+ "minutes": 7.0
+}

@@ -1,0 +1,39 @@
+# RECONSTRUCTION written by the ask-the-map project, NOT by the AETHER authors (PLAN.md amendment A3.1).
+# The published AETHER repository (commit 7b382c5) names this file in every alignment experiment but does not
+# contain it. Each value below is marked with where it came from:
+#   [sister]  the repository's other alignment model configs (geoclip_alignment.yaml, heat_tessera_alignment.yaml,
+#             geoclip_llm2clip_alignment.yaml), which all use the same values
+#   [code]    the class's own default in src/models/text_alignment_model.py
+#   [exp]     overridden anyway by the experiment file (satbird_alignment/aef_s01.yaml)
+_target_: src.models.text_alignment_model.TextAlignmentModel
+
+geo_encoder: # [exp]
+  _target_: src.models.components.geo_encoders.identity_encoder.IdentityEncoder
+  geo_data_name: aef_avr
+
+text_encoder: # [exp]
+  _target_: src.models.components.text_encoders.clip_text_encoder.ClipTextEncoder
+  hf_cache_dir: ${paths.huggingface_cache}
+
+trainable_modules: [loss_fn.log_temp] # [exp]
+
+metrics: ${metrics} # [sister]
+
+optimizer: # [sister]; lr is set by the experiment (0.001)
+  _target_: torch.optim.Adam
+  _partial_: true
+  lr: 0.001
+  weight_decay: 0.0
+
+scheduler: # [sister]
+  _target_: torch.optim.lr_scheduler.ReduceLROnPlateau
+  _partial_: true
+  mode: min
+  factor: 0.1
+  patience: 10
+
+loss_fn: # [exp]
+  _target_: src.models.components.loss_fns.soft_contrastive_loss.SoftContrastiveLoss
+  temperature: 0.07
+  sigma: 0.1
+# ks and match_to_geo are left out on purpose: [code] defaults ks = [5, 10, 15], match_to_geo = true.
