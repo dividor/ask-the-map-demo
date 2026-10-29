@@ -33,7 +33,7 @@
   textarea { min-height: 112px; resize: vertical; font-size: 16px; padding: 10px 12px; background: var(--panel);
              border: 2px solid var(--accent); box-shadow: 0 1px 4px rgba(0, 0, 0, .08); }
   textarea:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
-  button.go { margin-top: 12px; background: var(--accent); color: #fff; border: none; font-weight: 600;
+  button.go { margin-top: 8px; background: var(--accent); color: #fff; border: none; font-weight: 600;
               cursor: pointer; }
   button.go:disabled { opacity: .6; cursor: wait; }
   /* the example questions as equal-width boxes */
@@ -108,6 +108,7 @@
     <label for="q" class="ask">Ask a question</label>
     <textarea id="q" autofocus autocomplete="off"
               placeholder="Type a question in plain English, e.g. corn fields where July 2021 had at least 5 days above 35 C, or pick an example below"></textarea>
+    <button class="go" id="go">Search</button>
     <details class="examples-box">
       <summary>Examples (click one to run it)</summary>
       <div class="examples" id="examples"></div>
@@ -121,7 +122,6 @@
       <option value="best" selected>Method 3: Using satellite embeddings to build a classifier with AI Planner</option>
     </select>
     <div id="methodnote" class="sub"></div>
-    <button class="go" id="go">Search</button>
   </div>
   <div id="static-controls" hidden>
     <label for="preset">Question (answered in advance)</label>
