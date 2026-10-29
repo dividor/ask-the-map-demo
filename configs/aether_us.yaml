@@ -106,11 +106,11 @@ demo:
   # answers well (Check E in PLAN.md; notebooks 22 and 24 scored all ten), then the six North Carolina ones
   # chosen in Check E2
   page_examples:
+    - {question: "forest within 500 m of a solar farm", area: georgia}
     - {question: "corn fields where July 2021 had at least 5 days above 35 C", area: north_dakota}
     - {question: "cropland where spring 2022 was one of the wettest 10% since 2001", area: north_dakota}
     - {question: "grassland where summer 2022 rainfall was in the driest 10% of summers since 2001", area: north_dakota}
     - {question: "soybean fields more than 300 m from any wetland or open water", area: minnesota}
-    - {question: "forest within 500 m of a solar farm", area: georgia}
     - {question: "Which corn fields had a heatwave during pollination in July 2022?", area: north_carolina}
     - {question: "cropland where root-zone soil moisture in July 2010 was in the driest 10% since 2001",
        area: north_carolina}
