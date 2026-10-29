@@ -427,9 +427,11 @@ if (STATIC) {
     const ex = document.getElementById("examples");
     m.examples.forEach(e => {
       const b = document.createElement("button");
-      b.textContent = `${e.question} (${m.areas[e.area].label.replace(" study area", "")})`;
+      // shown and asked with a capital first letter; the plan is the same either way
+      const question = e.question.charAt(0).toUpperCase() + e.question.slice(1);
+      b.textContent = `${question} (${m.areas[e.area].label.replace(" study area", "")})`;
       b.onclick = () => {
-        document.getElementById("q").value = e.question;
+        document.getElementById("q").value = question;
         sel.value = e.area; sel.onchange();
         document.getElementById("go").click();
       };
@@ -446,6 +448,8 @@ if (STATIC) {
     };
     msel.onchange = explain; explain();
     showArea(sel.value);
+    // the page opens on the first example's answer, so there is something to look at straight away
+    if (ex.firstChild && !document.getElementById("q").value) ex.firstChild.click();
   });
   // Enter in the question box searches; Shift+Enter still starts a new line
   document.getElementById("q").addEventListener("keydown", e => {
