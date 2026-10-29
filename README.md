@@ -161,8 +161,8 @@ scripts/run_pipeline.sh 13         # one notebook, by its number
 | 5. First comparison arm | `06_embedding_search`, `07_verdicts`, `08_wetland_signal` | an embedding-only search, its verdicts, and the wetland-signal check | minutes |
 | 6. The aligned space | `11_aether_us` | AETHER's recipe on US farm country: 510,930 captions for 85,000 locations, trained with a frozen CLIP text encoder | about 1 h |
 | 7. Comparisons | `12_aether_compare` | text encoders; climate as numbers; a classifier per class | minutes |
-| 8. Better land maps | `20_general_land_maps`, `23_land_context` | one multinomial model for every class, then neighbourhood context and more training tiles (16 more Earth Engine tiles) | 10 min |
-| 9. Demo data | `13_aether_demo_data` | projected vectors, land maps and NASA POWER cell indices on a 90 m grid for the four demo areas | minutes |
+| 8. Demo grid | `13_aether_demo_data` | projected vectors, the official land cover and NASA POWER cell indices on a 90 m grid for the four demo areas (the classifier is marked "not ready" until step 9) | minutes |
+| 9. Better land maps | `20_general_land_maps`, `13_aether_demo_data`, `23_land_context`, `13_aether_demo_data` | one multinomial model for every class, then neighbourhood context and more training tiles (16 more Earth Engine tiles); each stage checks itself against the demo data the previous one built, so notebook 13 runs after each | 10 min |
 | 10. Demo checks | `16_demo_check_d2`, `22_demo_check_d3`, `24_demo_check_d4`, `28_page_examples` | the demo's answers scored against the official maps; the page examples chosen by a fixed rule | minutes each |
 | 11. The three methods | `21_unseen_words`, `25_three_methods`, `26_geometry_distances`, `27_aligned_retraining` | never-seen words against OpenStreetMap; the three methods side by side; distances by geometry; retraining the aligned space | about 40 min |
 | 12. Static page | `17_static_site` | the server-free page in `site/` | minutes |

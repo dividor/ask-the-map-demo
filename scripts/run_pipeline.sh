@@ -5,6 +5,8 @@
 #   scripts/run_pipeline.sh            # everything except the AETHER paper reproduction (notebook 09)
 #   scripts/run_pipeline.sh 11 12 13   # only the notebooks whose names start with these numbers
 #
+# Notebook 13 runs three times: each land-map notebook (20, 23) checks itself against the demo data the
+# previous stage built, and the last pass switches the demo to the configured land method.
 # Notebook 09 needs the AETHER authors' code and data and about 7 hours of CPU: see scripts/aether_stage1/.
 # Notebooks 15 and 15b (rebuild checks) are for comparing a fresh build with an existing data folder and are not
 # part of the main run.
@@ -13,7 +15,8 @@ cd "$(dirname "$0")/.."
 
 ORDER=(01_data 10_aether_osm 02_climate_summaries 03_land_maps 04_answer_key_and_land 04b_d0_diagnostic
        05_translation 06_embedding_search 07_verdicts 08_wetland_signal 11_aether_us 12_aether_compare
-       20_general_land_maps 23_land_context 13_aether_demo_data 16_demo_check_d2 21_unseen_words
+       13_aether_demo_data 20_general_land_maps 13_aether_demo_data 23_land_context 13_aether_demo_data
+       16_demo_check_d2 21_unseen_words
        22_demo_check_d3 24_demo_check_d4 25_three_methods 26_geometry_distances 27_aligned_retraining
        28_page_examples 17_static_site)
 
@@ -44,9 +47,10 @@ run_one() {
 if [ $# -eq 0 ]; then
   for nb in "${ORDER[@]}"; do run_one "$nb"; done
 else
+  # each argument runs its first match once; name a notebook twice to run it twice
   for prefix in "$@"; do
     for nb in "${ORDER[@]}"; do
-      if [[ "$nb" == "$prefix"* ]]; then run_one "$nb"; fi
+      if [[ "$nb" == "$prefix"* ]]; then run_one "$nb"; break; fi
     done
   done
 fi

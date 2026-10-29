@@ -1,5 +1,5 @@
 # The demo server as a container: the code, its dependencies (CPU-only PyTorch), the demo data built by
-# notebook 13, the NASA POWER daily data and the text encoder, all baked in. See docs/deploy_azure.md.
+# notebook 13, the NASA POWER daily data and the text encoder, all baked in. See the README, "Hosting the demo".
 #
 # Before building, stage the data (not part of the repository) under deploy/:
 #   deploy/data/demo/      <- $ASKMAP_DATA_ROOT/demo
@@ -20,23 +20,26 @@ RUN apt-get update \
 WORKDIR /app
 
 # Dependencies first, so code changes do not rebuild them. torch comes from PyTorch's CPU index (the PyPI
-# wheel carries CUDA and is several times larger); every other package comes from PyPI at the locked version.
+# wheel carries CUDA and is several times larger), so the CUDA helper packages the lock file lists for Linux
+# are left out; every other package comes from PyPI at the locked version.
 COPY pyproject.toml uv.lock README.md ./
 RUN pip install uv \
     && uv export --no-dev --no-hashes --no-emit-project --format requirements-txt -o requirements.txt \
+    && grep -v -E '^(nvidia-|cuda-|triton)' requirements.txt > requirements-cpu.txt \
     && pip install --index-url https://download.pytorch.org/whl/cpu --extra-index-url https://pypi.org/simple \
-         -r requirements.txt
+         -r requirements-cpu.txt
 
 # The data and the text encoder (the largest layers; they change rarely)
 COPY deploy/hf_cache /app/hf_cache
 COPY deploy/data /app/data
 
-# The code
+# The code runs from /app/src, so the package finds the repository's configs/ next to it (its project root is
+# two folders above askmap/config.py)
 COPY src ./src
 COPY configs ./configs
-RUN pip install --no-deps .
 
-ENV ASKMAP_DATA_ROOT=/app/data \
+ENV PYTHONPATH=/app/src \
+    ASKMAP_DATA_ROOT=/app/data \
     HF_HOME=/app/hf_cache \
     HF_HUB_OFFLINE=1 \
     ASKMAP_HOST=0.0.0.0
