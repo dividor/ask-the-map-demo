@@ -1,0 +1,98 @@
+[
+ {
+  "question": "Pasture and hay land that had a very dry summer in 2022",
+  "area": "north_dakota",
+  "type": "LFP",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 20091,
+   "precision": 0.4440348525469169,
+   "f1": 0.11484290357529794,
+   "hit": false,
+   "plan_words": "Grassland or hay, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 1913,
+   "true": 20091,
+   "precision": 0.9184526921066388,
+   "f1": 0.15969823668423924,
+   "hit": false,
+   "plan_words": "Grassland or hay, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 22167,
+   "true": 20091,
+   "precision": 0.8365588487391167,
+   "f1": 0.8776563017653463,
+   "hit": true,
+   "plan_words": "Grassland or hay, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Grassland where the soil was unusually dry in July and August 2022",
+  "area": "north_dakota",
+  "type": "CRP grazing",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 0,
+   "precision": 0.0,
+   "f1": 0.0,
+   "hit": false,
+   "plan_words": "Grassland, where July to August 2022: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 0,
+   "true": 0,
+   "precision": null,
+   "f1": 1.0,
+   "hit": false,
+   "plan_words": "Grassland, where July to August 2022: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 0,
+   "true": 0,
+   "precision": null,
+   "f1": 1.0,
+   "hit": false,
+   "plan_words": "Grassland, where July to August 2022: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": false,
+  "keep": false
+ },
+ {
+  "question": "Hay fields where the growing season was unusually dry in 2021",
+  "area": "north_dakota",
+  "type": "NAP hay",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 2210,
+   "precision": 0.5958445040214477,
+   "f1": 0.6846361185983828,
+   "hit": false,
+   "plan_words": "Hay, where April to September 2021: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 2210,
+   "precision": 0.5918230563002681,
+   "f1": 0.68001540238737,
+   "hit": false,
+   "plan_words": "Hay, where April to September 2021: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 1925,
+   "true": 2210,
+   "precision": 0.7761038961038961,
+   "f1": 0.7226118500604595,
+   "hit": true,
+   "plan_words": "Hay, where April to September 2021: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

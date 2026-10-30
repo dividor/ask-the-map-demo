@@ -45,7 +45,7 @@ rsync -a --delete --include='*.nc' --include='manifest.json' --include='*.json' 
   "$DATA_ROOT/power/" deploy/data/power/
 # the encoder's snapshot with its links resolved (the cache's blobs/ folder would double it), weights as
 # safetensors only (the cache may also hold .bin and .h5 copies of the same weights)
-rsync -aL --delete --exclude='blobs/' --exclude='*.bin' --exclude='*.h5' --exclude='*.msgpack' --exclude='*.ot' \
+rsync -aL --delete --delete-excluded --exclude='blobs/' --exclude='*.bin' --exclude='*.h5' --exclude='*.msgpack' --exclude='*.ot' \
   "$HF_HOME/models--openai--clip-vit-large-patch14/" deploy/hf_cache/models--openai--clip-vit-large-patch14/
 du -sh deploy/data deploy/hf_cache
 

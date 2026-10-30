@@ -1,0 +1,98 @@
+[
+ {
+  "question": "Corn fields that had an unusually wet spring in 2022",
+  "area": "north_dakota",
+  "type": "prevented planting",
+  "persona": null,
+  "M1": {
+   "shown": 2985,
+   "true": 14795,
+   "precision": 0.7983249581239531,
+   "f1": 0.26805399325084367,
+   "hit": false,
+   "plan_words": "Corn, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2825,
+   "true": 14795,
+   "precision": 0.9950442477876106,
+   "f1": 0.31906923950056754,
+   "hit": false,
+   "plan_words": "Corn, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 14727,
+   "true": 14795,
+   "precision": 0.9371901948801521,
+   "f1": 0.9350315019307635,
+   "hit": true,
+   "plan_words": "Corn, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields with at least five days above 35 C in July 2022",
+  "area": "north_carolina",
+  "type": "heat at pollination",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 16866,
+   "precision": 0.9832439678284183,
+   "f1": 0.2956171284634761,
+   "hit": false,
+   "plan_words": "Soybeans, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 16866,
+   "precision": 0.9705093833780161,
+   "f1": 0.2917884130982368,
+   "hit": false,
+   "plan_words": "Soybeans, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 16425,
+   "true": 16866,
+   "precision": 0.7905631659056317,
+   "f1": 0.7800907152083145,
+   "hit": true,
+   "plan_words": "Soybeans, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland within 100 m of a wetland",
+  "area": "north_carolina",
+  "type": "wetland compliance",
+  "persona": null,
+  "M1": {
+   "shown": 452,
+   "true": 10182,
+   "precision": 0.6349557522123894,
+   "f1": 0.05397780703404175,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M2": {
+   "shown": 452,
+   "true": 10182,
+   "precision": 0.6349557522123894,
+   "f1": 0.05397780703404175,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M3": {
+   "shown": 10243,
+   "true": 10182,
+   "precision": 0.6115395880113248,
+   "f1": 0.6133659730722154,
+   "hit": true,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

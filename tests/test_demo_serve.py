@@ -21,7 +21,7 @@ def test_page_examples_keep_question_and_area_and_fail_on_bad_entries():
 def test_configured_page_examples_name_demo_areas():
     au = load_config(PROJECT_ROOT / "configs" / "aether_us.yaml")
     got = page_examples(au["demo"]["page_examples"], {a: {} for a in au["demo"]["areas"]})
-    assert len(got) == 12
+    assert len(got) == 16
     assert len({x["question"] for x in got}) == len(got)  # no question is listed twice
 
 

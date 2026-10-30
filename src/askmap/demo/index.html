@@ -70,7 +70,7 @@
               white-space: nowrap; }
   .tile-tab:hover { background: #f1efe9; }
   /* the label inside the bottom-right corner of a NASA POWER cell that meets the climate conditions */
-  .cell-tag { transform: translate(-100%, -100%); width: max-content; background: #22c55e; color: #052e16;
+  .cell-tag { transform: translate(-100%, -100%); width: max-content; cursor: pointer; background: #22c55e; color: #052e16;
               font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px 0 0 0; white-space: nowrap; }
   .modal { position: fixed; inset: 0; background: #00000073; display: flex; align-items: center;
            justify-content: center; z-index: 2000; }
@@ -378,6 +378,7 @@ function render(d, question) {
     r.hidden = !!pcells.length;
     r.textContent = "No climate condition: NASA POWER not used";
   });
+  const overlapsCell = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
   pcells.forEach(c => {
     // pass: green edge and tint; fail: light dashed edge and a dark shade, so both read on satellite imagery
     L.rectangle(box(c.bounds), c.pass
@@ -386,16 +387,20 @@ function render(d, question) {
       .bindTooltip(c.pass ? "NASA POWER cell: meets the climate conditions" : "NASA POWER cell: does not meet them")
       .addTo(cells);
     if (c.pass) {
-      L.marker([c.bounds[1], c.bounds[2]], { interactive: false, icon: L.divIcon({ className: "", iconSize: null,
-          html: '<div class="cell-tag">NASA POWER</div>' }) }).addTo(cells);
+      // the tag opens the Match information window for the tile under the cell with the most matches (its climate
+      // section lists this cell's values); with no tile under the cell, the busiest tile of the answer
+      const under = d.tiles.filter(t => overlapsCell(t.bounds, c.bounds)).sort((a, b) => b.count - a.count)[0];
+      L.marker([c.bounds[1], c.bounds[2]], { icon: L.divIcon({ className: "", iconSize: null,
+          html: '<div class="cell-tag" title="Open the match information">NASA POWER</div>' }) })
+        .on("click", () => { const t = under || busiest || d.tiles[0]; if (t) openInfo(t); })
+        .addTo(cells);
     }
   });
   // 20 km tiles tens of km apart: fitting them all makes 90 m places invisible, so open on the tile with the most
   // matches. A NASA POWER cell (~50 km) is larger than that view, so for a question with climate conditions open on
   // the POWER cells around the matches instead, so the cells' edges are visible; with no matches, open on all the
   // area's POWER cells.
-  const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
-  const near = busiest ? pcells.filter(c => overlaps(c.bounds, busiest.match_bounds)) : pcells;
+  const near = busiest ? pcells.filter(c => overlapsCell(c.bounds, busiest.match_bounds)) : pcells;
   if (near.length) map.fitBounds(L.latLngBounds(near.flatMap(c => box(c.bounds))), { padding: [20, 20], animate: false });
   else if (busiest) map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
   else showArea(d.area);
