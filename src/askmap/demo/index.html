@@ -37,11 +37,14 @@
               cursor: pointer; }
   button.go:disabled { opacity: .6; cursor: wait; }
   /* the example questions as equal-width boxes */
-  .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 6px; margin-top: 6px; }
+  .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin-top: 6px; }
   .examples-box { margin-top: 6px; }
-  .examples-box summary { cursor: pointer; color: var(--muted); font-size: 13px; }
+  .examples-box summary { cursor: pointer; color: var(--text); font-size: 14px; font-weight: 600; margin-top: 4px; }
   .examples button { width: 100%; height: 100%; text-align: left; background: var(--chip); font-size: 12px;
                      padding: 5px 8px; cursor: pointer; }
+  .examples .badge { display: inline-block; margin-top: 3px; padding: 1px 7px; border-radius: 999px; font-size: 10.5px;
+                     font-weight: 600; letter-spacing: .02em; color: #1f6fd0; background: #1f6fd01a;
+                     border: 1px solid #1f6fd04d; white-space: nowrap; }
   #status { margin-top: 10px; color: var(--muted); min-height: 1.4em; }
   /* while a question is being answered: a thin ring in the accent colour that spins, in the status line and,
      larger, over the map */
@@ -110,12 +113,12 @@
   <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
      queries. Be gentle, it's not production-grade 🙂</p>
   <div id="live-controls">
-    <label for="q" class="ask">Ask a question</label>
+    <label for="q" class="ask">Go on, ask something</label>
     <textarea id="q" autofocus autocomplete="off"
               placeholder="Type a question in plain English, e.g. corn fields where July 2021 had at least 5 days above 35 C, or pick an example below"></textarea>
     <button class="go" id="go">Search</button>
     <details class="examples-box">
-      <summary>Examples (click one to run it)</summary>
+      <summary>Examples: click one to run it</summary>
       <div class="examples" id="examples"></div>
     </details>
     <label for="area">Study area</label>
@@ -439,7 +442,12 @@ if (STATIC) {
       const b = document.createElement("button");
       // shown and asked with a capital first letter; the plan is the same either way
       const question = e.question.charAt(0).toUpperCase() + e.question.slice(1);
-      b.textContent = `${question} (${m.areas[e.area].label.replace(" study area", "")})`;
+      // the question, then the study area as a small badge
+      b.textContent = question + " ";
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = m.areas[e.area].label.replace(" study area", "");
+      b.appendChild(badge);
       b.onclick = () => {
         document.getElementById("q").value = question;
         sel.value = e.area; sel.onchange();
