@@ -185,3 +185,16 @@ def test_a_leaf_that_the_config_also_calls_a_group_is_that_leaf():
     m = np.array([[0, 1, 2]])
     assert class_mask(m, "developed", old, CLS["groups"]).tolist() == [[False, True, False]]
     assert "developed" in class_names(old, CLS["groups"])
+
+
+def test_a_distance_below_one_cell_means_the_neighbouring_cell():
+    from askmap.geo import within
+
+    mask = np.array([[False, False, True, False, False]])
+    # 90 m cells: a 30 m rule reaches the neighbours (they touch), a 100 m rule the same, 200 m two cells
+    assert within(mask, 30, 90).tolist() == [[False, True, True, True, False]]
+    assert within(mask, 100, 90).tolist() == [[False, True, True, True, False]]
+    assert within(mask, 200, 90).tolist() == [[True, True, True, True, True]]
+    # 30 m cells: a 30 m rule is one cell, as before
+    assert within(mask, 30, 30).tolist() == [[False, True, True, True, False]]
+    assert within(mask, 10, 30).tolist() == [[False, True, True, True, False]]

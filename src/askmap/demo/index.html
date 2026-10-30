@@ -362,7 +362,7 @@ function openInfo(t) {
       }
     });
     h += `<p class="small">${d.used === "classifier"
-      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule)."
+      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule). The map's cells are 90 m, so a distance below 90 m means the neighbouring cell."
       : "A place passes a rule if it is within the distance of any cell of the named classes on the aligned space's own land map (or is not, for a \"not within\" rule); the places shown are the most similar candidates that pass every rule."}</p>`;
   }
 

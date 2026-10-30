@@ -56,10 +56,12 @@ def tile_bbox_4326(tile: Tile) -> tuple[float, float, float, float]:
 
 
 def within(mask: np.ndarray, distance_m: float, res_m: float) -> np.ndarray:
-    """Pixels whose centre is within ``distance_m`` of any True pixel in ``mask`` (includes ``mask``)."""
+    """Pixels whose centre is within ``distance_m`` of any True pixel in ``mask`` (includes ``mask``). A
+    distance below one cell (``res_m``) means the neighbouring cell: cells that touch are 0 m apart, but their
+    centres are ``res_m`` apart, so without this a 30 m rule on a 90 m grid could match nothing."""
     from scipy.ndimage import distance_transform_edt
 
     if not mask.any():
         return np.zeros_like(mask, dtype=bool)
     dist = distance_transform_edt(~mask) * res_m
-    return dist <= distance_m
+    return dist <= max(distance_m, res_m)

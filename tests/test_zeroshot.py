@@ -39,17 +39,17 @@ def test_leaf_grid_fills_valid_pixels_in_order():
 
 
 def test_distance_ok_uses_geometry_on_the_map():
-    m = np.zeros(
-        (1, 6), np.int16
-    )  # corn everywhere but a wetland pixel at the right end and one missing pixel
-    m[0, 5], m[0, 0] = 2, -1
+    # corn everywhere but two wetland pixels at the right end and one missing pixel (30 m cells)
+    m = np.zeros((1, 7), np.int16)
+    m[0, 5], m[0, 6], m[0, 0] = 2, 2, -1
     near = {"classes": ["wetland"], "distance_m": 60, "negate": False}
     plan = {"near": [near]}
-    assert distance_ok(plan, m, Ctx()).tolist() == [[False, False, False, True, True, True]]
+    assert distance_ok(plan, m, Ctx()).tolist() == [[False, False, False, True, True, True, True]]
     far = {"near": [dict(near, negate=True)]}
-    assert distance_ok(far, m, Ctx()).tolist() == [[True, True, True, False, False, False]]
-    both = {"near": [near, {"classes": ["cropland"], "distance_m": 0, "negate": False}]}
-    assert distance_ok(both, m, Ctx()).tolist() == [[False, False, False, True, True, False]]
+    assert distance_ok(far, m, Ctx()).tolist() == [[True, True, True, False, False, False, False]]
+    # a second rule narrows the first: within one cell of cropland (a distance below a cell is one cell)
+    both = {"near": [near, {"classes": ["cropland"], "distance_m": 10, "negate": False}]}
+    assert distance_ok(both, m, Ctx()).tolist() == [[False, False, False, True, True, True, False]]
     assert distance_ok({"near": []}, m, Ctx()).all()
 
 
