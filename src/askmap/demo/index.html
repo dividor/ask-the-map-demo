@@ -65,10 +65,11 @@
   /* when the box's bottom edge is off screen, the tab sits inside the visible part of the box instead */
   .tile-tab-wrap.inside { transform: translate(calc(-100% + 1px), -100%); }
   .tile-tab-wrap.inside .tile-tab { border-radius: 6px 0 0 0; }
-  .tile-tab { width: 100%; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
+  /* the tab reads as a link: blue, underlined */
+  .tile-tab { width: 100%; background: #ffffff; color: #1d4ed8; border: none; font-weight: 600; font-size: 12px;
               padding: 4px 9px 5px; border-radius: 0 0 6px 6px; cursor: pointer; box-shadow: 0 2px 4px #0004;
-              white-space: nowrap; }
-  .tile-tab:hover { background: #f1efe9; }
+              white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+  .tile-tab:hover { background: #f1efe9; color: #1e3a8a; }
   /* the label inside the bottom-right corner of a NASA POWER cell that meets the climate conditions */
   .cell-tag { transform: translate(-100%, -100%); width: max-content; cursor: pointer; background: #22c55e; color: #052e16;
               font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px 0 0 0; white-space: nowrap; }
@@ -185,16 +186,20 @@ let LAST = null;  // the last answer and its question: { d, question }
 document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
 // each tile's match image, drawn to a canvas so a click on the map can tell whether it hit a shown place
 let tileHits = [];
+// resolves once the tile's match image is drawn to its canvas (image decoding is asynchronous)
 function hitCanvas(t) {
-  const img = new Image();
-  img.onload = () => {
-    const c = document.createElement("canvas");
-    c.width = img.width; c.height = img.height;
-    const ctx = c.getContext("2d", { willReadFrequently: true });
-    ctx.drawImage(img, 0, 0);
-    tileHits.push({ t, ctx, w: img.width, h: img.height });
-  };
-  img.src = "data:image/png;base64," + t.png;
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = img.width; c.height = img.height;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0);
+      tileHits.push({ t, ctx, w: img.width, h: img.height });
+      resolve();
+    };
+    img.src = "data:image/png;base64," + t.png;
+  });
 }
 map.on("click", e => {
   const { lat, lng } = e.latlng;
@@ -366,17 +371,38 @@ function openInfo(t) {
   document.getElementById("info-close").focus();
 }
 
+// The part of a tile with the most matches: the tile's match image is cut into a 10 x 10 grid (2 km squares on
+// a 20 km tile) and the square with the most matched pixels is returned as map bounds. Fitting all of a tile's
+// matches shows a scatter over 20 km; this opens on the thickest cluster (a solar farm ringed by forest, say).
+function densestWindow(t) {
+  const h = tileHits.find(x => x.t === t);
+  if (!h) return box(t.match_bounds);
+  const img = h.ctx.getImageData(0, 0, h.w, h.h).data;
+  const cell = Math.max(1, Math.round(h.w / 10)), nx = Math.ceil(h.w / cell), ny = Math.ceil(h.h / cell);
+  const dens = new Float64Array(nx * ny);
+  for (let y = 0; y < h.h; y++)
+    for (let x = 0; x < h.w; x++)
+      if (img[(y * h.w + x) * 4 + 3] > 0) dens[Math.floor(y / cell) * nx + Math.floor(x / cell)]++;
+  let best = 0;
+  for (let i = 1; i < dens.length; i++) if (dens[i] > dens[best]) best = i;
+  const bx = best % nx, by = Math.floor(best / nx);
+  const [W, S, E, N] = t.bounds, lonPer = (E - W) / h.w, latPer = (N - S) / h.h;
+  const x0 = bx * cell, x1 = Math.min(h.w, (bx + 1) * cell), y0 = by * cell, y1 = Math.min(h.h, (by + 1) * cell);
+  return L.latLngBounds([N - y1 * latPer, W + x0 * lonPer], [N - y0 * latPer, W + x1 * lonPer]);
+}
+
 function render(d, question) {
   overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
   tileTabs = []; tileHits = [];
   const f = d.facts;
   let busiest = null;
+  const drawn = [];  // the match canvases being decoded
   // open on the tile with the most matches in passing NASA POWER cells when there are any, else the most matches
   const green = t => t.count_meeting_climate || 0;
   const anyGreen = d.tiles.some(t => green(t) > 0);
   d.tiles.forEach(t => {
     L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: matchOpacity() }).addTo(overlays);
-    if (t.count > 0) hitCanvas(t);
+    if (t.count > 0) drawn.push(hitCanvas(t));
     if (t.count > 0 && t.match_bounds) {
       const key = x => anyGreen ? green(x) : x.count;
       if (!busiest || key(t) > key(busiest)) busiest = t;
@@ -426,7 +452,15 @@ function render(d, question) {
   // area's POWER cells.
   const near = busiest ? pcells.filter(c => overlapsCell(c.bounds, busiest.match_bounds)) : pcells;
   if (near.length) map.fitBounds(L.latLngBounds(near.flatMap(c => box(c.bounds))), { padding: [20, 20], animate: false });
-  else if (busiest) map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
+  else if (busiest) {
+    // the densest window needs the busiest tile's canvas, so the view is set once the images are decoded
+    map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
+    Promise.all(drawn).then(() => {
+      if (LAST.d !== d) return;  // a newer answer has replaced this one
+      map.fitBounds(densestWindow(busiest), { padding: [30, 30], maxZoom: 14, animate: false });
+      sizeTabs();
+    });
+  }
   else showArea(d.area);
   sizeTabs();
 

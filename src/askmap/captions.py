@@ -40,7 +40,7 @@ class Vocab:
         self.fact_index = {f: k for k, f in enumerate(self.fact_ids)}
 
     def leaf_set(self, name: str) -> list[int]:
-        members = self.groups.get(name, [name])
+        members = [name] if name in self.leaves else self.groups.get(name, [name])
         return [self.leaves.index(m) for m in members if m in self.leaves]
 
 

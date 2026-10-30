@@ -54,7 +54,7 @@ def make_contexts(cfg: dict, meta: dict, demo_dir: Path) -> dict[str, AreaContex
             pc[t["name"]] = (z["iy"], z["ix"])
             cells[z["iy"], z["ix"]] = True
         out[area] = AreaContext(
-            leaves=cfg["classes"]["leaves"],
+            leaves=demo_leaves(meta),
             groups=cfg["classes"]["groups"],
             res_m=cfg["grid"]["res_m"] * meta["stride"],
             power=ds,
@@ -84,10 +84,20 @@ def page_examples(examples: list[dict], areas: dict) -> list[dict]:
     return out
 
 
-def make_planner(cfg: dict, translate, log_dir: Path):
-    """``planner(question, area)``: the main open model's plan for the question in the chosen area."""
+def demo_leaves(meta: dict) -> list[str]:
+    """The class list the demo data was built with (notebook 13 records it). The server, the planner's
+    catalogue and the engine all use this list, so a class list changed in the config after the data was built
+    cannot shift the data's columns."""
+    if "leaves" not in meta:
+        raise KeyError("demo meta.json has no 'leaves': rebuild the demo data with notebook 13")
+    return list(meta["leaves"])
+
+
+def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None = None):
+    """``planner(question, area)``: the main open model's plan for the question in the chosen area.
+    ``leaves`` is the class list the plan may use (default: the configured one)."""
     labels = cfg["question_areas"]
-    catalogue = area_classes(cfg)
+    catalogue = area_classes(cfg, leaves)
 
     def planner(question: str, area: str) -> dict:
         text = (
@@ -131,6 +141,12 @@ def main() -> None:
     cap = load_config(PROJECT_ROOT / "configs" / "captions.yaml")
     demo_dir = data_root() / "demo"
     meta = json.loads((demo_dir / "meta.json").read_text())
+    leaves = demo_leaves(meta)
+    if leaves != cfg["classes"]["leaves"]:
+        print(
+            "note: the demo data was built with a different class list from configs/feasibility.yaml; "
+            f"serving the data's classes {leaves} until notebook 13 rebuilds it"
+        )
     import torch
 
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
@@ -141,16 +157,17 @@ def main() -> None:
     client = make_client(llm["base_url"])
     years = (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4]))
     system = system_prompt(
-        (PROJECT_ROOT / "configs" / "language.md").read_text(), catalogue_text(cfg), data_years=years
+        (PROJECT_ROOT / "configs" / "language.md").read_text(), catalogue_text(cfg, leaves), data_years=years
     )
     planner = make_planner(
         cfg,
         lambda q, path: translate(client, llm["models"]["main"], system, q, path, llm),
         PROJECT_ROOT / "outputs" / "llm" / "demo",
+        leaves,
     )
     engine = Engine(
         load_tiles(demo_dir, meta),
-        cfg["classes"]["leaves"],
+        leaves,
         encode,
         planner,
         make_contexts(cfg, meta, demo_dir),

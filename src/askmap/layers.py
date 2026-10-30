@@ -72,8 +72,9 @@ def class_names(leaves: list[str], groups: dict[str, list[str]]) -> list[str]:
 def class_mask(
     leaf_map: np.ndarray, name: str, leaves: list[str], groups: dict[str, list[str]]
 ) -> np.ndarray:
-    """Boolean mask of a leaf or group class; unknown names fail."""
-    if name in groups:
+    """Boolean mask of a leaf or group class; unknown names fail. A name that is a leaf of this class list is
+    that leaf, even if the configured groups also know it as a group (data built before a leaf was split)."""
+    if name in groups and name not in leaves:
         members = [leaves.index(m) for m in groups[name] if m in leaves]
         if not members:
             raise ValueError(f"group {name!r} has no leaf in this area")
@@ -84,10 +85,12 @@ def class_mask(
 
 
 def class_indices(names: list[str], leaves: list[str], groups: dict[str, list[str]]) -> list[int]:
-    """Sorted leaf indices covered by class names (leaves or groups); unknown names fail."""
+    """Sorted leaf indices covered by class names (leaves or groups); unknown names fail. A name that is a
+    leaf of this class list is that leaf, even if the configured groups also know it as a group."""
     out = set()
     for name in names:
-        idx = [leaves.index(m) for m in groups.get(name, [name]) if m in leaves]
+        members = [name] if name in leaves else groups.get(name, [name])
+        idx = [leaves.index(m) for m in members if m in leaves]
         if not idx or (name not in groups and name == "other"):
             raise ValueError(f"unknown class {name!r}")
         out.update(idx)

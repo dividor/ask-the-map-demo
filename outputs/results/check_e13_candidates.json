@@ -1,0 +1,130 @@
+[
+ {
+  "question": "Cropland that had an unusually dry autumn in 2025",
+  "area": "north_carolina",
+  "type": "recent dry autumn",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 26674,
+   "precision": 0.7697721179624665,
+   "f1": 0.15489918403129005,
+   "hit": false,
+   "plan_words": "Cropland, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2049,
+   "true": 26674,
+   "precision": 0.9546120058565154,
+   "f1": 0.13619747240887095,
+   "hit": false,
+   "plan_words": "Cropland, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 25828,
+   "true": 26674,
+   "precision": 0.9200480099117238,
+   "f1": 0.9052226581844501,
+   "hit": true,
+   "plan_words": "Cropland, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields that had an unusually dry September and October in 2025",
+  "area": "north_carolina",
+  "type": "recent dry autumn",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 13758,
+   "precision": 0.9333109919571045,
+   "f1": 0.33269621311671244,
+   "hit": false,
+   "plan_words": "Soybeans, where September to October 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2365,
+   "true": 13758,
+   "precision": 0.9708245243128965,
+   "f1": 0.28481051913415617,
+   "hit": false,
+   "plan_words": "Soybeans, where September to October 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 13258,
+   "true": 13758,
+   "precision": 0.8029114496907528,
+   "f1": 0.7880515250222091,
+   "hit": true,
+   "plan_words": "Soybeans, where September to October 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cotton fields that had an unusually dry autumn in 2025",
+  "area": "north_carolina",
+  "type": "recent dry autumn",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 2455,
+   "precision": 0.29892761394101874,
+   "f1": 0.3280014708586137,
+   "hit": false,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 829,
+   "true": 2455,
+   "precision": 0.8902291917973462,
+   "f1": 0.44945188794153473,
+   "hit": false,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 2166,
+   "true": 2455,
+   "precision": 0.7668513388734995,
+   "f1": 0.7188920147154295,
+   "hit": true,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland that had a very dry summer in 2022",
+  "area": "north_carolina",
+  "type": "recent dry summer",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 26674,
+   "precision": 0.710455764075067,
+   "f1": 0.14296311281947535,
+   "hit": false,
+   "plan_words": "Cropland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2049,
+   "true": 26674,
+   "precision": 0.9546120058565154,
+   "f1": 0.13619747240887095,
+   "hit": false,
+   "plan_words": "Cropland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 25828,
+   "true": 26674,
+   "precision": 0.9200480099117238,
+   "f1": 0.9052226581844501,
+   "hit": true,
+   "plan_words": "Cropland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

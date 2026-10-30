@@ -5,7 +5,7 @@ import xarray as xr
 
 from askmap.catalogue import area_classes
 from askmap.config import PROJECT_ROOT, load_config
-from askmap.layers import class_mask, class_names, official_leaf_map
+from askmap.layers import class_indices, class_mask, class_names, official_leaf_map
 from askmap.plan import AreaContext, execute, min_patch, validate
 
 CFG = load_config(PROJECT_ROOT / "configs/feasibility.yaml")
@@ -175,3 +175,13 @@ def test_class_indices_leaves_and_groups():
         class_indices(["forest"], leaves, groups)
     with pytest.raises(ValueError):
         class_indices(["other"], leaves, groups)
+
+
+def test_a_leaf_that_the_config_also_calls_a_group_is_that_leaf():
+    # data built before "developed" was split: it is a leaf there, and the configured group over the new
+    # leaves must not hide it
+    old = ["corn", "developed", "other"]
+    assert class_indices(["developed"], old, CLS["groups"]) == [1]
+    m = np.array([[0, 1, 2]])
+    assert class_mask(m, "developed", old, CLS["groups"]).tolist() == [[False, True, False]]
+    assert "developed" in class_names(old, CLS["groups"])

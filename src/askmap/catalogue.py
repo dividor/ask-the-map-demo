@@ -44,17 +44,18 @@ VAR_TEXT = {
 }
 
 
-def area_classes(cfg: dict) -> dict[str, list[str]]:
-    """Class names a plan may use, per question area (one leaf list for every area)."""
+def area_classes(cfg: dict, leaves: list[str] | None = None) -> dict[str, list[str]]:
+    """Class names a plan may use, per question area (one leaf list for every area). ``leaves`` overrides the
+    configured list, for data built with another one (the demo data records its own)."""
     c = cfg["classes"]
-    return {a: class_names(c["leaves"], c["groups"]) for a in cfg["question_areas"]}
+    return {a: class_names(leaves or c["leaves"], c["groups"]) for a in cfg["question_areas"]}
 
 
-def catalogue_text(cfg: dict) -> str:
+def catalogue_text(cfg: dict, leaves: list[str] | None = None) -> str:
     """Plain-text catalogue for the language model: areas, land classes, climate variables, years."""
     p = cfg["power"]
     years = f"{p['start'][:4]}-{p['end'][:4]}"
-    names = class_names(cfg["classes"]["leaves"], cfg["classes"]["groups"])
+    names = class_names(leaves or cfg["classes"]["leaves"], cfg["classes"]["groups"])
     lines = [f"Land is mapped for {cfg['land_year']}. Climate data are daily, {years}.", "", "Study areas:"]
     lines += [f"- `{a}`: {label}" for a, label in cfg["question_areas"].items()]
     lines += [

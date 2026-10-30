@@ -73,6 +73,8 @@ def test_system_prompt_and_catalogue():
     text = catalogue_text(CFG)
     assert "`minnesota`" in text and "`solar_farm`" in text and "`LOW_WIND_SUN`" in text
     assert "`town`" in text and "`developed_open`" in text and "`developed`" in text
+    older = catalogue_text(CFG, ["corn", "developed", "other"])
+    assert "`developed`" in older and "`town`" not in older
     assert "unsupported" in system_prompt((PROJECT_ROOT / "configs" / "language.md").read_text(), text)
     assert "# Query language" in system_prompt("L", text)
 

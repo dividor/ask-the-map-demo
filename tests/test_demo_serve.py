@@ -3,7 +3,7 @@ import pytest
 
 from askmap.config import PROJECT_ROOT, load_config
 from askmap.demo.engine import UserError
-from askmap.demo.serve import load_tiles, make_planner, page_examples, server_host
+from askmap.demo.serve import demo_leaves, load_tiles, make_planner, page_examples, server_host
 
 CFG = load_config(PROJECT_ROOT / "configs" / "feasibility.yaml")
 
@@ -84,3 +84,26 @@ def test_server_listens_on_localhost_unless_told_otherwise():
     assert server_host({}) == "127.0.0.1"
     assert server_host({"ASKMAP_HOST": ""}) == "127.0.0.1"
     assert server_host({"ASKMAP_HOST": "0.0.0.0"}) == "0.0.0.0"
+
+
+def test_demo_leaves_come_from_the_data_and_are_required():
+    old = ["corn", "developed", "other"]
+    assert demo_leaves({"leaves": old}) == old
+    with pytest.raises(KeyError, match="notebook 13"):
+        demo_leaves({"stride": 3})
+
+
+def test_planner_validates_against_the_data_classes_not_the_config(tmp_path):
+    plan = {
+        "area": "x",
+        "land": {"classes": ["town"], "min_patch_ha": None},
+        "near": [],
+        "climate": [],
+        "output": "map",
+    }
+    old_data = make_planner(CFG, lambda t, p: {"plan": plan}, tmp_path, ["corn", "developed", "other"])
+    with pytest.raises(UserError, match="unknown classes"):
+        old_data("towns", "minnesota")
+    assert make_planner(CFG, lambda t, p: {"plan": plan}, tmp_path)("towns", "minnesota")["land"][
+        "classes"
+    ] == ["town"]
