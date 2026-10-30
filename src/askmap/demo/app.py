@@ -20,6 +20,7 @@ class Query(BaseModel):
     question: str
     area: str
     method: str
+    share: float | None = None  # the most similar share of the study area to show (default: the engine's)
 
 
 def create_app(engine, meta: dict) -> FastAPI:
@@ -43,7 +44,7 @@ def create_app(engine, meta: dict) -> FastAPI:
         if len(text) > 500:
             raise HTTPException(status_code=400, detail="Please keep the question under 500 characters.")
         try:
-            return engine.search(text, q.area, q.method)
+            return engine.search(text, q.area, q.method, q.share)
         except UserError as e:
             raise HTTPException(status_code=400, detail=str(e)) from e
         except Unavailable as e:

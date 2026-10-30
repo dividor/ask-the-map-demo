@@ -7,16 +7,16 @@
   "M1": {
    "shown": 2984,
    "true": 1541,
-   "precision": 0.4011394101876676,
-   "f1": 0.5290607734806629,
+   "precision": 0.4004691689008043,
+   "f1": 0.5281767955801105,
    "hit": false,
    "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 1260,
+   "shown": 1228,
    "true": 1541,
-   "precision": 0.9317460317460318,
-   "f1": 0.838272045697965,
+   "precision": 0.9348534201954397,
+   "f1": 0.8291802094618996,
    "hit": true,
    "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -40,16 +40,16 @@
   "M1": {
    "shown": 2984,
    "true": 3562,
-   "precision": 0.9125335120643432,
-   "f1": 0.8319584479071188,
+   "precision": 0.8971179624664879,
+   "f1": 0.8179040635502597,
    "hit": true,
    "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
   "M2": {
    "shown": 2984,
    "true": 3562,
-   "precision": 0.920911528150134,
-   "f1": 0.8395967002749771,
+   "precision": 0.9165549597855228,
+   "f1": 0.8356248090436909,
    "hit": true,
    "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
@@ -73,16 +73,16 @@
   "M1": {
    "shown": 2984,
    "true": 8257,
-   "precision": 0.978887399463807,
-   "f1": 0.5197046526109776,
+   "precision": 0.9581099195710456,
+   "f1": 0.5086736055511075,
    "hit": true,
    "plan_words": "Cotton, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
    "shown": 2984,
    "true": 8257,
-   "precision": 0.9892761394101877,
-   "f1": 0.5252201761409128,
+   "precision": 0.9849195710455764,
+   "f1": 0.5229072146606174,
    "hit": true,
    "plan_words": "Cotton, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -106,16 +106,16 @@
   "M1": {
    "shown": 2984,
    "true": 13758,
-   "precision": 0.7406166219839142,
-   "f1": 0.26400668976227454,
+   "precision": 0.7771447721179625,
+   "f1": 0.27702783418946364,
    "hit": false,
    "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 2177,
+   "shown": 1967,
    "true": 13758,
-   "precision": 0.9857602204869086,
-   "f1": 0.269344210856605,
+   "precision": 0.9954245043213015,
+   "f1": 0.2490302066772655,
    "hit": false,
    "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -139,16 +139,16 @@
   "M1": {
    "shown": 2984,
    "true": 24094,
-   "precision": 0.4996648793565684,
-   "f1": 0.11012630179481497,
+   "precision": 0.33579088471849866,
+   "f1": 0.07400842011965433,
    "hit": false,
    "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 2284,
+   "shown": 1761,
    "true": 24094,
-   "precision": 0.9457092819614711,
-   "f1": 0.16377284100386685,
+   "precision": 0.9335604770017035,
+   "f1": 0.12717076000773544,
    "hit": false,
    "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -172,16 +172,16 @@
   "M1": {
    "shown": 2984,
    "true": 39847,
-   "precision": 0.8666219839142091,
-   "f1": 0.12075365973243679,
+   "precision": 0.9051608579088471,
+   "f1": 0.12612360206392567,
    "hit": false,
    "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
    "shown": 2984,
    "true": 39847,
-   "precision": 0.9473860589812333,
-   "f1": 0.13200719105320913,
+   "precision": 0.9483914209115282,
+   "f1": 0.13214727650533492,
    "hit": false,
    "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -203,32 +203,32 @@
   "type": "wetland conservation",
   "persona": true,
   "M1": {
-   "shown": 0,
-   "true": 0,
-   "precision": null,
-   "f1": 1.0,
+   "shown": 906,
+   "true": 10182,
+   "precision": 0.6390728476821192,
+   "f1": 0.10443722943722944,
    "hit": false,
-   "plan_words": "Cropland, within 30 m of wetland."
+   "plan_words": "Cropland, next to wetland."
   },
   "M2": {
-   "shown": 0,
-   "true": 0,
-   "precision": null,
-   "f1": 1.0,
+   "shown": 906,
+   "true": 10182,
+   "precision": 0.6390728476821192,
+   "f1": 0.10443722943722944,
    "hit": false,
-   "plan_words": "Cropland, within 30 m of wetland."
+   "plan_words": "Cropland, next to wetland."
   },
   "M3": {
-   "shown": 0,
-   "true": 0,
-   "precision": null,
-   "f1": 1.0,
-   "hit": false,
-   "plan_words": "Cropland, within 30 m of wetland."
+   "shown": 10233,
+   "true": 10182,
+   "precision": 0.6096941268445226,
+   "f1": 0.611217242223855,
+   "hit": true,
+   "plan_words": "Cropland, next to wetland."
   },
-  "passes": false,
-  "best_f1": null,
-  "chosen": false
+  "passes": true,
+  "best_f1": 0.611217242223855,
+  "chosen": true
  },
  {
   "question": "cropland within 100 m of a wetland",
@@ -236,18 +236,18 @@
   "type": "wetland conservation",
   "persona": false,
   "M1": {
-   "shown": 1159,
+   "shown": 906,
    "true": 10182,
-   "precision": 0.6885245901639344,
-   "f1": 0.14072833083502337,
+   "precision": 0.6390728476821192,
+   "f1": 0.10443722943722944,
    "hit": false,
    "plan_words": "Cropland, within 100 m of wetland."
   },
   "M2": {
-   "shown": 1159,
+   "shown": 906,
    "true": 10182,
-   "precision": 0.6885245901639344,
-   "f1": 0.14072833083502337,
+   "precision": 0.6390728476821192,
+   "f1": 0.10443722943722944,
    "hit": false,
    "plan_words": "Cropland, within 100 m of wetland."
   },
@@ -269,18 +269,18 @@
   "type": "wetland conservation",
   "persona": false,
   "M1": {
-   "shown": 771,
+   "shown": 823,
    "true": 3689,
-   "precision": 0.6705577172503242,
-   "f1": 0.23183856502242153,
+   "precision": 0.6743620899149453,
+   "f1": 0.24601063829787234,
    "hit": false,
    "plan_words": "Wetland, more than 500 m from any cropland."
   },
   "M2": {
-   "shown": 771,
+   "shown": 823,
    "true": 3689,
-   "precision": 0.6705577172503242,
-   "f1": 0.23183856502242153,
+   "precision": 0.6743620899149453,
+   "f1": 0.24601063829787234,
    "hit": false,
    "plan_words": "Wetland, more than 500 m from any cropland."
   },
@@ -294,7 +294,7 @@
   },
   "passes": true,
   "best_f1": 0.6942667168485761,
-  "chosen": true
+  "chosen": false
  },
  {
   "question": "Grassland near existing solar farms, in the sunnier part of the region",
@@ -302,28 +302,28 @@
   "type": "solar siting",
   "persona": true,
   "M1": {
-   "shown": 82,
-   "true": 178,
-   "precision": 0.2682926829268293,
-   "f1": 0.16923076923076924,
+   "shown": 218,
+   "true": 409,
+   "precision": 0.28440366972477066,
+   "f1": 0.19776714513556617,
    "hit": false,
-   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+   "plan_words": "Grassland, within 300 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
   },
   "M2": {
-   "shown": 62,
-   "true": 178,
-   "precision": 0.46774193548387094,
-   "f1": 0.24166666666666667,
+   "shown": 135,
+   "true": 409,
+   "precision": 0.5111111111111111,
+   "f1": 0.2536764705882353,
    "hit": false,
-   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+   "plan_words": "Grassland, within 300 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
   },
   "M3": {
-   "shown": 227,
-   "true": 178,
-   "precision": 0.3920704845814978,
-   "f1": 0.43950617283950616,
+   "shown": 485,
+   "true": 409,
+   "precision": 0.47835051546391755,
+   "f1": 0.5190156599552572,
    "hit": false,
-   "plan_words": "Grassland, within 100 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
+   "plan_words": "Grassland, within 300 m of solar farm, where 2001 to 2025, all year (average): mean sunlight in the highest 50% of this area's places (NASA POWER)."
   },
   "passes": false,
   "best_f1": null,
@@ -335,18 +335,18 @@
   "type": "solar siting",
   "persona": false,
   "M1": {
-   "shown": 724,
+   "shown": 742,
    "true": 1432,
-   "precision": 0.2527624309392265,
-   "f1": 0.16975881261595546,
+   "precision": 0.22911051212938005,
+   "f1": 0.15639374425023,
    "hit": false,
    "plan_words": "Grassland or hay, within 1000 m of solar farm."
   },
   "M2": {
-   "shown": 724,
+   "shown": 742,
    "true": 1432,
-   "precision": 0.2527624309392265,
-   "f1": 0.16975881261595546,
+   "precision": 0.22911051212938005,
+   "f1": 0.15639374425023,
    "hit": false,
    "plan_words": "Grassland or hay, within 1000 m of solar farm."
   },
@@ -370,16 +370,16 @@
   "M1": {
    "shown": 2984,
    "true": 18011,
-   "precision": 0.8626005361930295,
-   "f1": 0.2452012383900929,
+   "precision": 0.9235924932975871,
+   "f1": 0.2625386996904025,
    "hit": false,
    "plan_words": "Developed, where June to August 2022: total cooling degree days in the highest 50% of this area's places (NASA POWER)."
   },
   "M2": {
-   "shown": 2804,
+   "shown": 2911,
    "true": 18011,
-   "precision": 0.9789586305278174,
-   "f1": 0.26375210184962766,
+   "precision": 0.9817931982136723,
+   "f1": 0.27320523850492306,
    "hit": false,
    "plan_words": "Developed, where June to August 2022: total cooling degree days in the highest 50% of this area's places (NASA POWER)."
   },
@@ -403,16 +403,16 @@
   "M1": {
    "shown": 2984,
    "true": 8257,
-   "precision": 0.9892761394101877,
-   "f1": 0.5252201761409128,
+   "precision": 0.9849195710455764,
+   "f1": 0.5229072146606174,
    "hit": true,
    "plan_words": "Cotton."
   },
   "M2": {
    "shown": 2984,
    "true": 8257,
-   "precision": 0.9892761394101877,
-   "f1": 0.5252201761409128,
+   "precision": 0.9849195710455764,
+   "f1": 0.5229072146606174,
    "hit": true,
    "plan_words": "Cotton."
   },
@@ -434,18 +434,18 @@
   "type": "land and distance",
   "persona": false,
   "M1": {
-   "shown": 50,
+   "shown": 39,
    "true": 490,
-   "precision": 0.28,
-   "f1": 0.05185185185185185,
+   "precision": 0.1282051282051282,
+   "f1": 0.01890359168241966,
    "hit": false,
    "plan_words": "Forest, more than 1000 m from any developed."
   },
   "M2": {
-   "shown": 50,
+   "shown": 39,
    "true": 490,
-   "precision": 0.28,
-   "f1": 0.05185185185185185,
+   "precision": 0.1282051282051282,
+   "f1": 0.01890359168241966,
    "hit": false,
    "plan_words": "Forest, more than 1000 m from any developed."
   },
@@ -467,18 +467,18 @@
   "type": "land and distance",
   "persona": false,
   "M1": {
-   "shown": 1833,
+   "shown": 1884,
    "true": 10048,
-   "precision": 0.8150572831423896,
-   "f1": 0.2514939819880481,
+   "precision": 0.8333333333333334,
+   "f1": 0.2631578947368421,
    "hit": false,
    "plan_words": "Soybeans, within 200 m of forest."
   },
   "M2": {
-   "shown": 1833,
+   "shown": 1884,
    "true": 10048,
-   "precision": 0.8150572831423896,
-   "f1": 0.2514939819880481,
+   "precision": 0.8333333333333334,
+   "f1": 0.2631578947368421,
    "hit": false,
    "plan_words": "Soybeans, within 200 m of forest."
   },

@@ -198,3 +198,33 @@ def test_a_distance_below_one_cell_means_the_neighbouring_cell():
     # 30 m cells: a 30 m rule is one cell, as before
     assert within(mask, 30, 30).tolist() == [[False, True, True, True, False]]
     assert within(mask, 10, 30).tolist() == [[False, True, True, True, False]]
+
+
+def test_plan_land_words_and_empty_classes():
+    cat = area_classes(CFG)
+    years = (2001, 2025)
+    base = {"area": "north_dakota", "near": [], "climate": [], "output": "map"}
+    validate(dict(base, land={"classes": ["corn"], "min_patch_ha": None, "words": "corn fields"}), cat, years)
+    validate(dict(base, land={"classes": [], "min_patch_ha": None, "words": "barns"}), cat, years)
+    with pytest.raises(ValueError, match="only with words"):
+        validate(dict(base, land={"classes": [], "min_patch_ha": None}), cat, years)
+    with pytest.raises(ValueError, match="non-empty string"):
+        validate(dict(base, land={"classes": ["corn"], "min_patch_ha": None, "words": " "}), cat, years)
+
+
+def test_a_zero_distance_means_touching():
+    cat = area_classes(CFG)
+    plan = {
+        "area": "north_dakota",
+        "land": {"classes": ["wetland"], "min_patch_ha": None},
+        "near": [{"classes": ["cropland"], "distance_m": 0, "negate": False}],
+        "climate": [],
+        "output": "map",
+    }
+    validate(plan, cat, (2001, 2025))
+    with pytest.raises(ValueError, match=">= 0"):
+        validate(dict(plan, near=[dict(plan["near"][0], distance_m=-1)]), cat, (2001, 2025))
+    from askmap.demo.core import near_words
+
+    assert near_words(plan["near"][0]) == "next to cropland"
+    assert near_words(dict(plan["near"][0], negate=True)) == "not next to cropland"

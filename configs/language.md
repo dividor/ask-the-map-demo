@@ -3,7 +3,7 @@ A plan is one JSON object with exactly these keys:
 ```
 {
   "area": "<study area name from the catalogue>",
-  "land": {"classes": ["<class>", ...], "min_patch_ha": <number or null>},
+  "land": {"classes": ["<class>", ...], "min_patch_ha": <number or null>, "words": "<the land type in the question's own words>"},
   "near": [ {"classes": ["<class>", ...], "distance_m": <number>, "negate": <true|false>}, ... ],
   "climate": [ <condition>, ... ],
   "output": "map" | "area"
@@ -14,11 +14,19 @@ Meaning. The answer is the set of pixels (30 m) that satisfy every part (logical
 
 - `land`: pixels of any of the listed classes (land as mapped for the catalogue's land year). If
   `min_patch_ha` is a number, keep only connected patches of these classes at least that many hectares.
+  `words` is always the land type exactly as the question puts it ("corn fields", "rivers", "barns"). When no
+  class fits the words, set `classes` to `[]` and keep `words`: the answer then ranks places by their
+  similarity to those words instead of a class. A land type is therefore never a reason to refuse. Always use
+  `[]` for rivers, streams, creeks and canals (the `water` class is lakes and ponds), barns, farm buildings and
+  farmyards, airfields and airports, quarries and gravel pits, golf courses, cemeteries, parks, railways and
+  anything else that is not one of the classes; use a class only when the words name it or its plain synonym
+  (corn, maize, soybeans, wheat, hay, pasture, grassland, forest, woods, wetlands, marsh, lakes, ponds, towns,
+  solar farms, cropland, fallow).
 - `near`: one entry per distance rule. `negate: false` keeps pixels within `distance_m` metres of any pixel of
   the listed classes; `negate: true` keeps pixels that are NOT within that distance. Use `[]` if none.
-  `distance_m` is always a positive number: "in", "inside", "among", "surrounded by" and "next to" mean
-  within 100 m (adjacent cells); "near" and "close to" mean within 300 m; "far from" and "away from" mean not
-  within 1000 m, unless the question gives a distance.
+  `distance_m` is a number of metres, never negative: "next to", "touching", "beside", "along" and "in" (as in
+  "rivers in towns") mean 0 (adjacent); "near" and "close to" mean within 300 m; "far from" and "away from"
+  mean not within 1000 m, unless the question gives a distance.
 - `climate`: one entry per NASA POWER climate condition (see below). Use `[]` if none.
 - `output`: `"map"` to show the pixels; `"area"` when the question asks how much land (hectares).
 
@@ -32,9 +40,9 @@ fixed: spring is months 3-5, summer 6-8, autumn (fall) 9-11, winter 12-2 of the 
 season is months 4-9; "dry" and "wet" mean total rainfall (`PRECTOTCORR`, stat `total`) unless the question
 says soil, in which case they mean root-zone soil wetness (`GWETROOT`, always stat `mean`: it is a fraction,
 not an amount), and "hot" means mean temperature (`T2M`, stat `mean`) unless it counts days. Only
-when the subject of a part has nothing in the catalogue (a land type with no class, a quantity with no climate
-variable, an event the data does not record such as fire, flood, harvest, yield, ownership or price), reply with
-this object instead of a plan, naming that part. Never reply with a plan that leaves a part of the question out
+when a condition has nothing in the catalogue (a quantity with no climate variable, an event the data does not
+record such as fire, flood, harvest, yield, ownership or price), reply with this object instead of a plan,
+naming that part. Never reply with a plan that leaves a part of the question out
 or swaps it for something the catalogue does have:
 
 ```
@@ -74,11 +82,15 @@ The test is one of:
 Examples.
 
 "Show cropland within 100 m of a wetland in the North Dakota study area." ->
-`{"area": "north_dakota", "land": {"classes": ["cropland"], "min_patch_ha": null},
+`{"area": "north_dakota", "land": {"classes": ["cropland"], "min_patch_ha": null, "words": "cropland"},
   "near": [{"classes": ["wetland"], "distance_m": 100, "negate": false}], "climate": [], "output": "map"}`
 
 "In the North Dakota study area, how much hay land had a June 2015 that was one of the 25% hottest Junes
 (mean daily temperature) since 2001?" ->
-`{"area": "north_dakota", "land": {"classes": ["hay"], "min_patch_ha": null}, "near": [],
+`{"area": "north_dakota", "land": {"classes": ["hay"], "min_patch_ha": null, "words": "hay land"}, "near": [],
   "climate": [{"variable": "T2M", "years": [2015, 2015], "months": [6], "stat": "mean", "day_threshold": null,
   "test": {"kind": "history_rank", "side": "high", "pct": 25, "history": [2001, 2025]}}], "output": "area"}`
+
+"Barns within 200 m of a river in the Georgia study area." ->
+`{"area": "georgia", "land": {"classes": [], "min_patch_ha": null, "words": "barns"},
+  "near": [{"classes": ["water"], "distance_m": 200, "negate": false}], "climate": [], "output": "map"}`

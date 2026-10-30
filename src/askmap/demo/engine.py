@@ -27,6 +27,7 @@ from typing import Any
 import numpy as np
 
 from askmap.aether_us import climate_ok_tile
+from askmap.captions import patch_text
 from askmap.demo.core import (
     cell_rects,
     class_shares,
@@ -41,7 +42,7 @@ from askmap.demo.core import (
 )
 from askmap.layers import class_indices
 from askmap.plan import min_patch, within
-from askmap.zeroshot import distance_ok, leaf_grid, leaf_phrases, zero_shot_leaf
+from askmap.zeroshot import climate_text, distance_ok, leaf_grid, leaf_phrases, zero_shot_leaf
 from askmap.zeroshot import plan_text as caption_plan_text
 
 LAND_THRESHOLD = 0.5  # the same threshold the plan's distance rules use on the class probabilities
@@ -122,6 +123,13 @@ class Engine:
         self._phrase_vectors: np.ndarray | None = None
         self._zero_shot: dict[str, np.ndarray] = {}
 
+    def _ranked(self, text: str, tiles: list[TileData], share: float) -> tuple[list[np.ndarray], float]:
+        """Similarity of every valid cell to ``text`` and the score at which the most similar ``share`` of the
+        study area begins."""
+        scores = self._text_scores(text, tiles)
+        cut = np.quantile(np.concatenate([s[t.valid] for s, t in zip(scores, tiles, strict=True)]), 1 - share)
+        return scores, float(cut)
+
     def _text_scores(self, text: str, tiles: list[TileData]) -> list[np.ndarray]:
         q = self.encode([text])[0]
         q = q / np.linalg.norm(q)
@@ -149,16 +157,28 @@ class Engine:
         return self._zero_shot[t.name]
 
     def plan_steps(
-        self, plan: dict, t: TileData, ctx
+        self, plan: dict, t: TileData, ctx, word_land: tuple[np.ndarray, float] | None = None
     ) -> tuple[np.ndarray, list[tuple[str, str, np.ndarray]]]:
         """Land probability of the plan's classes on one tile, and one (kind, label, mask) per step: land
-        (probability above ``LAND_THRESHOLD``, patch size), each distance rule, each climate condition."""
+        (probability above ``LAND_THRESHOLD``, patch size), each distance rule, each climate condition. A plan
+        with no land class ranks the land by similarity to the question's own words instead: ``word_land`` is
+        (this tile's similarity scores, the area-wide cut)."""
         probs = t.probs.astype(np.float32)
-        land_idx = class_indices(plan["land"]["classes"], ctx.leaves, ctx.groups)
-        land_p = probs[land_idx].max(axis=0)
-        land = t.valid & (land_p > LAND_THRESHOLD)
-        if plan["land"]["min_patch_ha"] is not None:
-            land &= min_patch(land_p > LAND_THRESHOLD, plan["land"]["min_patch_ha"] * 10_000 / ctx.res_m**2)
+        if plan["land"]["classes"]:
+            land_idx = class_indices(plan["land"]["classes"], ctx.leaves, ctx.groups)
+            land_p = probs[land_idx].max(axis=0)
+            land = t.valid & (land_p > LAND_THRESHOLD)
+            if plan["land"]["min_patch_ha"] is not None:
+                land &= min_patch(
+                    land_p > LAND_THRESHOLD, plan["land"]["min_patch_ha"] * 10_000 / ctx.res_m**2
+                )
+        else:
+            if word_land is None:
+                raise ValueError("a plan without land classes needs the words' similarity scores")
+            land_p, cut = word_land
+            land = t.valid & (land_p >= cut)
+            if plan["land"]["min_patch_ha"] is not None:
+                land &= min_patch(land, plan["land"]["min_patch_ha"] * 10_000 / ctx.res_m**2)
         steps = [("land", land_words(plan), land)]
         for n in plan["near"]:
             near = within(target_mask(t, n["classes"], ctx), n["distance_m"], ctx.res_m)
@@ -223,9 +243,15 @@ class Engine:
             f"{best['value']:g} against a threshold of {best['threshold']:g} ({c['unit']})."
         )
 
-    def search(self, question: str, area: str, method: str) -> dict:
+    def search(self, question: str, area: str, method: str, share: float | None = None) -> dict:
+        """``share``: the most similar share of the study area that Methods 1 and 2 (and a word-ranked land
+        step of Method 3) show; default ``top_share``."""
         if area not in self.areas:
             raise UserError(f"Unknown area {area!r}.")
+        if share is None:
+            share = self.top_share
+        elif not isinstance(share, int | float) or not 0 < share <= 0.2:
+            raise UserError("The share of places to show must be between 0 and 20%.")
         if method not in METHODS:
             raise UserError(f"Unknown method {method!r}.")
         if method in self.not_ready:
@@ -243,13 +269,13 @@ class Engine:
         except Unsupported as e:
             if how == "classifier":
                 raise
-            shown_plan, out = None, self._answer_free_text(question, tiles, e.reason)
+            shown_plan, out = None, self._answer_free_text(question, tiles, e.reason, share)
         else:
             shown_plan = plan
             if how == "classifier":
-                out = self._answer_plan(plan, tiles, self.contexts[area])
+                out = self._answer_plan(plan, tiles, self.contexts[area], share)
             else:
-                out = self._answer_top_share(plan, tiles, area, how)
+                out = self._answer_top_share(plan, tiles, area, how, share)
         out.update(
             {
                 "area": area,
@@ -267,23 +293,37 @@ class Engine:
         (``aligned``, ``aligned_land_power_climate``)."""
         if how != "classifier":
             tiles = self.areas[area]
-            _, shows, _ = self._top_share_shows(plan, tiles, area, how)
+            _, shows, _ = self._top_share_shows(plan, tiles, area, how, self.top_share)
             return {t.name: show for t, show in zip(tiles, shows, strict=True)}
         ctx = self.contexts[area]
         out = {}
         for t in self.areas[area]:
             keep = t.valid.copy()
-            for _, _, mask in self.plan_steps(plan, t, ctx)[1]:
+            for _, _, mask in self.plan_steps(plan, t, ctx, self._word_land_for(plan, t, area))[1]:
                 keep &= mask
             out[t.name] = keep
         return out
 
-    def _answer_plan(self, plan: dict, tiles: list[TileData], ctx) -> dict:
-        """Places that meet every step of the plan."""
+    def _word_land_for(self, plan: dict, t: TileData, area: str) -> tuple[np.ndarray, float] | None:
+        """For ``answer_masks``: the word ranking of one tile when the plan has no land class."""
+        if plan["land"]["classes"]:
+            return None
+        tiles = self.areas[area]
+        scores, cut = self._ranked(plan["land"]["words"], tiles, self.top_share)
+        return scores[[x.name for x in tiles].index(t.name)], cut
+
+    def _answer_plan(self, plan: dict, tiles: list[TileData], ctx, share: float | None = None) -> dict:
+        """Places that meet every step of the plan. A plan with no land class takes the most similar
+        ``share`` of the area to the question's own land words as its land step."""
+        share = self.top_share if share is None else share
+        word_scores: list[np.ndarray] | None = None
+        cut = 0.0
+        if not plan["land"]["classes"]:
+            word_scores, cut = self._ranked(plan["land"]["words"], tiles, share)
         out_tiles, shown_leaf = [], []
         steps: list[dict[str, Any]] | None = None
-        for t in tiles:
-            _, tile_steps = self.plan_steps(plan, t, ctx)
+        for i, t in enumerate(tiles):
+            _, tile_steps = self.plan_steps(plan, t, ctx, (word_scores[i], cut) if word_scores else None)
             if steps is None:
                 steps = [{"kind": k, "label": lab, "places": 0} for k, lab, _ in tile_steps]
             keep = t.valid.copy()
@@ -314,18 +354,20 @@ class Engine:
             "rule": "every step",
             "empty_reason": self._empty_reason(steps or [], climate) if codes.size == 0 else None,
         }
+        if word_scores is not None:
+            facts["word_land"] = {"words": plan["land"]["words"], "share": share}
         if plan["climate"]:
             facts["share_meeting_climate_conditions"] = 1.0 if codes.size else None
         return {"tiles": out_tiles, "facts": facts, "power_cells": boxes}
 
-    def _answer_free_text(self, question: str, tiles: list[TileData], reason: str) -> dict:
+    def _answer_free_text(
+        self, question: str, tiles: list[TileData], reason: str, share: float | None = None
+    ) -> dict:
         """Methods 1 and 2 without a plan: the most similar ``top_share`` of the study area to the question's
         own words in the aligned space, with no distance or climate filter (none can be derived from the
         text)."""
-        scores = self._text_scores(question, tiles)
-        cut = np.quantile(
-            np.concatenate([s[t.valid] for s, t in zip(scores, tiles, strict=True)]), 1 - self.top_share
-        )
+        share = self.top_share if share is None else share
+        scores, cut = self._ranked(question, tiles, share)
         out_tiles, shown_leaf = [], []
         for s, t in zip(scores, tiles, strict=True):
             show = t.valid & (s >= cut)
@@ -339,7 +381,7 @@ class Engine:
         facts = {
             "shown_pixels": int(codes.size),
             "land_of_shown_pixels": class_shares(codes, self.leaves),
-            "rule": f"top {self.top_share:.0%}",
+            "rule": f"top {100 * share:g}%",
             "plan_words": f"Free-text search of the aligned space for \u201c{question}\u201d; no plan, so no "
             f"distance or climate filter ({reason}).",
             "text": question,
@@ -350,7 +392,9 @@ class Engine:
         }
         return {"tiles": out_tiles, "facts": facts, "power_cells": []}
 
-    def _answer_top_share(self, plan: dict, tiles: list[TileData], area: str, how: str) -> dict:
+    def _answer_top_share(
+        self, plan: dict, tiles: list[TileData], area: str, how: str, share: float | None = None
+    ) -> dict:
         """The aligned space has no class map to threshold, so its candidates are the most similar
         ``top_share`` of the whole study area, and the plan's geometry (A8) then filters them.
 
@@ -360,7 +404,8 @@ class Engine:
         (``aligned_land_power_climate``): the plan's land wording picks the candidates; only candidates that
         pass every distance rule and lie in NASA POWER cells that meet every climate condition are shown."""
         ctx = self.contexts[area]
-        text, shows, n = self._top_share_shows(plan, tiles, area, how)
+        share = self.top_share if share is None else share
+        text, shows, n = self._top_share_shows(plan, tiles, area, how, share)
         out_tiles, shown_leaf, clim = [], [], []
         for show, t in zip(shows, tiles, strict=True):
             out_tiles.append(self._tile_out(t, show))
@@ -375,7 +420,7 @@ class Engine:
         facts = {
             "shown_pixels": int(codes.size),
             "land_of_shown_pixels": class_shares(codes, self.leaves),
-            "rule": f"top {self.top_share:.0%}",
+            "rule": f"top {100 * share:g}%",
             "plan_words": describe_plan(plan),
             "text": text,
             "distance_gate": bool(plan["near"]),
@@ -395,17 +440,28 @@ class Engine:
             )
         return {"tiles": out_tiles, "facts": facts, "power_cells": boxes}
 
+    def _search_text(self, plan: dict, how: str) -> str:
+        """The text Methods 1 and 2 embed: the question's own land words when the plan carries them (the
+        aligned space can score any text, so the wording the user chose is kept), else the plan's land in
+        caption wording; plus the patch size and, for Method 1, the climate conditions in caption wording."""
+        words = plan["land"].get("words")
+        if not words:
+            return caption_plan_text(plan, self.cap, distances=False, climate=how == "aligned")
+        extras = []
+        if plan["land"]["min_patch_ha"] is not None:
+            extras.append(patch_text(plan["land"]["min_patch_ha"], self.cap, 0))
+        if how == "aligned":
+            extras += [climate_text(c, self.cap) for c in plan["climate"]]
+        return words + ("" if not extras else " " + " and ".join(extras))
+
     def _top_share_shows(
-        self, plan: dict, tiles: list[TileData], area: str, how: str
+        self, plan: dict, tiles: list[TileData], area: str, how: str, share: float
     ) -> tuple[str, list[np.ndarray], dict[str, int]]:
-        """Methods 1 and 2: the text, the shown places per tile (the most similar ``top_share`` of the study
-        area that pass the plan's filters) and the counts behind an empty answer's reason."""
+        """Methods 1 and 2: the text, the shown places per tile (the most similar ``share`` of the study area
+        that pass the plan's filters) and the counts behind an empty answer's reason."""
         ctx = self.contexts[area]
-        text = caption_plan_text(plan, self.cap, distances=False, climate=how == "aligned")
-        scores = self._text_scores(text, tiles)
-        cut = np.quantile(
-            np.concatenate([s[t.valid] for s, t in zip(scores, tiles, strict=True)]), 1 - self.top_share
-        )
+        text = self._search_text(plan, how)
+        scores, cut = self._ranked(text, tiles, share)
         shows, n = [], {"candidates": 0, "distance": 0, "candidates_distance": 0}
         for s, t in zip(scores, tiles, strict=True):
             candidate = t.valid & (s >= cut)

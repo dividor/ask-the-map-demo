@@ -17,7 +17,8 @@ from askmap.layers import class_mask
 from askmap.power import BASE_VARS, DERIVED_VARS, STATS, condition_cells, condition_values
 
 PLAN_KEYS = {"area", "land", "near", "climate", "output"}
-LAND_KEYS = {"classes", "min_patch_ha"}
+LAND_KEYS = {"classes", "min_patch_ha", "words"}
+LAND_REQUIRED = {"classes", "min_patch_ha"}
 NEAR_KEYS = {"classes", "distance_m", "negate"}
 COND_KEYS = {"variable", "years", "months", "stat", "day_threshold", "test"}
 OUTPUTS = ("map", "area")
@@ -58,8 +59,16 @@ def validate(plan: dict, catalogue: dict[str, list[str]], year_range: tuple[int,
 
 
 def _validate_land(land: dict, known: set[str]) -> None:
-    _keys(land, LAND_KEYS, LAND_KEYS, "land")
-    _classes(land["classes"], known, "land")
+    _keys(land, LAND_KEYS, LAND_REQUIRED, "land")
+    words = land.get("words")
+    if words is not None and (not isinstance(words, str) or not words.strip()):
+        raise ValueError("land: words must be a non-empty string")
+    if land["classes"] == []:
+        # no class fits the land type: the demo ranks places by similarity to the question's own words
+        if not words:
+            raise ValueError("land: classes may be empty only with words")
+    else:
+        _classes(land["classes"], known, "land")
     mp = land["min_patch_ha"]
     if mp is not None and (not isinstance(mp, int | float) or mp <= 0):
         raise ValueError("land: min_patch_ha must be null or > 0")
@@ -68,8 +77,9 @@ def _validate_land(land: dict, known: set[str]) -> None:
 def _validate_near(n: dict, known: set[str], what: str) -> None:
     _keys(n, NEAR_KEYS, NEAR_KEYS, what)
     _classes(n["classes"], known, what)
-    if not isinstance(n["distance_m"], int | float) or n["distance_m"] <= 0:
-        raise ValueError(f"{what}: distance_m must be > 0")
+    # 0 means touching: a distance below one cell reaches the neighbouring cell (askmap.geo.within)
+    if not isinstance(n["distance_m"], int | float) or n["distance_m"] < 0:
+        raise ValueError(f"{what}: distance_m must be >= 0")
     if not isinstance(n["negate"], bool):
         raise ValueError(f"{what}: negate must be true or false")
 

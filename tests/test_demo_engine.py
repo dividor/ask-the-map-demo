@@ -363,3 +363,44 @@ def test_unsupported_questions_refuse_the_classifier_but_free_text_search_the_al
         assert out["plan"] is None and f["free_text"] and f["text"] == "barns" and f["climate"] == []
         assert f["shown_pixels"] > 0 and f["rule"] == "top 25%" and "barns" in f["plan_words"]
         assert "barns are not a land class" in f["plan_words"] and out["power_cells"] == []
+
+
+def test_methods_1_and_2_embed_the_questions_own_land_words():
+    seen = []
+
+    def encode(texts):
+        seen.extend(texts)
+        return np.array([[1.0, 0.0]] * len(texts))
+
+    plan = dict(PLAN, land=dict(PLAN["land"], words="maize"))
+    e = Engine(
+        {"a": [tile()]}, LEAVES, encode, lambda q, a: plan, {"a": Ctx()}, "aligned", CAP, top_share=0.25
+    )
+    out = e.search("maize", "a", "aligned")
+    # the question's words for the land, then Method 1's climate wording as before
+    assert out["facts"]["text"].startswith("maize where") and any(x.startswith("maize") for x in seen)
+    # without words the plan's caption wording is embedded, as before
+    e2 = Engine(
+        {"a": [tile()]}, LEAVES, encode, lambda q, a: PLAN, {"a": Ctx()}, "aligned", CAP, top_share=0.25
+    )
+    assert e2.search("corn", "a", "aligned")["facts"]["text"].startswith("Show ")
+
+
+def test_method_3_ranks_by_the_words_when_no_class_fits_and_filters_by_geometry():
+    plan = {
+        "area": "a",
+        "land": {"classes": [], "min_patch_ha": None, "words": "barns"},
+        "near": [],
+        "climate": [],
+        "output": "map",
+    }
+    e = engine(best="classifier", planner=lambda q, a: plan)
+    out = e.search("barns", "a", "best")
+    f = out["facts"]
+    assert f["word_land"] == {"words": "barns", "share": 0.25} and f["shown_pixels"] > 0
+    assert f["steps"][0]["label"].startswith("places most like \u201cbarns\u201d")
+    assert e.answer_masks(plan, "a")["t"].sum() == f["shown_pixels"]
+    # a smaller share shows fewer places
+    assert e.search("barns", "a", "best", 0.1)["facts"]["shown_pixels"] <= f["shown_pixels"]
+    with pytest.raises(UserError, match="between 0 and 20%"):
+        e.search("barns", "a", "best", 0.5)

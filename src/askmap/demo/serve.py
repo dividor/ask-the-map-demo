@@ -93,9 +93,17 @@ def demo_leaves(meta: dict) -> list[str]:
     return list(meta["leaves"])
 
 
-def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None = None):
+def plan_key(area: str, text: str, prompt: str = "") -> str:
+    """The saved-reply file name for a question: the area, the text sent to the model and the prompt it was
+    sent with, so a changed prompt or catalogue never reuses a reply made under the old one."""
+    salt = hashlib.sha256(prompt.encode()).hexdigest()[:8] if prompt else ""
+    return hashlib.sha256(f"{area}|{text}|{salt}".encode()).hexdigest()[:16]
+
+
+def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None = None, prompt: str = ""):
     """``planner(question, area)``: the main open model's plan for the question in the chosen area.
-    ``leaves`` is the class list the plan may use (default: the configured one)."""
+    ``leaves`` is the class list the plan may use (default: the configured one); ``prompt`` is the system
+    prompt the replies are asked with (part of the saved-reply key)."""
     labels = cfg["question_areas"]
     catalogue = area_classes(cfg, leaves)
 
@@ -105,8 +113,7 @@ def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None =
             if labels[area].split(" (")[0].lower() in question.lower()
             else f"In the {labels[area].split(' (')[0]}: {question}"
         )
-        key = hashlib.sha256(f"{area}|{text}".encode()).hexdigest()[:16]
-        rec = translate(text, log_dir / f"{key}.json")
+        rec = translate(text, log_dir / f"{plan_key(area, text, prompt)}.json")
         plan = rec.get("plan")
         if plan is None:
             raise UserError("The language model did not return a usable plan; try rewording the question.")
@@ -165,6 +172,7 @@ def main() -> None:
         lambda q, path: translate(client, llm["models"]["main"], system, q, path, llm),
         PROJECT_ROOT / "outputs" / "llm" / "demo",
         leaves,
+        system,
     )
     engine = Engine(
         load_tiles(demo_dir, meta),

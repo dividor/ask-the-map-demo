@@ -158,13 +158,19 @@ def climate_words(cond: dict) -> str:
 
 
 def near_words(rule: dict) -> str:
+    if rule["distance_m"] == 0:  # touching
+        return f"{'not ' if rule['negate'] else ''}next to {class_words(rule['classes'])}"
     if rule["negate"]:
         return f"more than {rule['distance_m']:g} m from any {class_words(rule['classes'])}"
     return f"within {rule['distance_m']:g} m of {class_words(rule['classes'])}"
 
 
 def land_words(plan: dict) -> str:
-    text = class_words(plan["land"]["classes"])
+    land = plan["land"]
+    if not land["classes"]:
+        text = f"places most like \u201c{land['words']}\u201d (no land class fits)"
+    else:
+        text = class_words(land["classes"])
     if plan["land"]["min_patch_ha"] is not None:
         text += f" in patches of at least {plan['land']['min_patch_ha']:g} ha"
     return text

@@ -129,6 +129,14 @@
       <summary>Examples: click one to run it</summary>
       <div class="examples" id="examples"></div>
     </details>
+    <label for="share">How many places to show (most similar)</label>
+    <select id="share">
+      <option value="0.005">Top 0.5% of the study area</option>
+      <option value="0.01">Top 1%</option>
+      <option value="0.02" selected>Top 2%</option>
+      <option value="0.05">Top 5%</option>
+    </select>
+    <div class="sub">Used by Methods 1 and 2, and by Method 3 when the land type has no class and places are ranked by your words.</div>
     <label for="method">Method</label>
     <select id="method">
       <option value="aligned">Method 1: Aligning text and satellite embeddings (AETHER's recipe)</option>
@@ -559,6 +567,7 @@ if (STATIC) {
       };
       ex.appendChild(b);
     });
+    document.getElementById("share").onchange = askAgain;
     const msel = document.getElementById("method"), note = document.getElementById("methodnote");
     [...msel.options].forEach(o => { if (m.not_ready[o.value]) o.textContent += " (not ready yet)"; });
     msel.value = "best";  // Method 3 on every load: browsers otherwise keep the last choice across reloads
@@ -583,7 +592,8 @@ if (STATIC) {
     btn.disabled = true; st.className = ""; closeError();
     st.innerHTML = '<span class="spinner"></span>Asking the map…'; busy.hidden = false;
     const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
-                   method: document.getElementById("method").value };
+                   method: document.getElementById("method").value,
+                   share: parseFloat(document.getElementById("share").value) };
     try {
       const r = await fetch("/api/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const d = await r.json();

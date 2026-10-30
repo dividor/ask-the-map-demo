@@ -3,7 +3,7 @@ import pytest
 
 from askmap.config import PROJECT_ROOT, load_config
 from askmap.demo.engine import Unsupported, UserError
-from askmap.demo.serve import demo_leaves, load_tiles, make_planner, page_examples, server_host
+from askmap.demo.serve import demo_leaves, load_tiles, make_planner, page_examples, plan_key, server_host
 
 CFG = load_config(PROJECT_ROOT / "configs" / "feasibility.yaml")
 
@@ -108,3 +108,24 @@ def test_planner_validates_against_the_data_classes_not_the_config(tmp_path):
     assert make_planner(CFG, lambda t, p: {"plan": plan}, tmp_path)("towns", "minnesota")["land"][
         "classes"
     ] == ["town"]
+
+
+def test_saved_reply_key_changes_with_the_prompt(tmp_path):
+    assert plan_key("a", "q") == plan_key("a", "q") and plan_key("a", "q") != plan_key("a", "q", "prompt 1")
+    assert plan_key("a", "q", "prompt 1") != plan_key("a", "q", "prompt 2")
+    seen = []
+    plan = {
+        "area": "x",
+        "land": {"classes": ["corn"], "min_patch_ha": None},
+        "near": [],
+        "climate": [],
+        "output": "map",
+    }
+
+    def translate(text, path):
+        seen.append(path.name)
+        return {"plan": plan}
+
+    make_planner(CFG, translate, tmp_path, None, "prompt 1")("corn", "minnesota")
+    make_planner(CFG, translate, tmp_path, None, "prompt 2")("corn", "minnesota")
+    assert len(set(seen)) == 2  # a new prompt never reuses the old reply
