@@ -56,6 +56,7 @@ def test_translate_records_saves_and_reuses(tmp_path):
     assert rec["model_returned"] == "fake/model" and rec["request"]["messages"][1]["content"] == "q?"
     again = translate(c, "m", "sys", "q?", tmp_path / "a.json", LLM)
     assert again == json.loads((tmp_path / "a.json").read_text()) and c.calls == 1
+    assert (tmp_path / "a.json").read_text().endswith("}\n")  # a text file, so the hooks leave it alone
     bad = translate(FakeClient(["not json"]), "m", "sys", "q", tmp_path / "b.json", LLM)
     assert bad["plan"] is None and bad["error"].startswith("malformed plan")
 

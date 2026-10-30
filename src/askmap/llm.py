@@ -141,7 +141,7 @@ def translate(client, model: str, system: str, question: str, log_path: Path, cf
         rec["plan"], rec["error"] = None, f"malformed plan: {type(e).__name__}: {e}"
     log_path.parent.mkdir(parents=True, exist_ok=True)
     tmp = log_path.with_suffix(".part")
-    tmp.write_text(json.dumps(rec, indent=1, default=str))
+    tmp.write_text(json.dumps(rec, indent=1, default=str) + "\n")  # a text file ends with a newline
     tmp.replace(log_path)
     return rec
 
