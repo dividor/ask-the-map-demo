@@ -33,6 +33,10 @@ RUN pip install uv \
 COPY deploy/hf_cache /app/hf_cache
 COPY deploy/data /app/data
 
+# The saved language-model replies for the page examples, so the deployed demo uses exactly the plans that
+# were checked (a question that has no saved reply is asked afresh and saved in the container)
+COPY outputs/llm/demo /app/outputs/llm/demo
+
 # The code runs from /app/src, so the package finds the repository's configs/ next to it (its project root is
 # two folders above askmap/config.py)
 COPY src ./src

@@ -109,3 +109,12 @@ def test_hf_token_sources(tmp_path, monkeypatch):
     monkeypatch.delenv("HF_TOKEN")
     with pytest.raises(RuntimeError):
         hf_token(tmp_path / "missing")
+
+
+def test_system_prompt_tells_the_model_when_now_is():
+    from datetime import date
+
+    text = system_prompt("L", "C", today=date(2026, 10, 29), data_years=(2001, 2025))
+    assert "Today is 2026-10-29" in text and '"last year" is 2025' in text and '"This year" is 2026' in text
+    assert "covers 2001 to 2025 inclusive" in text
+    assert "Today is " + date.today().isoformat() in system_prompt("L", "C")

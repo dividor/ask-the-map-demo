@@ -64,13 +64,6 @@ def make_contexts(cfg: dict, meta: dict, demo_dir: Path) -> dict[str, AreaContex
     return out
 
 
-def server_host(env: dict | None = None) -> str:
-    """The address the server listens on: ``ASKMAP_HOST`` if set, else localhost only. A container sets it to
-    ``0.0.0.0`` so the platform can reach the server; nothing else should."""
-    value = (os.environ if env is None else env).get("ASKMAP_HOST", "").strip()
-    return value or "127.0.0.1"
-
-
 def page_examples(examples: list[dict], areas: dict) -> list[dict]:
     """The page's clickable examples, ``{"question", "area"}``; fails on an empty question or unknown area."""
     out = []
@@ -133,7 +126,10 @@ def main() -> None:
 
     llm = cfg["llm"]
     client = make_client(llm["base_url"])
-    system = system_prompt((PROJECT_ROOT / "configs" / "language.md").read_text(), catalogue_text(cfg))
+    years = (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4]))
+    system = system_prompt(
+        (PROJECT_ROOT / "configs" / "language.md").read_text(), catalogue_text(cfg), data_years=years
+    )
     planner = make_planner(
         cfg,
         lambda q, path: translate(client, llm["models"]["main"], system, q, path, llm),
@@ -162,7 +158,7 @@ def main() -> None:
                 "not_ready": engine.not_ready,
             },
         ),
-        host=server_host(),
+        host="127.0.0.1",
         port=au["demo"]["port"],
     )
 

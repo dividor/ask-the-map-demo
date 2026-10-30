@@ -13,14 +13,29 @@ from __future__ import annotations
 import json
 import os
 import time
+from datetime import date
 from pathlib import Path
 
 
-def system_prompt(language: str, catalogue: str) -> str:
+def system_prompt(
+    language: str, catalogue: str, today: date | None = None, data_years: tuple[int, int] | None = None
+) -> str:
+    """The planner's instructions. ``today`` (default: today's date) tells the model when "now" is, so "last
+    year" and "this summer" mean something; ``data_years`` says which years the climate data covers."""
+    today = today or date.today()
+    when = (
+        f'\n\n# Today\n\nToday is {today.isoformat()}. "This year" is {today.year} and "last year" is '
+        f'{today.year - 1}; read other relative times ("last summer", "the past five years") from this date.'
+    )
+    if data_years:
+        when += (
+            f" The climate data covers {data_years[0]} to {data_years[1]} inclusive; a question about a "
+            "later year cannot be answered with it."
+        )
     return (
         "You translate a user's question about land and climate into a plan in the query language below. "
         "Reply with the plan only: one JSON object that follows the language exactly, with no other text.\n\n"
-        f"# Query language\n\n{language}\n\n# Catalogue\n\n{catalogue}\n"
+        f"# Query language\n\n{language}\n\n# Catalogue\n\n{catalogue}{when}\n"
     )
 
 

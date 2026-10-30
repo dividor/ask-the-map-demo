@@ -6,5 +6,6 @@
 !src/
 !configs/
 !deploy/
+!outputs/llm/demo/
 src/**/__pycache__/
 deploy/**/.DS_Store
