@@ -22,11 +22,13 @@ Meaning. The answer is the set of pixels (30 m) that satisfy every part (logical
 Every part of the question must appear in the plan. Comparisons are always expressible: "hottest", "driest",
 "wettest", "unusually", "very", "one of the driest since 2001" and the like become a `history_rank` test (a
 place's own past; use `pct` 10 for "unusually", "very", "the hottest", "the driest" and "one of the driest",
-unless the question states a share) or an `area_rank` test (between places, for "the sunniest half of the
-area" and the like), and "at least N days above X" becomes `days_above` with an absolute test. Seasons are
+unless the question states a share; `history` is always the data's whole span, the first to the last year
+of the climate data, including the year asked about, unless the question states a span) or an `area_rank`
+test (between places, for "the sunniest half of the area" and the like), and "at least N days above X" becomes `days_above` with an absolute test. Seasons are
 fixed: spring is months 3-5, summer 6-8, autumn (fall) 9-11, winter 12-2 of the named year, and the growing
 season is months 4-9; "dry" and "wet" mean total rainfall (`PRECTOTCORR`, stat `total`) unless the question
-says soil, and "hot" means mean temperature (`T2M`, stat `mean`) unless it counts days. Only
+says soil, in which case they mean root-zone soil wetness (`GWETROOT`, always stat `mean`: it is a fraction,
+not an amount), and "hot" means mean temperature (`T2M`, stat `mean`) unless it counts days. Only
 when the subject of a part has nothing in the catalogue (a land type with no class, a quantity with no climate
 variable, an event the data does not record such as fire, flood, harvest, yield, ownership or price), reply with
 this object instead of a plan, naming that part. Never reply with a plan that leaves a part of the question out
