@@ -9,7 +9,7 @@
   907
  ],
  "facts": 4006,
- "minutes": 0.2,
+ "minutes": 0.1,
  "MB": {
   "facts.npz": 0.35,
   "long_term_z.npy": 0.02,

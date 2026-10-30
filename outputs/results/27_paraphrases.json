@@ -2,51 +2,51 @@
  "land.cropland": [
   "agricultural fields",
   "arable land",
-  "farmed acreage",
-  "annual crop land",
-  "planting area"
+  "row\u2011crop acreage",
+  "planting area",
+  "farmed acreage"
  ],
  "land.corn": [
-  "sweet corn acres",
+  "sweet corn acreage",
   "field corn plots",
+  "yellow corn land",
   "maize acreage",
-  "corn belt",
-  "corn planting area"
+  "corn belt fields"
  ],
  "land.soybeans": [
   "soybean acres",
+  "soy crop land",
   "soybean planting area",
-  "soybean cropland",
-  "soybean plots",
-  "soybean farm land"
+  "soybean production fields",
+  "soybean farmland"
  ],
  "land.spring_wheat": [
+  "early\u2011season wheat",
+  "spring\u2011sown wheat fields",
   "spring wheat acreage",
-  "spring wheat planting",
-  "spring wheat cropland",
   "spring wheat farms",
-  "spring wheat belt"
+  "spring wheat planting area"
  ],
  "land.sunflower": [
   "sunflower acres",
   "sunflower planting area",
-  "sunflower cropland",
   "sunflower farms",
-  "sunflower plots"
+  "sunflower crop land",
+  "sunflower rows"
  ],
  "land.canola": [
   "canola acres",
   "canola planting area",
-  "canola cropland",
   "canola farms",
-  "canola plots"
+  "canola crop land",
+  "canola rows"
  ],
  "land.cotton": [
   "cotton acres",
   "cotton planting area",
-  "cotton cropland",
   "cotton farms",
-  "cotton plots"
+  "cotton crop land",
+  "cotton rows"
  ],
  "land.other_crop": [
   "miscellaneous annual crops",
@@ -56,116 +56,137 @@
   "additional annual crops"
  ],
  "land.hay": [
+  "hay meadows",
   "hay production area",
-  "hay acreage",
-  "hay and forage fields",
-  "hay cultivation land",
-  "hay farms"
+  "hay and alfalfa acres",
+  "hay pasture",
+  "hay cultivation fields"
  ],
  "land.grassland": [
   "pastureland",
-  "grass-covered fields",
-  "grazing acreage",
-  "grass and pasture area",
-  "herbaceous land"
+  "grass\u2011covered fields",
+  "forage land",
+  "grass prairie",
+  "grazing acreage"
  ],
  "land.fallow": [
   "resting farmland",
   "unused cropland",
   "land left fallow",
-  "temporarily idle fields",
-  "fallow acreage"
+  "idle agricultural land",
+  "temporarily uncultivated fields"
  ],
  "land.forest": [
-  "tree-covered area",
   "timberland",
+  "tree\u2011covered area",
   "forest stand",
-  "wooded region",
-  "forested terrain"
+  "wooded land",
+  "forest tract"
  ],
  "land.developed": [
-  "urbanized area",
-  "constructed land",
+  "constructed area",
+  "urbanized land",
   "built environment",
-  "settlement land",
-  "man\u2011made landscape"
+  "man\u2011made landscape",
+  "settlement land"
+ ],
+ "land.developed_open": [
+  "rural road network",
+  "farmstead corridors",
+  "open built\u2011up area",
+  "farmyard pathways",
+  "rural infrastructure strip"
+ ],
+ "land.town": [
+  "municipal areas",
+  "urban settlements",
+  "village clusters",
+  "township land",
+  "populated places"
  ],
  "land.water": [
   "standing water bodies",
   "surface water",
-  "freshwater bodies",
+  "freshwater areas",
   "water surfaces",
   "ponds and lakes"
  ],
  "land.wetland": [
-  "bogs and swamps",
-  "wetland habitats",
-  "marshy areas",
-  "wetland zones",
-  "floodplain wetlands"
+  "boggy areas",
+  "flooded lowlands",
+  "wet meadowland",
+  "marshland",
+  "swampy terrain"
  ],
  "land.solar_farm": [
   "solar power sites",
-  "large solar installations",
-  "solar energy farms",
   "photovoltaic farms",
-  "solar array fields"
+  "large solar installations",
+  "solar array fields",
+  "solar generation sites"
  ],
  "near.classes.wetland": [
   "a marsh",
   "wetland area",
-  "any wetland zone",
+  "any marshland",
   "a bog",
-  "any marshland"
+  "any swampy area"
  ],
  "near.classes.water": [
   "a water body",
   "any lake",
   "any pond",
-  "a standing water area",
-  "any surface water"
+  "a surface water area",
+  "any standing water"
  ],
  "near.classes.developed": [
-  "urban area",
-  "constructed zone",
-  "built environment",
-  "settlement area",
-  "man\u2011made land"
+  "constructed area",
+  "structures or pavement",
+  "urban land",
+  "man\u2011made surfaces",
+  "built environment"
+ ],
+ "near.classes.town": [
+  "a municipality",
+  "municipal area",
+  "urban settlement",
+  "village",
+  "community"
  ],
  "near.classes.forest": [
-  "tree stand",
-  "wooded area",
-  "forested region",
   "timber area",
-  "tree canopy"
+  "tree stand",
+  "wooded zone",
+  "forest tract",
+  "tree\u2011covered land"
  ],
  "near.classes.cropland": [
   "agricultural land",
-  "planting fields",
+  "arable fields",
+  "planting area",
   "farm acreage",
-  "cultivated land",
-  "arable fields"
+  "cultivated land"
  ],
  "near.classes.grassland": [
   "grazing area",
-  "grass-covered land",
+  "herbaceous land",
+  "grass prairie",
   "pastureland",
-  "herbaceous field",
-  "grass terrain"
+  "forage fields"
  ],
  "near.classes.solar_farm": [
-  "a solar installation",
-  "solar site",
-  "a photovoltaic farm",
+  "a solar power site",
   "solar array",
-  "a solar power site"
+  "photovoltaic farm",
+  "solar installation",
+  "utility solar site"
  ],
  "prefixes": [
   "Locate ",
   "Display ",
-  "Search for ",
   "Identify ",
-  "List "
+  "Search for ",
+  "Map "
  ],
  "near.near_templates": [
   "inside {d} of {c}",

@@ -1,0 +1,546 @@
+[
+ {
+  "question": "Forest within 500 m of a solar farm",
+  "area": "georgia",
+  "type": "solar",
+  "persona": null,
+  "M1": {
+   "shown": 69,
+   "true": 735,
+   "precision": 0.11594202898550725,
+   "f1": 0.01990049751243781,
+   "hit": false,
+   "plan_words": "Forest, within 500 m of solar farm."
+  },
+  "M2": {
+   "shown": 69,
+   "true": 735,
+   "precision": 0.11594202898550725,
+   "f1": 0.01990049751243781,
+   "hit": false,
+   "plan_words": "Forest, within 500 m of solar farm."
+  },
+  "M3": {
+   "shown": 601,
+   "true": 735,
+   "precision": 0.6655574043261231,
+   "f1": 0.5988023952095808,
+   "hit": true,
+   "plan_words": "Forest, within 500 m of solar farm."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Corn fields that had a heatwave in July 2021",
+  "area": "north_dakota",
+  "type": "heat",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 18959,
+   "precision": 0.993632707774799,
+   "f1": 0.2702456364216379,
+   "hit": false,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 30 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 18959,
+   "precision": 0.9939678284182306,
+   "f1": 0.2703367816615777,
+   "hit": false,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 30 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 19152,
+   "true": 18959,
+   "precision": 0.9276315789473685,
+   "f1": 0.93232924877332,
+   "hit": true,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 30 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Corn fields with at least five days above 35 C in July 2021",
+  "area": "north_dakota",
+  "type": "heat",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 18959,
+   "precision": 0.9973190348525469,
+   "f1": 0.27124823406097615,
+   "hit": false,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 18959,
+   "precision": 0.9939678284182306,
+   "f1": 0.2703367816615777,
+   "hit": false,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 19152,
+   "true": 18959,
+   "precision": 0.9276315789473685,
+   "f1": 0.93232924877332,
+   "hit": true,
+   "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland that had an unusually wet spring in 2022",
+  "area": "north_dakota",
+  "type": "wet spring",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 48214,
+   "precision": 0.6843163538873994,
+   "f1": 0.079768740966444,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 1691,
+   "true": 48214,
+   "precision": 0.9668835008870491,
+   "f1": 0.06552449654343252,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 48212,
+   "true": 48214,
+   "precision": 0.9452003650543433,
+   "f1": 0.9451807603758322,
+   "hit": true,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland with one of the wettest springs on record in 2022",
+  "area": "north_dakota",
+  "type": "wet spring",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 48214,
+   "precision": 0.6843163538873994,
+   "f1": 0.079768740966444,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 1691,
+   "true": 48214,
+   "precision": 0.9668835008870491,
+   "f1": 0.06552449654343252,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 48212,
+   "true": 48214,
+   "precision": 0.9452003650543433,
+   "f1": 0.9451807603758322,
+   "hit": true,
+   "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Grassland that had a very dry summer in 2022",
+  "area": "north_dakota",
+  "type": "dry summer",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 19397,
+   "precision": 0.15650134048257372,
+   "f1": 0.041731826102497656,
+   "hit": false,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 827,
+   "true": 19397,
+   "precision": 0.8174123337363967,
+   "f1": 0.0668512658227848,
+   "hit": false,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 21601,
+   "true": 19397,
+   "precision": 0.8207027452432758,
+   "f1": 0.8648226742767939,
+   "hit": true,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Grassland with one of the driest summers on record in 2022",
+  "area": "north_dakota",
+  "type": "dry summer",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 19397,
+   "precision": 0.15650134048257372,
+   "f1": 0.041731826102497656,
+   "hit": false,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 827,
+   "true": 19397,
+   "precision": 0.8174123337363967,
+   "f1": 0.0668512658227848,
+   "hit": false,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 21601,
+   "true": 19397,
+   "precision": 0.8207027452432758,
+   "f1": 0.8648226742767939,
+   "hit": true,
+   "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields well away from wetlands and water",
+  "area": "minnesota",
+  "type": "far from water",
+  "persona": null,
+  "M1": {
+   "shown": 2490,
+   "true": 10868,
+   "precision": 0.9120481927710843,
+   "f1": 0.3400209612217398,
+   "hit": false,
+   "plan_words": "Soybeans, more than 500 m from any wetland or water."
+  },
+  "M2": {
+   "shown": 2490,
+   "true": 10868,
+   "precision": 0.9120481927710843,
+   "f1": 0.3400209612217398,
+   "hit": false,
+   "plan_words": "Soybeans, more than 500 m from any wetland or water."
+  },
+  "M3": {
+   "shown": 11638,
+   "true": 10868,
+   "precision": 0.8034885719195738,
+   "f1": 0.8309784057584644,
+   "hit": true,
+   "plan_words": "Soybeans, more than 500 m from any wetland or water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields at least 300 m from any wetland or water",
+  "area": "minnesota",
+  "type": "far from water",
+  "persona": null,
+  "M1": {
+   "shown": 2778,
+   "true": 13853,
+   "precision": 0.9528437724982002,
+   "f1": 0.3183212073838013,
+   "hit": false,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "M2": {
+   "shown": 2778,
+   "true": 13853,
+   "precision": 0.9528437724982002,
+   "f1": 0.3183212073838013,
+   "hit": false,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "M3": {
+   "shown": 13783,
+   "true": 13853,
+   "precision": 0.8565624319814263,
+   "f1": 0.8543928209581705,
+   "hit": true,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Which corn fields had a heatwave during pollination in July 2022?",
+  "area": "north_carolina",
+  "type": "heat NC",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 1541,
+   "precision": 0.38036193029490617,
+   "f1": 0.5016574585635359,
+   "hit": false,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 1175,
+   "true": 1541,
+   "precision": 0.9531914893617022,
+   "f1": 0.8247422680412371,
+   "hit": true,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 1465,
+   "true": 1541,
+   "precision": 0.8757679180887372,
+   "f1": 0.8536260811709914,
+   "hit": true,
+   "plan_words": "Corn, where July 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland where the soil was unusually dry in July 2010",
+  "area": "north_carolina",
+  "type": "dry soil",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 24094,
+   "precision": 0.7945710455764075,
+   "f1": 0.1751237166703597,
+   "hit": false,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2618,
+   "true": 24094,
+   "precision": 0.9633307868601986,
+   "f1": 0.18882899071578316,
+   "hit": false,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 24082,
+   "true": 24094,
+   "precision": 0.9143343576114941,
+   "f1": 0.9141066090999668,
+   "hit": true,
+   "plan_words": "Cropland, where July 2010: mean root-zone soil wetness in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland with the driest July soils on record in 2010",
+  "area": "north_carolina",
+  "type": "dry soil",
+  "persona": null,
+  "M1": {
+   "shown": 0,
+   "true": null,
+   "precision": null,
+   "f1": null,
+   "hit": false,
+   "plan_words": "NO PLAN: The language model's plan was not valid (climate[0]: side must be high/low and 0 < pct < 100); try rewording the question."
+  },
+  "M2": {
+   "shown": 0,
+   "true": null,
+   "precision": null,
+   "f1": null,
+   "hit": false,
+   "plan_words": "NO PLAN: The language model's plan was not valid (climate[0]: side must be high/low and 0 < pct < 100); try rewording the question."
+  },
+  "M3": {
+   "shown": 0,
+   "true": null,
+   "precision": null,
+   "f1": null,
+   "hit": false,
+   "plan_words": "NO PLAN: The language model's plan was not valid (climate[0]: side must be high/low and 0 < pct < 100); try rewording the question."
+  },
+  "keep_by_hits": false,
+  "keep": false
+ },
+ {
+  "question": "Cropland that had an unusually wet spring in 2017",
+  "area": "north_carolina",
+  "type": "wet spring NC",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 39847,
+   "precision": 0.9815683646112601,
+   "f1": 0.1367700964254862,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 39847,
+   "precision": 0.964142091152815,
+   "f1": 0.13434194858863907,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 39337,
+   "true": 39847,
+   "precision": 0.9216767928413453,
+   "f1": 0.9157405536472014,
+   "hit": true,
+   "plan_words": "Cropland, where March to May 2017: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Wetlands far from any cropland",
+  "area": "north_carolina",
+  "type": "wetlands far",
+  "persona": null,
+  "M1": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M2": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M3": {
+   "shown": 4318,
+   "true": 3689,
+   "precision": 0.6470588235294118,
+   "f1": 0.6978893468215311,
+   "hit": true,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Wetlands at least 500 m from any cropland",
+  "area": "north_carolina",
+  "type": "wetlands far",
+  "persona": null,
+  "M1": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M2": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M3": {
+   "shown": 4318,
+   "true": 3689,
+   "precision": 0.6470588235294118,
+   "f1": 0.6978893468215311,
+   "hit": true,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Developed land in the warmer half of the area in summer 2022",
+  "area": "north_carolina",
+  "type": "cooling",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 18011,
+   "precision": 0.7982573726541555,
+   "f1": 0.22691116932603,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2685,
+   "true": 18011,
+   "precision": 0.9169459962756052,
+   "f1": 0.23792037108620023,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 50% of this area's places (NASA POWER)."
+  },
+  "M3": {
+   "shown": 18528,
+   "true": 18011,
+   "precision": 0.7701316925734024,
+   "f1": 0.7810284901064616,
+   "hit": true,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 50% of this area's places (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Towns and built-up land with the hottest summer in 2022",
+  "area": "north_carolina",
+  "type": "cooling",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 21863,
+   "precision": 0.9286193029490617,
+   "f1": 0.22304503561798206,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 21863,
+   "precision": 0.9189008042895442,
+   "f1": 0.2207107497887069,
+   "hit": false,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 21875,
+   "true": 21863,
+   "precision": 0.7688685714285715,
+   "f1": 0.7690795189537701,
+   "hit": true,
+   "plan_words": "Developed, where June to August 2022: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

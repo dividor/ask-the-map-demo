@@ -55,6 +55,16 @@ class UserError(ValueError):
     """A problem with the request that can be shown to the user as is."""
 
 
+class Unsupported(UserError):
+    """The planner says a part of the question cannot be expressed with the data (configs/language.md). The
+    classifier method needs a plan, so it refuses; the aligned space can score any text, so Methods 1 and 2
+    search it with the question's own words instead."""
+
+    def __init__(self, reason: str):
+        super().__init__(f"This data cannot answer that: {reason}")
+        self.reason = reason
+
+
 class Unavailable(RuntimeError):
     """A method that cannot run right now (for example, the language model is not configured)."""
 
@@ -227,11 +237,17 @@ class Engine:
             raise Unavailable("The best combination is not known yet.")
         if how in self.not_ready:
             raise Unavailable(f"The best combination uses '{how}', which is not ready: {self.not_ready[how]}")
-        plan = self._plan(question, area)
-        if how == "classifier":
-            out = self._answer_plan(plan, tiles, self.contexts[area])
+        try:
+            plan = self._plan(question, area)
+        except Unsupported as e:
+            if how == "classifier":
+                raise
+            plan, out = None, self._answer_free_text(question, tiles, e.reason)
         else:
-            out = self._answer_top_share(plan, tiles, area, how)
+            if how == "classifier":
+                out = self._answer_plan(plan, tiles, self.contexts[area])
+            else:
+                out = self._answer_top_share(plan, tiles, area, how)
         out.update(
             {
                 "area": area,
@@ -299,6 +315,38 @@ class Engine:
         if plan["climate"]:
             facts["share_meeting_climate_conditions"] = 1.0 if codes.size else None
         return {"tiles": out_tiles, "facts": facts, "power_cells": boxes}
+
+    def _answer_free_text(self, question: str, tiles: list[TileData], reason: str) -> dict:
+        """Methods 1 and 2 without a plan: the most similar ``top_share`` of the study area to the question's
+        own words in the aligned space, with no distance or climate filter (none can be derived from the
+        text)."""
+        scores = self._text_scores(question, tiles)
+        cut = np.quantile(
+            np.concatenate([s[t.valid] for s, t in zip(scores, tiles, strict=True)]), 1 - self.top_share
+        )
+        out_tiles, shown_leaf = [], []
+        for s, t in zip(scores, tiles, strict=True):
+            show = t.valid & (s >= cut)
+            out_tiles.append(self._tile_out(t, show))
+            out_tiles[-1]["facts"] = {
+                "land_of_shown_pixels": class_shares(t.leaf[show].astype(int), self.leaves),
+                "cells": int(t.valid.sum()),
+            }
+            shown_leaf.append(t.leaf[show])
+        codes = np.concatenate(shown_leaf).astype(int)
+        facts = {
+            "shown_pixels": int(codes.size),
+            "land_of_shown_pixels": class_shares(codes, self.leaves),
+            "rule": f"top {self.top_share:.0%}",
+            "plan_words": f"Free-text search of the aligned space for \u201c{question}\u201d; no plan, so no "
+            f"distance or climate filter ({reason}).",
+            "text": question,
+            "free_text": True,
+            "distance_gate": False,
+            "climate_gate": False,
+            "climate": [],
+        }
+        return {"tiles": out_tiles, "facts": facts, "power_cells": []}
 
     def _answer_top_share(self, plan: dict, tiles: list[TileData], area: str, how: str) -> dict:
         """The aligned space has no class map to threshold, so its candidates are the most similar

@@ -2,7 +2,7 @@ import numpy as np
 import pytest
 
 from askmap.config import PROJECT_ROOT, load_config
-from askmap.demo.engine import UserError
+from askmap.demo.engine import Unsupported, UserError
 from askmap.demo.serve import demo_leaves, load_tiles, make_planner, page_examples, server_host
 
 CFG = load_config(PROJECT_ROOT / "configs" / "feasibility.yaml")
@@ -65,8 +65,9 @@ def test_planner_names_the_area_validates_and_caches_by_question(tmp_path):
     unsupported = make_planner(
         CFG, lambda t, p: {"plan": {"unsupported": "the data has no record of fire"}}, tmp_path
     )
-    with pytest.raises(UserError, match="cannot answer that: the data has no record of fire"):
+    with pytest.raises(Unsupported, match="cannot answer that: the data has no record of fire") as info:
         unsupported("corn fields that burned", "minnesota")
+    assert info.value.reason == "the data has no record of fire"
     silent = make_planner(CFG, lambda t, p: {"plan": {"unsupported": ""}}, tmp_path)
     with pytest.raises(UserError, match="gave no reason"):
         silent("corn fields that burned", "minnesota")

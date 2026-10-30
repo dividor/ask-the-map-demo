@@ -1,0 +1,130 @@
+[
+ {
+  "question": "Soybean fields at least 300 m from any wetland or water",
+  "area": "minnesota",
+  "type": "far from water",
+  "persona": null,
+  "M1": {
+   "shown": 2778,
+   "true": 13853,
+   "precision": 0.9528437724982002,
+   "f1": 0.3183212073838013,
+   "hit": false,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "M2": {
+   "shown": 2778,
+   "true": 13853,
+   "precision": 0.9528437724982002,
+   "f1": 0.3183212073838013,
+   "hit": false,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "M3": {
+   "shown": 13783,
+   "true": 13853,
+   "precision": 0.8565624319814263,
+   "f1": 0.8543928209581705,
+   "hit": true,
+   "plan_words": "Soybeans, more than 300 m from any wetland or water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Corn fields that had a heatwave in July 2022",
+  "area": "north_carolina",
+  "type": "heat NC",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9152144772117963,
+   "f1": 0.8344026886648335,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 1 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9142091152815014,
+   "f1": 0.8334860983806905,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 1 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 3514,
+   "true": 3562,
+   "precision": 0.85486624928856,
+   "f1": 0.8490672696438666,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 1 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Corn fields with at least five days above 35 C in July 2022",
+  "area": "north_carolina",
+  "type": "heat NC",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9148793565683646,
+   "f1": 0.8340971585701191,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 3562,
+   "precision": 0.9142091152815014,
+   "f1": 0.8334860983806905,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 3514,
+   "true": 3562,
+   "precision": 0.85486624928856,
+   "f1": 0.8490672696438666,
+   "hit": true,
+   "plan_words": "Corn, where July 2022 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Wetlands at least 500 m from any cropland",
+  "area": "north_carolina",
+  "type": "wetlands far",
+  "persona": null,
+  "M1": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M2": {
+   "shown": 357,
+   "true": 3689,
+   "precision": 0.5574229691876751,
+   "f1": 0.09836875926841325,
+   "hit": false,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "M3": {
+   "shown": 4318,
+   "true": 3689,
+   "precision": 0.6470588235294118,
+   "f1": 0.6978893468215311,
+   "hit": true,
+   "plan_words": "Wetland, more than 500 m from any cropland."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

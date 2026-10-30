@@ -7,29 +7,29 @@
   "M1": {
    "shown": 2984,
    "true": 18959,
-   "precision": 0.9701742627345844,
-   "f1": 0.2638654696258488,
+   "precision": 0.9922922252010724,
+   "f1": 0.2698810554618785,
    "hit": false,
    "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
   "M2": {
    "shown": 2984,
    "true": 18959,
-   "precision": 0.982573726541555,
-   "f1": 0.267237843503623,
+   "precision": 0.9909517426273459,
+   "f1": 0.26951647450211913,
    "hit": false,
    "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
   "M3": {
-   "shown": 19152,
+   "shown": 19172,
    "true": 18959,
-   "precision": 0.9276315789473685,
-   "f1": 0.93232924877332,
+   "precision": 0.9271333194241602,
+   "f1": 0.9323122918360389,
    "hit": true,
    "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
   "passes": true,
-  "best_f1": 0.93232924877332,
+  "best_f1": 0.9323122918360389,
   "keep": true
  },
  {
@@ -73,29 +73,29 @@
   "M1": {
    "shown": 2984,
    "true": 48214,
-   "precision": 0.5707104557640751,
-   "f1": 0.06652603617328802,
+   "precision": 0.9128686327077749,
+   "f1": 0.10641040665651003,
    "hit": false,
    "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 1681,
+   "shown": 1961,
    "true": 48214,
-   "precision": 0.9886972040452112,
-   "f1": 0.06661990179376691,
+   "precision": 0.9739928607853137,
+   "f1": 0.07613353263577478,
    "hit": false,
    "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M3": {
-   "shown": 48212,
+   "shown": 48214,
    "true": 48214,
-   "precision": 0.9452003650543433,
-   "f1": 0.9451807603758322,
+   "precision": 0.9452441199651553,
+   "f1": 0.9452441199651553,
    "hit": true,
    "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "passes": true,
-  "best_f1": 0.9451807603758322,
+  "best_f1": 0.9452441199651553,
   "keep": true
  },
  {
@@ -106,29 +106,29 @@
   "M1": {
    "shown": 2984,
    "true": 19397,
-   "precision": 0.7121313672922251,
-   "f1": 0.18989321299316383,
+   "precision": 0.15080428954423591,
+   "f1": 0.040212680398552345,
    "hit": false,
    "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 2436,
+   "shown": 1052,
    "true": 19397,
-   "precision": 0.9154351395730707,
-   "f1": 0.2042779279072963,
+   "precision": 0.658745247148289,
+   "f1": 0.06777837547068316,
    "hit": false,
    "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M3": {
-   "shown": 21601,
+   "shown": 21550,
    "true": 19397,
-   "precision": 0.8207027452432758,
-   "f1": 0.8648226742767939,
+   "precision": 0.8225522041763341,
+   "f1": 0.8658021344665054,
    "hit": true,
    "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "passes": true,
-  "best_f1": 0.8648226742767939,
+  "best_f1": 0.8658021344665054,
   "keep": true
  },
  {
@@ -170,26 +170,26 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 57,
+   "shown": 91,
    "true": 197,
-   "precision": 0.5964912280701754,
-   "f1": 0.2677165354330709,
+   "precision": 0.5164835164835165,
+   "f1": 0.3263888888888889,
    "hit": false,
    "plan_words": "Hay, within 200 m of wetland."
   },
   "M2": {
-   "shown": 57,
+   "shown": 91,
    "true": 197,
-   "precision": 0.5964912280701754,
-   "f1": 0.2677165354330709,
+   "precision": 0.5164835164835165,
+   "f1": 0.3263888888888889,
    "hit": false,
    "plan_words": "Hay, within 200 m of wetland."
   },
   "M3": {
-   "shown": 160,
+   "shown": 165,
    "true": 197,
-   "precision": 0.30625,
-   "f1": 0.27450980392156865,
+   "precision": 0.296969696969697,
+   "f1": 0.27071823204419887,
    "hit": false,
    "plan_words": "Hay, within 200 m of wetland."
   },
@@ -203,31 +203,31 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 2932,
+   "shown": 2479,
    "true": 13853,
-   "precision": 0.9795361527967258,
-   "f1": 0.3422103068215669,
+   "precision": 0.8608309802339653,
+   "f1": 0.2613274553024737,
    "hit": false,
    "plan_words": "Soybeans, more than 300 m from any wetland or water."
   },
   "M2": {
-   "shown": 2932,
+   "shown": 2479,
    "true": 13853,
-   "precision": 0.9795361527967258,
-   "f1": 0.3422103068215669,
+   "precision": 0.8608309802339653,
+   "f1": 0.2613274553024737,
    "hit": false,
    "plan_words": "Soybeans, more than 300 m from any wetland or water."
   },
   "M3": {
-   "shown": 13783,
+   "shown": 13768,
    "true": 13853,
-   "precision": 0.8565624319814263,
-   "f1": 0.8543928209581705,
+   "precision": 0.8559703660662406,
+   "f1": 0.8533362296803157,
    "hit": true,
    "plan_words": "Soybeans, more than 300 m from any wetland or water."
   },
   "passes": true,
-  "best_f1": 0.8543928209581705,
+  "best_f1": 0.8533362296803157,
   "keep": true
  },
  {
@@ -236,26 +236,26 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 83,
+   "shown": 69,
    "true": 192,
-   "precision": 0.39759036144578314,
-   "f1": 0.24,
+   "precision": 0.43478260869565216,
+   "f1": 0.22988505747126436,
    "hit": false,
    "plan_words": "Grassland, within 100 m of solar farm."
   },
   "M2": {
-   "shown": 83,
+   "shown": 69,
    "true": 192,
-   "precision": 0.39759036144578314,
-   "f1": 0.24,
+   "precision": 0.43478260869565216,
+   "f1": 0.22988505747126436,
    "hit": false,
    "plan_words": "Grassland, within 100 m of solar farm."
   },
   "M3": {
-   "shown": 283,
+   "shown": 278,
    "true": 192,
-   "precision": 0.3286219081272085,
-   "f1": 0.391578947368421,
+   "precision": 0.3345323741007194,
+   "f1": 0.39574468085106385,
    "hit": false,
    "plan_words": "Grassland, within 100 m of solar farm."
   },
@@ -269,26 +269,26 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 473,
+   "shown": 354,
    "true": 5679,
-   "precision": 0.6596194503171248,
-   "f1": 0.10143042912873862,
+   "precision": 0.7146892655367232,
+   "f1": 0.08387203712912315,
    "hit": false,
    "plan_words": "Wetland, within 100 m of developed."
   },
   "M2": {
-   "shown": 473,
+   "shown": 354,
    "true": 5679,
-   "precision": 0.6596194503171248,
-   "f1": 0.10143042912873862,
+   "precision": 0.7146892655367232,
+   "f1": 0.08387203712912315,
    "hit": false,
    "plan_words": "Wetland, within 100 m of developed."
   },
   "M3": {
-   "shown": 5385,
+   "shown": 5347,
    "true": 5679,
-   "precision": 0.47168059424326836,
-   "f1": 0.4591467823571945,
+   "precision": 0.47391060407705254,
+   "f1": 0.4596408489025939,
    "hit": false,
    "plan_words": "Wetland, within 100 m of developed."
   },
@@ -302,31 +302,31 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 17,
+   "shown": 18,
    "true": 735,
-   "precision": 0.4117647058823529,
-   "f1": 0.018617021276595744,
+   "precision": 0.16666666666666666,
+   "f1": 0.00796812749003984,
    "hit": false,
    "plan_words": "Forest, within 500 m of solar farm."
   },
   "M2": {
-   "shown": 17,
+   "shown": 18,
    "true": 735,
-   "precision": 0.4117647058823529,
-   "f1": 0.018617021276595744,
+   "precision": 0.16666666666666666,
+   "f1": 0.00796812749003984,
    "hit": false,
    "plan_words": "Forest, within 500 m of solar farm."
   },
   "M3": {
-   "shown": 601,
+   "shown": 623,
    "true": 735,
-   "precision": 0.6655574043261231,
-   "f1": 0.5988023952095808,
+   "precision": 0.6597110754414125,
+   "f1": 0.605301914580265,
    "hit": true,
    "plan_words": "Forest, within 500 m of solar farm."
   },
   "passes": true,
-  "best_f1": 0.5988023952095808,
+  "best_f1": 0.605301914580265,
   "keep": true
  }
 ]

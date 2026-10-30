@@ -7,7 +7,7 @@ from fastapi.testclient import TestClient
 
 from askmap.config import PROJECT_ROOT, load_config
 from askmap.demo.app import create_app
-from askmap.demo.engine import Engine, TileData, Unavailable, UserError
+from askmap.demo.engine import Engine, TileData, Unavailable, Unsupported, UserError
 
 CAP = load_config(PROJECT_ROOT / "configs" / "captions.yaml")
 LEAVES = ["corn", "wetland", "other"]
@@ -346,3 +346,20 @@ def test_far_rules_are_negated_and_an_impossible_rule_says_why():
     empty = geometry_engine(nowhere).search("x", "a", "aligned")
     assert empty["facts"]["shown_pixels"] == 0
     assert empty["facts"]["empty_reason"].startswith("No place in this area is more than 90 m from any")
+
+
+def test_unsupported_questions_refuse_the_classifier_but_free_text_search_the_aligned_space():
+    def planner(q, a):
+        raise Unsupported("barns are not a land class")
+
+    e = engine(best="classifier", planner=planner)
+    with pytest.raises(Unsupported, match="cannot answer that: barns"):
+        e.search("barns", "a", "best")
+    with pytest.raises(Unsupported):
+        e.search("barns", "a", "classifier")
+    for method in ("aligned", "aligned_land_power_climate"):
+        out = e.search("barns", "a", method)
+        f = out["facts"]
+        assert out["plan"] is None and f["free_text"] and f["text"] == "barns" and f["climate"] == []
+        assert f["shown_pixels"] > 0 and f["rule"] == "top 25%" and "barns" in f["plan_words"]
+        assert "barns are not a land class" in f["plan_words"] and out["power_cells"] == []

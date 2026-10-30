@@ -23,6 +23,16 @@ Meaning. The answer is the set of pixels (30 m) that satisfy every part (logical
 - `climate`: one entry per NASA POWER climate condition (see below). Use `[]` if none.
 - `output`: `"map"` to show the pixels; `"area"` when the question asks how much land (hectares).
 
+Every part of the question must appear in the plan. If any part cannot be expressed with the catalogue (a
+land type with no class, a condition with no climate variable, an event the data does not record such as fire,
+flood, harvest, yield, ownership or price, a measure with no stat or test), reply with this object instead of a
+plan, naming that part. Never reply with a plan that leaves a part of the question out or swaps it for
+something the catalogue does have:
+
+```
+{"unsupported": "<the part of the question the data cannot express, and why, in one sentence>"}
+```
+
 A climate condition:
 
 ```
@@ -76,7 +86,7 @@ Study areas:
 - `minnesota`: Minnesota study area (farm country with solar farms)
 - `georgia`: Georgia study area (Coastal Plain and Piedmont, solar farms)
 
-Land classes (the same in every area):
+Land classes (the same in every area; there are no others, and no record of fire, flood, harvest or yield):
 - `corn`: corn (maize)
 - `soybeans`: soybeans
 - `spring_wheat`: spring wheat
@@ -88,11 +98,13 @@ Land classes (the same in every area):
 - `grassland`: grassland and pasture (grazing land)
 - `fallow`: fallow or idle cropland
 - `forest`: forest (deciduous, evergreen, mixed)
-- `developed`: developed land (buildings, roads, towns, open developed space)
+- `developed_open`: open and low-density developed land: roads, farmsteads, lawns and large-lot housing (in farm country mostly roads); not towns
+- `town`: towns and built-up land: dense housing, commercial and industrial blocks
 - `water`: open water
 - `wetland`: wetlands (marsh, wet meadow, wooded wetland)
 - `solar_farm`: existing utility-scale solar farms (built by the land year)
 - `cropland`: any annual crop (all crops below plus other annual crops)
+- `developed`: any developed land (developed_open plus town)
 
 Climate variables (NASA POWER):
 - `T2M`: air temperature at 2 m, daily mean (C)
@@ -107,3 +119,7 @@ Climate variables (NASA POWER):
 - `HDD18`: heating degree days, base 18.3 C (degree-days per day; use stat total for a sum)
 - `CDD18`: cooling degree days, base 18.3 C (degree-days per day; use stat total for a sum)
 - `LOW_WIND_SUN`: 1 on a low-wind, low-sun day (50 m wind and sunlight both in the cell's lowest 10% of days), else 0 (use stat total to count such days)
+
+# Today
+
+Today is 2026-10-29. "This year" is 2026 and "last year" is 2025; read other relative times ("last summer", "the past five years") from this date.

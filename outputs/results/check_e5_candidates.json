@@ -1,0 +1,98 @@
+[
+ {
+  "question": "Corn fields hit by drought in summer 2022",
+  "area": "north_dakota",
+  "type": "usda drought",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 4449,
+   "precision": 0.24698391420911528,
+   "f1": 0.19830485672003229,
+   "hit": false,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 170,
+   "true": 4449,
+   "precision": 0.9764705882352941,
+   "f1": 0.0718770296600996,
+   "hit": false,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 4718,
+   "true": 4449,
+   "precision": 0.8995337007206443,
+   "f1": 0.9259299661830479,
+   "hit": true,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields that had a drought in summer 2022",
+  "area": "north_carolina",
+  "type": "usda drought",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 13758,
+   "precision": 0.7875335120643432,
+   "f1": 0.28073109544857244,
+   "hit": false,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2365,
+   "true": 13758,
+   "precision": 0.9708245243128965,
+   "f1": 0.28481051913415617,
+   "hit": false,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 13258,
+   "true": 13758,
+   "precision": 0.8029114496907528,
+   "f1": 0.7880515250222091,
+   "hit": true,
+   "plan_words": "Soybeans, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Hay fields that had an unusually hot growing season in 2021",
+  "area": "north_dakota",
+  "type": "usda heat",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 2210,
+   "precision": 0.592828418230563,
+   "f1": 0.6811705814401232,
+   "hit": false,
+   "plan_words": "Hay, where May to September 2021: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 2210,
+   "precision": 0.5918230563002681,
+   "f1": 0.68001540238737,
+   "hit": false,
+   "plan_words": "Hay, where May to September 2021: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 1925,
+   "true": 2210,
+   "precision": 0.7761038961038961,
+   "f1": 0.7226118500604595,
+   "hit": true,
+   "plan_words": "Hay, where May to September 2021: mean temperature in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

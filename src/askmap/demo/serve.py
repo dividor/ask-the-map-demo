@@ -15,7 +15,7 @@ import numpy as np
 
 from askmap.catalogue import area_classes, catalogue_text
 from askmap.config import PROJECT_ROOT, data_root, load_config, load_env
-from askmap.demo.engine import Engine, TileData, UserError
+from askmap.demo.engine import Engine, TileData, Unsupported, UserError
 from askmap.plan import AreaContext, validate
 
 
@@ -111,11 +111,12 @@ def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None =
         if plan is None:
             raise UserError("The language model did not return a usable plan; try rewording the question.")
         if "unsupported" in plan:
-            # the model says a part of the question cannot be expressed with the data (configs/language.md)
+            # the model says a part of the question cannot be expressed with the data (configs/language.md);
+            # the engine decides what that means for each method
             why = plan["unsupported"]
             if not isinstance(why, str) or not why.strip():
                 raise UserError("The language model said the question is unsupported but gave no reason.")
-            raise UserError(f"This data cannot answer that: {why.strip()}")
+            raise Unsupported(why.strip())
         plan = dict(plan, area=area)
         try:
             validate(plan, catalogue, (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4])))

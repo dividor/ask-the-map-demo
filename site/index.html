@@ -65,12 +65,13 @@
   /* when the box's bottom edge is off screen, the tab sits inside the visible part of the box instead */
   .tile-tab-wrap.inside { transform: translate(calc(-100% + 1px), -100%); }
   .tile-tab-wrap.inside .tile-tab { border-radius: 6px 0 0 0; }
-  .tile-tab { width: 100%; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
+  /* the tab reads as a link: blue, underlined */
+  .tile-tab { width: 100%; background: #ffffff; color: #1d4ed8; border: none; font-weight: 600; font-size: 12px;
               padding: 4px 9px 5px; border-radius: 0 0 6px 6px; cursor: pointer; box-shadow: 0 2px 4px #0004;
-              white-space: nowrap; }
-  .tile-tab:hover { background: #f1efe9; }
+              white-space: nowrap; text-decoration: underline; text-underline-offset: 2px; }
+  .tile-tab:hover { background: #f1efe9; color: #1e3a8a; }
   /* the label inside the bottom-right corner of a NASA POWER cell that meets the climate conditions */
-  .cell-tag { transform: translate(-100%, -100%); width: max-content; background: #22c55e; color: #052e16;
+  .cell-tag { transform: translate(-100%, -100%); width: max-content; cursor: pointer; background: #22c55e; color: #052e16;
               font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px 0 0 0; white-space: nowrap; }
   .modal { position: fixed; inset: 0; background: #00000073; display: flex; align-items: center;
            justify-content: center; z-index: 2000; }
@@ -109,20 +110,20 @@
 <aside>
   <h1>Ask the map</h1>
   <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
-     in four study areas.</p>
+     in four geographical study areas.</p>
   <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
-     queries. Be gentle, it's not production-grade, but it could be with more effort 🙂</p>
+     queries. Be gentle, it's not production-grade and will make mistakes, but maybe it could be with more follow-up work 🙂</p>
   <div id="live-controls">
     <label for="q" class="ask">Go on, ask something</label>
     <textarea id="q" autofocus autocomplete="off"
               placeholder="Type a question in plain English, e.g. corn fields where July 2021 had at least 5 days above 35 C, or pick an example below"></textarea>
     <button class="go" id="go">Search</button>
+    <label for="area">Study area</label>
+    <select id="area"></select>
     <details class="examples-box">
       <summary>Examples: click one to run it</summary>
       <div class="examples" id="examples"></div>
     </details>
-    <label for="area">Study area</label>
-    <select id="area"></select>
     <label for="method">Method</label>
     <select id="method">
       <option value="aligned">Method 1: Aligning text and satellite embeddings (AETHER's recipe)</option>
@@ -185,16 +186,20 @@ let LAST = null;  // the last answer and its question: { d, question }
 document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
 // each tile's match image, drawn to a canvas so a click on the map can tell whether it hit a shown place
 let tileHits = [];
+// resolves once the tile's match image is drawn to its canvas (image decoding is asynchronous)
 function hitCanvas(t) {
-  const img = new Image();
-  img.onload = () => {
-    const c = document.createElement("canvas");
-    c.width = img.width; c.height = img.height;
-    const ctx = c.getContext("2d", { willReadFrequently: true });
-    ctx.drawImage(img, 0, 0);
-    tileHits.push({ t, ctx, w: img.width, h: img.height });
-  };
-  img.src = "data:image/png;base64," + t.png;
+  return new Promise(resolve => {
+    const img = new Image();
+    img.onload = () => {
+      const c = document.createElement("canvas");
+      c.width = img.width; c.height = img.height;
+      const ctx = c.getContext("2d", { willReadFrequently: true });
+      ctx.drawImage(img, 0, 0);
+      tileHits.push({ t, ctx, w: img.width, h: img.height });
+      resolve();
+    };
+    img.src = "data:image/png;base64," + t.png;
+  });
 }
 map.on("click", e => {
   const { lat, lng } = e.latlng;
@@ -313,6 +318,30 @@ function openInfo(t) {
       (f.distance_gate ? " Distances are measured on the aligned space's own land map: each cell takes the land " +
         "class whose name its embedding is closest to." : ""))}</p>`;
 
+  // distance attributes (only when the plan has a distance rule)
+  const near = (d.plan && d.plan.near) || [];
+  if (near.length) {
+    h += "<h2 class=\"section\">Distance attributes</h2>";
+    const steps = f.steps || [], tsteps = tf.steps || [];
+    const nearSteps = steps.map((s, j) => s.kind === "near" ? j : -1).filter(j => j >= 0);
+    near.forEach((r, i) => {
+      const cls = r.classes.map(c => c.replace(/_/g, " ")).join(" or ");
+      h += `<h3>${r.negate ? "Not within" : "Within"} ${r.distance_m} m of ${esc(cls)}</h3>`;
+      const k = nearSteps[i];
+      // Method 3 counts the places left after each step of the plan, for the tile and the whole area
+      if (k > 0 && tsteps[k] && steps[k]) {
+        h += "<table><tr><th></th><th class=\"n\">Before this rule</th><th class=\"n\">After</th></tr>" +
+          `<tr><td>Places in this tile</td><td class="n">${tsteps[k - 1].places.toLocaleString()}</td>` +
+          `<td class="n">${tsteps[k].places.toLocaleString()}</td></tr>` +
+          `<tr><td>Places in the whole study area</td><td class="n">${steps[k - 1].places.toLocaleString()}</td>` +
+          `<td class="n">${steps[k].places.toLocaleString()}</td></tr></table>`;
+      }
+    });
+    h += `<p class="small">${d.used === "classifier"
+      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule)."
+      : "A place passes a rule if it is within the distance of any cell of the named classes on the aligned space's own land map (or is not, for a \"not within\" rule); the places shown are the most similar candidates that pass every rule."}</p>`;
+  }
+
   // climate attributes (only when the question has a climate condition)
   const pcells = d.power_cells || [];
   if ((f.climate || []).length) {
@@ -321,13 +350,17 @@ function openInfo(t) {
       "similarity to the question's text, climate wording included, and does not use these NASA POWER cells; they show where the question's " +
       "climate condition actually holds. In our tests its climate wording matched at chance.</p>";
     if (t.count_meeting_climate !== undefined)
-      h += `<p>${t.count_meeting_climate.toLocaleString()} of the ${t.count.toLocaleString()} places in this tile are in NASA POWER cells that meet the condition.</p>`;
+      h += `<p>${t.count_meeting_climate.toLocaleString()} of the ${t.count.toLocaleString()} places in this tile are in NASA POWER cells that meet the condition${(f.climate || []).length > 1 ? "s" : ""} below.</p>`;
     // the POWER cells over this tile (the cell list and the map boxes are in the same order)
     const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
     const onTile = pcells.map((c, i) => overlaps(c.bounds, t.bounds) ? i : -1).filter(i => i >= 0);
     (f.climate || []).forEach(c => {
       const rows = onTile.length ? onTile.map(i => c.cells[i]) : c.cells;
-      h += `<h3>NASA POWER: ${esc(c.quantity)}</h3><table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
+      // the condition in words (the filter applied), then each cell's value against its threshold
+      h += `<h3>NASA POWER: ${esc(c.quantity)}</h3>` +
+        `<p><b>Condition:</b> ${esc(c.label)}. A cell passes when its ${esc(c.quantity)} is ` +
+        `${c.op === ">=" ? "at least" : "at most"} the threshold shown; every place in a passing cell is kept, every place in a failing cell is dropped.</p>` +
+        `<table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
         `<th class="n">Needs ${c.op === ">=" ? "≥" : "≤"}</th><th></th></tr>` +
         rows.map(x => `<tr><td>${x.lat.toFixed(2)}, ${x.lon.toFixed(2)}</td><td class="n">${fmt(x.value)}</td>` +
           `<td class="n">${fmt(x.threshold)}</td><td class="${x.pass ? "pass" : "fail"}">${x.pass ? "meets" : "no"}</td></tr>`).join("") +
@@ -342,17 +375,38 @@ function openInfo(t) {
   document.getElementById("info-close").focus();
 }
 
+// The part of a tile with the most matches: the tile's match image is cut into a 10 x 10 grid (2 km squares on
+// a 20 km tile) and the square with the most matched pixels is returned as map bounds. Fitting all of a tile's
+// matches shows a scatter over 20 km; this opens on the thickest cluster (a solar farm ringed by forest, say).
+function densestWindow(t) {
+  const h = tileHits.find(x => x.t === t);
+  if (!h) return box(t.match_bounds);
+  const img = h.ctx.getImageData(0, 0, h.w, h.h).data;
+  const cell = Math.max(1, Math.round(h.w / 10)), nx = Math.ceil(h.w / cell), ny = Math.ceil(h.h / cell);
+  const dens = new Float64Array(nx * ny);
+  for (let y = 0; y < h.h; y++)
+    for (let x = 0; x < h.w; x++)
+      if (img[(y * h.w + x) * 4 + 3] > 0) dens[Math.floor(y / cell) * nx + Math.floor(x / cell)]++;
+  let best = 0;
+  for (let i = 1; i < dens.length; i++) if (dens[i] > dens[best]) best = i;
+  const bx = best % nx, by = Math.floor(best / nx);
+  const [W, S, E, N] = t.bounds, lonPer = (E - W) / h.w, latPer = (N - S) / h.h;
+  const x0 = bx * cell, x1 = Math.min(h.w, (bx + 1) * cell), y0 = by * cell, y1 = Math.min(h.h, (by + 1) * cell);
+  return L.latLngBounds([N - y1 * latPer, W + x0 * lonPer], [N - y0 * latPer, W + x1 * lonPer]);
+}
+
 function render(d, question) {
   overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
   tileTabs = []; tileHits = [];
   const f = d.facts;
   let busiest = null;
+  const drawn = [];  // the match canvases being decoded
   // open on the tile with the most matches in passing NASA POWER cells when there are any, else the most matches
   const green = t => t.count_meeting_climate || 0;
   const anyGreen = d.tiles.some(t => green(t) > 0);
   d.tiles.forEach(t => {
     L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: matchOpacity() }).addTo(overlays);
-    if (t.count > 0) hitCanvas(t);
+    if (t.count > 0) drawn.push(hitCanvas(t));
     if (t.count > 0 && t.match_bounds) {
       const key = x => anyGreen ? green(x) : x.count;
       if (!busiest || key(t) > key(busiest)) busiest = t;
@@ -378,6 +432,7 @@ function render(d, question) {
     r.hidden = !!pcells.length;
     r.textContent = "No climate condition: NASA POWER not used";
   });
+  const overlapsCell = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
   pcells.forEach(c => {
     // pass: green edge and tint; fail: light dashed edge and a dark shade, so both read on satellite imagery
     L.rectangle(box(c.bounds), c.pass
@@ -386,26 +441,41 @@ function render(d, question) {
       .bindTooltip(c.pass ? "NASA POWER cell: meets the climate conditions" : "NASA POWER cell: does not meet them")
       .addTo(cells);
     if (c.pass) {
-      L.marker([c.bounds[1], c.bounds[2]], { interactive: false, icon: L.divIcon({ className: "", iconSize: null,
-          html: '<div class="cell-tag">NASA POWER</div>' }) }).addTo(cells);
+      // the tag opens the Match information window for the tile under the cell with the most matches (its climate
+      // section lists this cell's values); with no tile under the cell, the busiest tile of the answer
+      const under = d.tiles.filter(t => overlapsCell(t.bounds, c.bounds)).sort((a, b) => b.count - a.count)[0];
+      L.marker([c.bounds[1], c.bounds[2]], { icon: L.divIcon({ className: "", iconSize: null,
+          html: '<div class="cell-tag" title="Open the match information">NASA POWER</div>' }) })
+        .on("click", () => { const t = under || busiest || d.tiles[0]; if (t) openInfo(t); })
+        .addTo(cells);
     }
   });
   // 20 km tiles tens of km apart: fitting them all makes 90 m places invisible, so open on the tile with the most
   // matches. A NASA POWER cell (~50 km) is larger than that view, so for a question with climate conditions open on
   // the POWER cells around the matches instead, so the cells' edges are visible; with no matches, open on all the
   // area's POWER cells.
-  const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
-  const near = busiest ? pcells.filter(c => overlaps(c.bounds, busiest.match_bounds)) : pcells;
+  const near = busiest ? pcells.filter(c => overlapsCell(c.bounds, busiest.match_bounds)) : pcells;
   if (near.length) map.fitBounds(L.latLngBounds(near.flatMap(c => box(c.bounds))), { padding: [20, 20], animate: false });
-  else if (busiest) map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
+  else if (busiest) {
+    // the densest window needs the busiest tile's canvas, so the view is set once the images are decoded
+    map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
+    Promise.all(drawn).then(() => {
+      if (!LAST || LAST.d !== d) return;  // a newer answer (or none) has replaced this one
+      map.fitBounds(densestWindow(busiest), { padding: [30, 30], maxZoom: 14, animate: false });
+      sizeTabs();
+    });
+  }
   else showArea(d.area);
   sizeTabs();
 
   const st = document.getElementById("status");
   st.className = "";
-  st.textContent = f.shown_pixels
-    ? `${f.shown_pixels.toLocaleString()} places matched. Click a red place, or "Match information" on a tile, for details.`
-    : `No places matched. Click "Match information" on a tile to see why.`;
+  // the plan in words, so what the language model understood is always visible
+  st.innerHTML = f.shown_pixels
+    ? `<b>${f.shown_pixels.toLocaleString()} places matched.</b> Understood as: ${esc(f.plan_words)} ` +
+      `Click a red place, or "Match information" on a tile, for details.`
+    : `<b>No places matched.</b> Understood as: ${esc(f.plan_words)} ` +
+      esc(f.empty_reason || 'Click "Match information" on a tile to see why.');
   LAST = { d, question };
 }
 
@@ -416,7 +486,11 @@ function askAgain() {
 
 function setupAreas(m) {
   const sel = document.getElementById("area");
-  Object.entries(m.areas).forEach(([k, a]) => { const o = document.createElement("option"); o.value = k; o.textContent = a.label; sel.appendChild(o); });
+  // the options are the state names; "study area" is already in the label above the list
+  Object.entries(m.areas).forEach(([k, a]) => {
+    const o = document.createElement("option"); o.value = k; o.textContent = a.label.replace(/ study area$/, "");
+    sel.appendChild(o);
+  });
   sel.onchange = () => {
     overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); askAgain();
   };
@@ -491,7 +565,14 @@ if (STATIC) {
       const d = await r.json();
       if (!r.ok) throw new Error(d.detail || "Search failed");
       render(d, body.question);
-    } catch (e) { st.className = "err"; st.textContent = e.message; }
+    } catch (e) {
+      // the question got no answer (a refusal, an invalid plan, a server fault): nothing from the previous
+      // answer stays on the map
+      overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
+      tileTabs = []; tileHits = []; LAST = null;
+      showArea(document.getElementById("area").value);  // back out to the whole study area
+      st.className = "err"; st.textContent = e.message;
+    }
     busy.hidden = true; btn.disabled = false;
   };
 }

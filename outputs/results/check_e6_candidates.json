@@ -1,0 +1,34 @@
+[
+ {
+  "question": "Corn fields that had a very dry summer in 2022",
+  "area": "north_dakota",
+  "type": "usda drought",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 4449,
+   "precision": 0.24698391420911528,
+   "f1": 0.19830485672003229,
+   "hit": false,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 170,
+   "true": 4449,
+   "precision": 0.9764705882352941,
+   "f1": 0.0718770296600996,
+   "hit": false,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 4718,
+   "true": 4449,
+   "precision": 0.8995337007206443,
+   "f1": 0.9259299661830479,
+   "hit": true,
+   "plan_words": "Corn, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]
