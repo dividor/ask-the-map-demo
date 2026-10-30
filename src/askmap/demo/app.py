@@ -6,6 +6,8 @@ Run with ``uv run python -m askmap.demo.serve`` (loads the engine from the preco
 from __future__ import annotations
 
 import logging
+import time
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -24,9 +26,42 @@ class Query(BaseModel):
     share: float | None = None  # the most similar share of the study area to show (default: the engine's)
 
 
-def create_app(engine, meta: dict) -> FastAPI:
-    """``engine`` answers ``search(question, area, method)``; ``meta`` lists areas, methods and examples."""
+@dataclass
+class Warmup:
+    """What the server is doing before it can answer: the page shows this while a cold container loads
+    the tiles and the text encoder, instead of a blank wait. ``ready()`` hands over the engine and the
+    metadata."""
+
+    stage: str = "starting"
+    started: float = field(default_factory=time.time)
+    engine: object | None = None
+    meta: dict | None = None
+    error: str | None = None
+
+    def ready(self, engine, meta: dict) -> None:
+        self.engine, self.meta, self.stage = engine, meta, "ready"
+
+    def status(self) -> dict:
+        return {
+            "loading": True,
+            "stage": self.stage,
+            "seconds": round(time.time() - self.started),
+            "error": self.error,
+        }
+
+
+def create_app(engine, meta: dict | None, warmup: Warmup | None = None) -> FastAPI:
+    """``engine`` answers ``search(question, area, method)``; ``meta`` lists areas, methods and examples.
+    With a ``warmup``, both may be None at first: the app serves the page and reports the loading stage
+    until ``warmup.ready()`` is called (the server listens while a cold container loads)."""
     app = FastAPI(title="Ask the map")
+    if warmup is not None and engine is not None:
+        warmup.ready(engine, meta or {})
+
+    def current():
+        if warmup is None:
+            return engine, meta
+        return warmup.engine, warmup.meta
 
     @app.get("/", response_class=HTMLResponse)
     def page() -> HTMLResponse:
@@ -35,17 +70,24 @@ def create_app(engine, meta: dict) -> FastAPI:
 
     @app.get("/api/meta")
     def get_meta() -> dict:
-        return meta
+        eng, m = current()
+        if eng is None:
+            return warmup.status() if warmup is not None else {"loading": True, "stage": "starting"}
+        return m or {}
 
     @app.post("/api/search")
     def search(q: Query) -> dict:
+        eng, _ = current()
+        if eng is None:
+            stage = warmup.stage if warmup is not None else "starting"
+            raise HTTPException(status_code=503, detail=f"Still waking up: {stage}. Try again in a moment.")
         text = q.question.strip()
         if not text:
             raise HTTPException(status_code=400, detail="Please type a question.")
         if len(text) > 500:
             raise HTTPException(status_code=400, detail="Please keep the question under 500 characters.")
         try:
-            return engine.search(text, q.area, q.method, q.share)
+            return eng.search(text, q.area, q.method, q.share)
         except UserError as e:
             raise HTTPException(status_code=400, detail=str(e)) from e
         except Unavailable as e:

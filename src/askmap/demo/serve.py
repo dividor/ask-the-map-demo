@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import os
 from pathlib import Path
 
@@ -145,14 +146,11 @@ def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None =
     return planner
 
 
-def main() -> None:
-    import uvicorn
-
+def load_engine(warmup) -> tuple[Engine, dict]:
+    """Everything the demo needs, loaded in order, naming each stage on ``warmup`` as it goes."""
     from askmap.aether_us import TextEncoder
-    from askmap.demo.app import create_app
     from askmap.llm import make_client, system_prompt, translate
 
-    load_env()
     cfg = load_config(PROJECT_ROOT / "configs" / "feasibility.yaml")
     au = load_config(PROJECT_ROOT / "configs" / "aether_us.yaml")
     cap = load_config(PROJECT_ROOT / "configs" / "captions.yaml")
@@ -164,12 +162,13 @@ def main() -> None:
             "note: the demo data was built with a different class list from configs/feasibility.yaml; "
             f"serving the data's classes {leaves} until notebook 13 rebuilds it"
         )
+    warmup.stage = "loading the text encoder"
     import torch
 
     device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
-    cache = os.environ["HF_HOME"]
-    encode = TextEncoder(meta["encoder"], meta["encoder_kind"], device, cache)
+    encode = TextEncoder(meta["encoder"], meta["encoder_kind"], device, os.environ["HF_HOME"])
 
+    warmup.stage = "connecting to the language model"
     llm = cfg["llm"]
     client = make_client(llm["base_url"])
     years = (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4]))
@@ -183,6 +182,7 @@ def main() -> None:
         leaves,
         system,
     )
+    warmup.stage = "loading the map tiles and the climate data"
     engine = Engine(
         load_tiles(demo_dir, meta),
         leaves,
@@ -195,20 +195,39 @@ def main() -> None:
         not_ready=meta["not_ready"],
     )
     examples = page_examples(au["demo"]["page_examples"], meta["areas"])
-    uvicorn.run(
-        create_app(
-            engine,
-            {
-                "areas": meta["areas"],
-                "best": meta["best"],
-                "land_method": meta["land_method"],
-                "examples": examples,
-                "not_ready": engine.not_ready,
-            },
-        ),
-        host=server_host(),
-        port=au["demo"]["port"],
-    )
+    return engine, {
+        "areas": meta["areas"],
+        "best": meta["best"],
+        "land_method": meta["land_method"],
+        "examples": examples,
+        "not_ready": engine.not_ready,
+    }
+
+
+def main() -> None:
+    """Start listening at once and load in the background, so a visitor to a cold server sees the page and
+    its "waking up" message instead of a blank wait; the port is also what the hosting platform's startup
+    probe watches. A loading failure is reported on the page and ends the process."""
+    import threading
+
+    import uvicorn
+
+    from askmap.demo.app import Warmup, create_app
+
+    load_env()
+    au = load_config(PROJECT_ROOT / "configs" / "aether_us.yaml")
+    warmup = Warmup()
+
+    def load() -> None:
+        try:
+            warmup.ready(*load_engine(warmup))
+        except (OSError, KeyError, ValueError, RuntimeError, ImportError) as e:  # reported, then exit
+            warmup.error = f"{type(e).__name__}: {e}"
+            logging.getLogger("askmap.demo").exception("loading failed")
+            os._exit(1)
+
+    threading.Thread(target=load, name="askmap-load", daemon=True).start()
+    uvicorn.run(create_app(None, None, warmup), host=server_host(), port=au["demo"]["port"])
 
 
 if __name__ == "__main__":

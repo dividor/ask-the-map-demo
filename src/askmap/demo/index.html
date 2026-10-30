@@ -165,6 +165,13 @@
     <p id="err-hint" class="small" hidden></p>
   </div>
 </div>
+<div id="warm-modal" class="modal" hidden role="status" aria-live="polite">
+  <div class="modal-box">
+    <h2 style="margin:0 0 8px"><span class="spinner"></span>Waking up</h2>
+    <p id="warm-text" style="margin:0">The server was asleep and is loading the map tiles and the text encoder; this takes about a minute after a quiet spell.</p>
+    <p id="warm-stage" class="small" style="margin:8px 0 0"></p>
+  </div>
+</div>
 <div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
   <div class="modal-box">
     <div class="modal-head">
@@ -555,7 +562,19 @@ if (STATIC) {
     pre.onchange = load; load();
   });
 } else {
-  fetch("/api/meta").then(r => r.json()).then(m => {
+  // a cold server answers /api/meta with its loading stage until it is ready: show that, and keep asking
+  const warm = document.getElementById("warm-modal"), warmStage = document.getElementById("warm-stage");
+  const whenReady = () => fetch("/api/meta", { cache: "no-store" }).then(r => r.json()).then(m => {
+    if (!m.loading) { warm.hidden = true; return m; }
+    if (m.error) {
+      warmStage.textContent = "Loading failed: " + m.error;
+      throw new Error("Loading failed: " + m.error);
+    }
+    warm.hidden = false;
+    warmStage.textContent = `${m.stage[0].toUpperCase()}${m.stage.slice(1)}… ${m.seconds} s so far`;
+    return new Promise(r => setTimeout(r, 2000)).then(whenReady);
+  });
+  whenReady().then(m => {
     META = m;
     const sel = setupAreas(m);
     const ex = document.getElementById("examples");

@@ -452,3 +452,26 @@ def test_a_place_with_a_class_comes_from_the_map_and_one_without_from_its_words(
         e2.answer_masks(free, "a", "aligned")["t"].sum()
         == e2.search("x", "a", "aligned")["facts"]["shown_pixels"]
     )
+
+
+def test_app_serves_the_page_and_the_loading_stage_before_the_engine_is_ready():
+    from fastapi.testclient import TestClient
+
+    from askmap.demo.app import Warmup, create_app
+
+    warm = Warmup()
+    client = TestClient(create_app(None, None, warm))
+    assert client.get("/").status_code == 200
+    warm.stage = "loading the text encoder"
+    m = client.get("/api/meta").json()
+    assert m["loading"] and m["stage"] == "loading the text encoder" and m["error"] is None
+    r = client.post("/api/search", json={"question": "corn", "area": "a", "method": "aligned"})
+    assert r.status_code == 503 and "waking up" in r.json()["detail"] and "text encoder" in r.json()["detail"]
+    warm.ready(engine(), {"areas": {"a": {}}, "examples": []})
+    assert client.get("/api/meta").json() == {"areas": {"a": {}}, "examples": []}
+    assert (
+        client.post("/api/search", json={"question": "corn", "area": "a", "method": "aligned"}).status_code
+        == 200
+    )
+    # an app given a ready engine behaves as before
+    assert TestClient(create_app(engine(), {"x": 1})).get("/api/meta").json() == {"x": 1}
