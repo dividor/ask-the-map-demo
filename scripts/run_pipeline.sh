@@ -18,7 +18,7 @@ ORDER=(01_data 10_aether_osm 02_climate_summaries 03_land_maps 04_answer_key_and
        13_aether_demo_data 20_general_land_maps 13_aether_demo_data 23_land_context 13_aether_demo_data
        16_demo_check_d2 21_unseen_words
        22_demo_check_d3 24_demo_check_d4 25_three_methods 26_geometry_distances 27_aligned_retraining
-       28_page_examples 17_static_site)
+       28_page_examples 29_free_words 17_static_site)
 
 # The demo checks (16, 22, 24) ask the language model afresh and refuse to run over saved replies, so any saved
 # replies for them are moved aside first.
