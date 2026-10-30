@@ -350,13 +350,17 @@ function openInfo(t) {
       "similarity to the question's text, climate wording included, and does not use these NASA POWER cells; they show where the question's " +
       "climate condition actually holds. In our tests its climate wording matched at chance.</p>";
     if (t.count_meeting_climate !== undefined)
-      h += `<p>${t.count_meeting_climate.toLocaleString()} of the ${t.count.toLocaleString()} places in this tile are in NASA POWER cells that meet the condition.</p>`;
+      h += `<p>${t.count_meeting_climate.toLocaleString()} of the ${t.count.toLocaleString()} places in this tile are in NASA POWER cells that meet the condition${(f.climate || []).length > 1 ? "s" : ""} below.</p>`;
     // the POWER cells over this tile (the cell list and the map boxes are in the same order)
     const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
     const onTile = pcells.map((c, i) => overlaps(c.bounds, t.bounds) ? i : -1).filter(i => i >= 0);
     (f.climate || []).forEach(c => {
       const rows = onTile.length ? onTile.map(i => c.cells[i]) : c.cells;
-      h += `<h3>NASA POWER: ${esc(c.quantity)}</h3><table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
+      // the condition in words (the filter applied), then each cell's value against its threshold
+      h += `<h3>NASA POWER: ${esc(c.quantity)}</h3>` +
+        `<p><b>Condition:</b> ${esc(c.label)}. A cell passes when its ${esc(c.quantity)} is ` +
+        `${c.op === ">=" ? "at least" : "at most"} the threshold shown; every place in a passing cell is kept, every place in a failing cell is dropped.</p>` +
+        `<table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
         `<th class="n">Needs ${c.op === ">=" ? "≥" : "≤"}</th><th></th></tr>` +
         rows.map(x => `<tr><td>${x.lat.toFixed(2)}, ${x.lon.toFixed(2)}</td><td class="n">${fmt(x.value)}</td>` +
           `<td class="n">${fmt(x.threshold)}</td><td class="${x.pass ? "pass" : "fail"}">${x.pass ? "meets" : "no"}</td></tr>`).join("") +
