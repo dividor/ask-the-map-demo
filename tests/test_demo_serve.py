@@ -62,6 +62,14 @@ def test_planner_names_the_area_validates_and_caches_by_question(tmp_path):
     planner("corn fields in the Minnesota study area", "minnesota")
     assert seen[1][0] == "corn fields in the Minnesota study area" and seen[0][1] != seen[1][1]
 
+    unsupported = make_planner(
+        CFG, lambda t, p: {"plan": {"unsupported": "the data has no record of fire"}}, tmp_path
+    )
+    with pytest.raises(UserError, match="cannot answer that: the data has no record of fire"):
+        unsupported("corn fields that burned", "minnesota")
+    silent = make_planner(CFG, lambda t, p: {"plan": {"unsupported": ""}}, tmp_path)
+    with pytest.raises(UserError, match="gave no reason"):
+        silent("corn fields that burned", "minnesota")
     bad = make_planner(CFG, lambda t, p: {"plan": None}, tmp_path)
     with pytest.raises(UserError):
         bad("x", "minnesota")

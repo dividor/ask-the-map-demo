@@ -26,13 +26,18 @@ def test_official_leaf_map_precedence():
     # NC: CDL wetland classes count as wetland; solar farms built by the cut-off override; later ones do not
     assert names2 == [
         ["corn", "soybeans", "other_crop", "solar_farm"],
-        ["water", "wetland", "developed", "other"],
+        ["water", "wetland", "developed_open", "other"],
     ]
 
 
 def test_class_mask_groups_and_unknown():
     m = official_leaf_map(np.array([[1, 5, 24, 176]]), ND, CLS)
     assert class_mask(m, "cropland", ND, CLS["groups"]).tolist() == [[True, True, True, False]]
+    # developed land is two leaves (open developed land: CDL 121-122; towns: 123-124) and a group over both
+    d = official_leaf_map(np.array([[121, 122, 123, 124, 1]]), ND, CLS)
+    assert [ND[i] for i in d[0]] == ["developed_open", "developed_open", "town", "town", "corn"]
+    assert class_mask(d, "town", ND, CLS["groups"]).tolist() == [[False, False, True, True, False]]
+    assert class_mask(d, "developed", ND, CLS["groups"]).tolist() == [[True, True, True, True, False]]
     with pytest.raises(ValueError):
         class_mask(m, "other", ND, CLS["groups"])
     assert "cropland" in class_names(ND, CLS["groups"]) and "other" not in class_names(ND, CLS["groups"])

@@ -19,6 +19,16 @@ Meaning. The answer is the set of pixels (30 m) that satisfy every part (logical
 - `climate`: one entry per NASA POWER climate condition (see below). Use `[]` if none.
 - `output`: `"map"` to show the pixels; `"area"` when the question asks how much land (hectares).
 
+Every part of the question must appear in the plan. If any part cannot be expressed with the catalogue (a
+land type with no class, a condition with no climate variable, an event the data does not record such as fire,
+flood, harvest, yield, ownership or price, a measure with no stat or test), reply with this object instead of a
+plan, naming that part. Never reply with a plan that leaves a part of the question out or swaps it for
+something the catalogue does have:
+
+```
+{"unsupported": "<the part of the question the data cannot express, and why, in one sentence>"}
+```
+
 A climate condition:
 
 ```

@@ -313,6 +313,30 @@ function openInfo(t) {
       (f.distance_gate ? " Distances are measured on the aligned space's own land map: each cell takes the land " +
         "class whose name its embedding is closest to." : ""))}</p>`;
 
+  // distance attributes (only when the plan has a distance rule)
+  const near = (d.plan && d.plan.near) || [];
+  if (near.length) {
+    h += "<h2 class=\"section\">Distance attributes</h2>";
+    const steps = f.steps || [], tsteps = tf.steps || [];
+    const nearSteps = steps.map((s, j) => s.kind === "near" ? j : -1).filter(j => j >= 0);
+    near.forEach((r, i) => {
+      const cls = r.classes.map(c => c.replace(/_/g, " ")).join(" or ");
+      h += `<h3>${r.negate ? "Not within" : "Within"} ${r.distance_m} m of ${esc(cls)}</h3>`;
+      const k = nearSteps[i];
+      // Method 3 counts the places left after each step of the plan, for the tile and the whole area
+      if (k > 0 && tsteps[k] && steps[k]) {
+        h += "<table><tr><th></th><th class=\"n\">Before this rule</th><th class=\"n\">After</th></tr>" +
+          `<tr><td>Places in this tile</td><td class="n">${tsteps[k - 1].places.toLocaleString()}</td>` +
+          `<td class="n">${tsteps[k].places.toLocaleString()}</td></tr>` +
+          `<tr><td>Places in the whole study area</td><td class="n">${steps[k - 1].places.toLocaleString()}</td>` +
+          `<td class="n">${steps[k].places.toLocaleString()}</td></tr></table>`;
+      }
+    });
+    h += `<p class="small">${d.used === "classifier"
+      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule)."
+      : "A place passes a rule if it is within the distance of any cell of the named classes on the aligned space's own land map (or is not, for a \"not within\" rule); the places shown are the most similar candidates that pass every rule."}</p>`;
+  }
+
   // climate attributes (only when the question has a climate condition)
   const pcells = d.power_cells || [];
   if ((f.climate || []).length) {
@@ -408,9 +432,12 @@ function render(d, question) {
 
   const st = document.getElementById("status");
   st.className = "";
-  st.textContent = f.shown_pixels
-    ? `${f.shown_pixels.toLocaleString()} places matched. Click a red place, or "Match information" on a tile, for details.`
-    : `No places matched. ${f.empty_reason || 'Click "Match information" on a tile to see why.'}`;
+  // the plan in words, so what the language model understood is always visible
+  st.innerHTML = f.shown_pixels
+    ? `<b>${f.shown_pixels.toLocaleString()} places matched.</b> Understood as: ${esc(f.plan_words)} ` +
+      `Click a red place, or "Match information" on a tile, for details.`
+    : `<b>No places matched.</b> Understood as: ${esc(f.plan_words)} ` +
+      esc(f.empty_reason || 'Click "Match information" on a tile to see why.');
   LAST = { d, question };
 }
 

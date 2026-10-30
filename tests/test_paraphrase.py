@@ -79,7 +79,7 @@ def test_captions_draw_from_every_wording_when_extended():
     vocab = Vocab(ext, LEAVES, GROUPS, FACTS, wordings=8)
     loc = Location(
         LEAVES.index("corn"),
-        np.array([50.0, 400.0, 1000.0, 1000.0, 1000.0, 1000.0, 1000.0]),
+        np.array([50.0, 400.0] + [1000.0] * (len(CAP["near"]["classes"]) - 2)),
         30.0,
         30.0,
         {"heat": np.array([0]), "long": np.array([1])},

@@ -100,6 +100,12 @@ def make_planner(cfg: dict, translate, log_dir: Path):
         plan = rec.get("plan")
         if plan is None:
             raise UserError("The language model did not return a usable plan; try rewording the question.")
+        if "unsupported" in plan:
+            # the model says a part of the question cannot be expressed with the data (configs/language.md)
+            why = plan["unsupported"]
+            if not isinstance(why, str) or not why.strip():
+                raise UserError("The language model said the question is unsupported but gave no reason.")
+            raise UserError(f"This data cannot answer that: {why.strip()}")
         plan = dict(plan, area=area)
         try:
             validate(plan, catalogue, (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4])))

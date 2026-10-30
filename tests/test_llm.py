@@ -72,6 +72,8 @@ def test_call_retries_only_transport_errors():
 def test_system_prompt_and_catalogue():
     text = catalogue_text(CFG)
     assert "`minnesota`" in text and "`solar_farm`" in text and "`LOW_WIND_SUN`" in text
+    assert "`town`" in text and "`developed_open`" in text and "`developed`" in text
+    assert "unsupported" in system_prompt((PROJECT_ROOT / "configs" / "language.md").read_text(), text)
     assert "# Query language" in system_prompt("L", text)
 
 

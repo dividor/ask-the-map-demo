@@ -1,0 +1,130 @@
+[
+ {
+  "question": "Corn fields within 300 m of a wetland or water",
+  "area": "minnesota",
+  "type": "mn within",
+  "persona": null,
+  "M1": {
+   "shown": 437,
+   "true": 6870,
+   "precision": 0.7254004576659039,
+   "f1": 0.08676611468454906,
+   "hit": false,
+   "plan_words": "Corn, within 300 m of wetland or water."
+  },
+  "M2": {
+   "shown": 437,
+   "true": 6870,
+   "precision": 0.7254004576659039,
+   "f1": 0.08676611468454906,
+   "hit": false,
+   "plan_words": "Corn, within 300 m of wetland or water."
+  },
+  "M3": {
+   "shown": 3958,
+   "true": 6870,
+   "precision": 0.782465891864578,
+   "f1": 0.5720354636128555,
+   "hit": true,
+   "plan_words": "Corn, within 300 m of wetland or water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland within 100 m of a wetland",
+  "area": "minnesota",
+  "type": "mn within",
+  "persona": null,
+  "M1": {
+   "shown": 51,
+   "true": 197,
+   "precision": 0.0,
+   "f1": 0.0,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M2": {
+   "shown": 51,
+   "true": 197,
+   "precision": 0.0,
+   "f1": 0.0,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "M3": {
+   "shown": 27,
+   "true": 197,
+   "precision": 0.3333333333333333,
+   "f1": 0.08035714285714286,
+   "hit": false,
+   "plan_words": "Cropland, within 100 m of wetland."
+  },
+  "keep_by_hits": false,
+  "keep": false
+ },
+ {
+  "question": "Forest within 300 m of water",
+  "area": "minnesota",
+  "type": "mn within",
+  "persona": null,
+  "M1": {
+   "shown": 757,
+   "true": 18834,
+   "precision": 0.6565389696169088,
+   "f1": 0.05073758358429891,
+   "hit": false,
+   "plan_words": "Forest, within 300 m of water."
+  },
+  "M2": {
+   "shown": 757,
+   "true": 18834,
+   "precision": 0.6565389696169088,
+   "f1": 0.05073758358429891,
+   "hit": false,
+   "plan_words": "Forest, within 300 m of water."
+  },
+  "M3": {
+   "shown": 9218,
+   "true": 18834,
+   "precision": 0.7644825341722716,
+   "f1": 0.5024240695850564,
+   "hit": true,
+   "plan_words": "Forest, within 300 m of water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Soybean fields within 500 m of a wetland or water",
+  "area": "minnesota",
+  "type": "mn within",
+  "persona": null,
+  "M1": {
+   "shown": 495,
+   "true": 7228,
+   "precision": 0.6202020202020202,
+   "f1": 0.07950278389226985,
+   "hit": false,
+   "plan_words": "Soybeans, within 500 m of wetland or water."
+  },
+  "M2": {
+   "shown": 495,
+   "true": 7228,
+   "precision": 0.6202020202020202,
+   "f1": 0.07950278389226985,
+   "hit": false,
+   "plan_words": "Soybeans, within 500 m of wetland or water."
+  },
+  "M3": {
+   "shown": 4099,
+   "true": 7228,
+   "precision": 0.8792388387411564,
+   "f1": 0.636355610488214,
+   "hit": true,
+   "plan_words": "Soybeans, within 500 m of wetland or water."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

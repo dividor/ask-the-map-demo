@@ -52,7 +52,7 @@ classes:
   # One leaf list for every area. Wetland: NWI in North Dakota, CDL 190/195 elsewhere. Solar farm: USPVDB.
   cropland_ranges: [[1, 35], [38, 58], [204, 254]]
   leaves: [corn, soybeans, spring_wheat, sunflower, canola, cotton, other_crop, hay, grassland, fallow, forest,
-           developed, water, wetland, solar_farm, other]
+           developed_open, town, water, wetland, solar_farm, other]
   cdl:
     corn: [1]
     soybeans: [5]
@@ -64,11 +64,13 @@ classes:
     grassland: [176]
     fallow: [61]
     forest: [141, 142, 143]
-    developed: [121, 122, 123, 124]
+    developed_open: [121, 122]     # open space and low intensity: roads, farmsteads, lawns, large-lot housing
+    town: [123, 124]               # medium and high intensity: towns, dense housing, commercial, industrial
     water: [111]
     wetland_cdl: [190, 195]
   groups:
     cropland: [corn, soybeans, spring_wheat, sunflower, canola, cotton, other_crop]
+    developed: [developed_open, town]
 
 power:
   merra2_daily: s3://nasa-power/merra2/temporal/power_merra2_daily_temporal_lst.zarr

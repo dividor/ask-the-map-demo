@@ -18,7 +18,10 @@ CLASS_TEXT = {
     "grassland": "grassland and pasture (grazing land)",
     "fallow": "fallow or idle cropland",
     "forest": "forest (deciduous, evergreen, mixed)",
-    "developed": "developed land (buildings, roads, towns, open developed space)",
+    "developed_open": "open and low-density developed land: roads, farmsteads, lawns and large-lot housing "
+    "(in farm country mostly roads); not towns",
+    "town": "towns and built-up land: dense housing, commercial and industrial blocks",
+    "developed": "any developed land (developed_open plus town)",
     "water": "open water",
     "wetland": "wetlands (marsh, wet meadow, wooded wetland)",
     "solar_farm": "existing utility-scale solar farms (built by the land year)",
@@ -54,7 +57,11 @@ def catalogue_text(cfg: dict) -> str:
     names = class_names(cfg["classes"]["leaves"], cfg["classes"]["groups"])
     lines = [f"Land is mapped for {cfg['land_year']}. Climate data are daily, {years}.", "", "Study areas:"]
     lines += [f"- `{a}`: {label}" for a, label in cfg["question_areas"].items()]
-    lines += ["", "Land classes (the same in every area):"]
+    lines += [
+        "",
+        "Land classes (the same in every area; there are no others, and no record of fire, flood, harvest "
+        "or yield):",
+    ]
     lines += [f"- `{n}`: {CLASS_TEXT[n]}" for n in names]
     lines += ["", "Climate variables (NASA POWER):"]
     lines += [f"- `{v}`: {t}" for v, t in VAR_TEXT.items()]

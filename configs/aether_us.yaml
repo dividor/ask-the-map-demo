@@ -113,10 +113,10 @@ demo:
     - {question: "Grassland and hay fields that had a very dry summer in 2022", area: north_dakota}
     - {question: "Grassland where the soil was unusually dry in July and August 2021", area: north_dakota}
     - {question: "Hay fields where the growing season of 2021 was one of the driest since 2001", area: north_dakota}
-    - {question: "Soybean fields at least 300 m from any wetland or water", area: minnesota}
+    - {question: "Soybean fields within 500 m of a wetland or water", area: minnesota}
     - {question: "Corn fields with at least five days above 35 C in July 2022", area: north_carolina}
     - {question: "Cropland where the soil was unusually dry in July 2010", area: north_carolina}
-    - {question: "Wetlands at least 500 m from any cropland", area: north_carolina}
+    - {question: "Wetlands within 500 m of cropland", area: north_carolina}
     - {question: "Towns and built-up land with the hottest summer in 2022", area: north_carolina}
   # land maps for every class: one_vs_rest (notebook 12), multinomial (A5, notebook 20) or context_more (A7,
   # notebook 23; chosen by Matt after A7, a post hoc decision: see PLAN.md)
