@@ -15,7 +15,7 @@
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-424decf5-2e27-4703-9483-8250e3433202",
+  "id": "chatcmpl-675e852c-c6b9-407e-850e-0a331ed17326",
   "choices": [
    {
     "finish_reason": "stop",
@@ -29,43 +29,49 @@
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\"\n\nInterpretation:\n\n- area: north_dakota\n- land: classes: [\"corn\"]; min_patch_ha: null (no patch size requirement)\n- near: none\n- climate: condition: variable T2M_MAX? Actually \"above 35 C\" likely daily max temperature >35\u00b0C. Use variable T2M_MAX (daily max). Need days_above with threshold 35, count days >=? The spec says \"strictly above / below day_threshold\". So days_above counts days where daily value > threshold. So we need days_above threshold 35, and test absolute >= 5 days. So climate condition: variable \"T2M_MAX\", years [2021,2021], months [7], stat \"days_above\", day_threshold 35, test absolute >=5.\n\n- output: likely \"map\" because they want the fields (corn fields) that satisfy condition. Not asking area. So output \"map\".\n\nThus JSON:\n\n{\n  \"area\": \"north_dakota\",\n  \"land\": {\"classes\": [\"corn\"], \"min_patch_ha\": null},\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2021, 2021],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\"kind\": \"absolute\", \"op\": \">=\", \"value\": 5}\n    }\n  ],\n  \"output\": \"map\"\n}\n\nCheck format: keys exactly as required. Yes.\n\nReturn only JSON."
+     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\"\n\nInterpretation:\n\n- area: north_dakota\n- land: classes: [\"corn\"]; min_patch_ha: null (no patch size requirement)\n- near: none\n- climate: condition: variable T2M_MAX? Actually \"above 35 C\" likely daily max temperature >35\u00b0C. Use variable T2M_MAX (daily max). Need days_above with threshold 35, count days >=? The spec says \"strictly above / below day_threshold\". So days_above counts days where daily value > threshold. So we need days_above 35, and test absolute >= 5 days.\n\nThus climate condition:\n{\n \"variable\": \"T2M_MAX\",\n \"years\": [2021,2021],\n \"months\": [7],\n \"stat\": \"days_above\",\n \"day_threshold\": 35,\n \"test\": {\"kind\":\"absolute\",\"op\":\">=\",\"value\":5}\n}\n\nOutput: likely map (they want the fields). The question: \"corn fields where July 2021 had at least 5 days above 35 C\". They likely want map. So output \"map\".\n\nThus final JSON:\n\n{\n \"area\":\"north_dakota\",\n \"land\":{\"classes\":[\"corn\"],\"min_patch_ha\":null},\n \"near\":[],\n \"climate\":[{...}],\n \"output\":\"map\"\n}\n\nMake sure formatting correct."
     }
    }
   ],
-  "created": 1793281497,
+  "created": 1793318322,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_19b184c447",
+  "system_fingerprint": "fp_8655ddce88",
   "usage": {
-   "completion_tokens": 517,
+   "completion_tokens": 465,
    "prompt_tokens": 1728,
-   "total_tokens": 2245,
+   "total_tokens": 2193,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 375,
+    "reasoning_tokens": 323,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
-   "prompt_tokens_details": null,
-   "queue_time": 0.083385539,
-   "prompt_time": 0.074035283,
-   "completion_time": 1.090279034,
-   "total_time": 1.164314317
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 1536,
+    "image_tokens": null,
+    "text_tokens": null
+   },
+   "queue_time": 0.074722015,
+   "prompt_time": 0.010000617,
+   "completion_time": 1.056237083,
+   "total_time": 1.0662377
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m63yg4pqe5m81zvfkmq22r6r",
-   "seed": 540964788
+   "id": "req_01m651kzexerzakqsnabvp7kqd",
+   "seed": 446209512
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.36,
+ "seconds": 1.24,
  "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"corn\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2021, 2021],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\n        \"kind\": \"absolute\",\n        \"op\": \">=\",\n        \"value\": 5\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,

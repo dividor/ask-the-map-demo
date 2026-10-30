@@ -9,7 +9,7 @@
    "lon": -83.159,
    "lat": 35.183,
    "state": "NC",
-   "seconds": 0.1,
+   "seconds": 0.0,
    "solar_px": 0,
    "missing_embedding_share": 0.0
   },
@@ -126,7 +126,7 @@
    "lon": -79.97,
    "lat": 36.107,
    "state": "NC",
-   "seconds": 0.1,
+   "seconds": 0.0,
    "solar_px": 30,
    "missing_embedding_share": 0.0
   },
@@ -153,17 +153,17 @@
   "N": {
    "tiles": 17,
    "features": 256,
-   "minutes": 2.0
+   "minutes": 0.9
   },
   "M": {
    "tiles": 33,
    "features": 64,
-   "minutes": 0.7
+   "minutes": 0.3
   },
   "NM": {
    "tiles": 33,
    "features": 256,
-   "minutes": 3.0
+   "minutes": 1.1
   }
  },
  "macro_f1_A5": 0.6764609700595423,
@@ -641,5 +641,5 @@
    ]
   }
  },
- "minutes": 7.0
+ "minutes": 2.6
 }

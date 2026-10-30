@@ -15,58 +15,64 @@
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-3a2438c9-b761-4337-9217-6bc8f7359a73",
+  "id": "chatcmpl-710a3629-80ac-4fb3-bbe3-c7819444a90f",
   "choices": [
    {
     "finish_reason": "stop",
     "index": 0,
     "logprobs": null,
     "message": {
-     "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+     "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 30,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
      "refusal": null,
      "role": "assistant",
      "annotations": null,
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's question: \"In the North Dakota study area: wetlands next to crop fields\". They want wetlands next to crop fields. Likely they want map of wetlands that are near crop fields. Land classes: wetlands = \"wetland\". Crop fields could be any cropland: maybe \"cropland\" class (any annual crop). Or could be specific crops, but generic \"crop fields\" suggests cropland. So we need wetlands that are near crop fields. The \"near\" rule: we need wetlands that are within some distance of crop fields. The question doesn't specify distance. Probably default small distance like 100 m? But we need to infer. The query language requires a distance. If unspecified, maybe we choose a typical distance like 100 m. However, we must be careful: The instruction says we translate the question into a plan. If distance not specified, maybe we set distance_m to 0? That would be exact adjacency? But adjacency is ambiguous. Could use 0 to mean directly adjacent? But distance 0 would only include same pixel, which is not \"next to\". Better to choose a small distance like 100 m. Many examples use 100 m. So we can set distance_m: 100.\n\nWe need land: wetlands. So land classes: [\"wetland\"], min_patch_ha null (no patch size). Near: classes [\"cropland\"], distance 100, negate false.\n\nClimate: none.\n\nOutput: map (they want wetlands next to crop fields). So output \"map\".\n\nThus JSON:\n\n{\n  \"area\": \"north_dakota\",\n  \"land\": {\"classes\": [\"wetland\"], \"min_patch_ha\": null},\n  \"near\": [{\"classes\": [\"cropland\"], \"distance_m\": 100, \"negate\": false}],\n  \"climate\": [],\n  \"output\": \"map\"\n}\n\nReturn only that."
+     "reasoning": "We need to translate the user's question: \"In the North Dakota study area: wetlands next to crop fields\". They want wetlands next to crop fields. Likely they want map of wetlands that are adjacent to crop fields. The phrase \"next to\" suggests near within some distance, maybe immediate adjacency. Usually we might use distance 0? But typical near rule uses distance_m. Could use 30 m (one pixel) or maybe 100 m. The question ambiguous. Probably they want wetlands that are near crop fields. Use near with distance maybe 30 m (adjacent). Use land classes: wetlands. Near: crop fields. Crop fields could be any cropland class: maybe \"cropland\". So near rule: classes [\"cropland\"], distance_m: 30, negate false. Output map. No climate condition. No min_patch. So produce JSON.\n\nThus:\n\n{\n \"area\": \"north_dakota\",\n \"land\": {\"classes\": [\"wetland\"], \"min_patch_ha\": null},\n \"near\": [{\"classes\": [\"cropland\"], \"distance_m\": 30, \"negate\": false}],\n \"climate\": [],\n \"output\": \"map\"\n}\n\nReturn only JSON."
     }
    }
   ],
-  "created": 1793281495,
+  "created": 1793318321,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_0708ac49a5",
+  "system_fingerprint": "fp_c3da0d4bb9",
   "usage": {
-   "completion_tokens": 481,
+   "completion_tokens": 337,
    "prompt_tokens": 1716,
-   "total_tokens": 2197,
+   "total_tokens": 2053,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 389,
+    "reasoning_tokens": 245,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
-   "prompt_tokens_details": null,
-   "queue_time": 0.03835633,
-   "prompt_time": 0.125007173,
-   "completion_time": 1.031296259,
-   "total_time": 1.156303432
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 1536,
+    "image_tokens": null,
+    "text_tokens": null
+   },
+   "queue_time": 0.221549709,
+   "prompt_time": 0.092759557,
+   "completion_time": 0.697041325,
+   "total_time": 0.789800882
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m63yg3ane8388bp74ep3spcj",
-   "seed": 521473681
+   "id": "req_01m651kybaeafrd4takjd1f7s2",
+   "seed": 2075740607
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.36,
- "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+ "seconds": 1.15,
+ "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 30,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,
  "question": "In the North Dakota study area: wetlands next to crop fields",
@@ -83,7 +89,7 @@
     "classes": [
      "cropland"
     ],
-    "distance_m": 100,
+    "distance_m": 30,
     "negate": false
    }
   ],

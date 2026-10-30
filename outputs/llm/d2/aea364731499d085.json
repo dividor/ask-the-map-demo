@@ -15,7 +15,7 @@
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-ff0bb920-75ef-4063-bb52-2739c89893de",
+  "id": "chatcmpl-bde90328-8551-4b52-a1e3-4126d12a9598",
   "choices": [
    {
     "finish_reason": "stop",
@@ -29,43 +29,43 @@
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's question into a plan. The user says: \"In the North Dakota study area: hay fields\". Likely they want a map of hay fields, or maybe area? The phrasing \"In the North Dakota study area: hay fields\" ambiguous. Usually if they just mention land class, they might want a map. The instruction: output \"map\" when question asks to show pixels; \"area\" when asks how much land (hectares). The user didn't ask for area, just \"hay fields\". Likely they want a map of hay fields. So output map.\n\nNo near constraints, no climate constraints. Land classes: hay. min_patch_ha null (no patch size). So plan:\n\n{\n \"area\": \"north_dakota\",\n \"land\": {\"classes\": [\"hay\"], \"min_patch_ha\": null},\n \"near\": [],\n \"climate\": [],\n \"output\": \"map\"\n}\n\nReturn JSON only."
+     "reasoning": "We need to translate the user's question into a plan. The user says: \"In the North Dakota study area: hay fields\". Likely they want to see hay fields (maybe map). No climate or near constraints. So output map. Land class hay. No min_patch. So:\n\n{\n \"area\":\"north_dakota\",\n \"land\":{\"classes\":[\"hay\"],\"min_patch_ha\":null},\n \"near\":[],\n \"climate\":[],\n \"output\":\"map\"\n}\n\nCheck format: keys exactly. Yes."
     }
    }
   ],
-  "created": 1793239658,
+  "created": 1793317083,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_7a4ab09ae4",
+  "system_fingerprint": "fp_8ea50c0161",
   "usage": {
-   "completion_tokens": 259,
+   "completion_tokens": 168,
    "prompt_tokens": 1713,
-   "total_tokens": 1972,
+   "total_tokens": 1881,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 197,
+    "reasoning_tokens": 106,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
    "prompt_tokens_details": null,
-   "queue_time": 0.199681354,
-   "prompt_time": 0.090540332,
-   "completion_time": 0.542070127,
-   "total_time": 0.632610459
+   "queue_time": 0.138457219,
+   "prompt_time": 0.076345223,
+   "completion_time": 0.351873471,
+   "total_time": 0.428218694
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m62pkbg0epmtfpbh70hvdw4e",
-   "seed": 1323228371
+   "id": "req_01m650e609er4v1nc6dkcxr5ty",
+   "seed": 1194181452
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.15,
+ "seconds": 1.04,
  "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"hay\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,

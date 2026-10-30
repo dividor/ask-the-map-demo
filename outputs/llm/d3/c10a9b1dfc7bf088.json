@@ -8,86 +8,102 @@
    },
    {
     "role": "user",
-    "content": "In the North Carolina study area: wetlands within 100 m of developed land"
+    "content": "In the North Carolina study area: Corn fields that had a heatwave in July 2022"
    }
   ],
   "temperature": 0,
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-a3c772fc-102f-4072-9b00-8092e52bb507",
+  "id": "chatcmpl-df09e811-3d09-41bc-b753-e70292c35919",
   "choices": [
    {
     "finish_reason": "stop",
     "index": 0,
     "logprobs": null,
     "message": {
-     "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"developed\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+     "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"corn\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2022, 2022],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\n        \"kind\": \"absolute\",\n        \"op\": \">=\",\n        \"value\": 1\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
      "refusal": null,
      "role": "assistant",
      "annotations": null,
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to produce JSON plan.\n\nUser: \"In the North Carolina study area: wetlands within 100 m of developed land\"\n\nInterpretation: Show wetlands that are within 100 m of developed land. So land classes: wetlands. near: developed within 100 m, negate false. No climate conditions. Output map (they didn't ask area). So:\n\n{\n \"area\": \"north_carroll\"? Wait study area name is \"north_carroll\"? Actually catalogue: \"north_carroll\"? No, it's \"north_carroll\"? Let's check: The catalogue lists \"north_carroll\"? Actually it lists \"north_carroll\"? Let's read: Study areas: north_dakota, north_carolina, minnesota, georgia. So area: \"north_carolina\". Land classes: \"wetland\". near: classes [\"developed\"], distance_m 100, negate false. climate: [].\n\nOutput: \"map\". min_patch_ha null.\n\nThus JSON."
+     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Carolina study area: Corn fields that had a heatwave in July 2022\"\n\nInterpretation: Land class = corn. Heatwave in July 2022: need climate condition. Define heatwave as maybe days where max temperature above some threshold? The language supports days_above with day_threshold. We need to decide threshold. The user didn't specify threshold. Could interpret heatwave as many days above e.g., 35\u00b0C. But we need to encode something. Perhaps use days_above with threshold 35\u00b0C for T2M_MAX in July 2022, and require at least some number of days? The test can be absolute on days_above count. For example, days_above >= 5 days. But not specified. Could also use \"days_above\" with threshold and test absolute >= 1 (i.e., at least one day). The simplest: days_above threshold 35\u00b0C, test >= 1.\n\nThus climate condition: variable \"T2M_MAX\", years [2022,2022], months [7], stat \"days_above\", day_threshold 35, test absolute >= 1.\n\nOutput: map (they want to see fields). So output \"map\".\n\nLand: classes [\"corn\"], min_patch_ha null (not specified). Near: none.\n\nThus JSON:\n\n{\n \"area\": \"north_carolina\",\n \"land\": {\"classes\": [\"corn\"], \"min_patch_ha\": null},\n \"near\": [],\n \"climate\": [\n   {\n     \"variable\": \"T2M_MAX\",\n     \"years\": [2022, 2022],\n     \"months\": [7],\n     \"stat\": \"days_above\",\n     \"day_threshold\": 35,\n     \"test\": {\"kind\": \"absolute\", \"op\": \">=\", \"value\": 1}\n   }\n ],\n \"output\": \"map\"\n}\n\nCheck format: keys exactly. Yes.\n\nReturn only JSON."
     }
    }
   ],
-  "created": 1793287299,
+  "created": 1793318335,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_e5b4e54fbb",
+  "system_fingerprint": "fp_c15aa9c1b7",
   "usage": {
-   "completion_tokens": 288,
-   "prompt_tokens": 1719,
-   "total_tokens": 2007,
+   "completion_tokens": 555,
+   "prompt_tokens": 1723,
+   "total_tokens": 2278,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 197,
+    "reasoning_tokens": 414,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
-   "prompt_tokens_details": null,
-   "queue_time": 0.07450641,
-   "prompt_time": 0.09214822,
-   "completion_time": 0.606393074,
-   "total_time": 0.698541294
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 1536,
+    "image_tokens": null,
+    "text_tokens": null
+   },
+   "queue_time": 0.221468298,
+   "prompt_time": 0.115691047,
+   "completion_time": 1.578196695,
+   "total_time": 1.693887742
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m64417vre5tvy77zh21gfz7p",
-   "seed": 2118094130
+   "id": "req_01m651mbkvezeanv5qh5224ech",
+   "seed": 225791466
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 0.88,
- "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"developed\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+ "seconds": 2.03,
+ "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"corn\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2022, 2022],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\n        \"kind\": \"absolute\",\n        \"op\": \">=\",\n        \"value\": 1\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,
- "question": "In the North Carolina study area: wetlands within 100 m of developed land",
+ "question": "In the North Carolina study area: Corn fields that had a heatwave in July 2022",
  "plan": {
   "area": "north_carolina",
   "land": {
    "classes": [
-    "wetland"
+    "corn"
    ],
    "min_patch_ha": null
   },
-  "near": [
+  "near": [],
+  "climate": [
    {
-    "classes": [
-     "developed"
+    "variable": "T2M_MAX",
+    "years": [
+     2022,
+     2022
     ],
-    "distance_m": 100,
-    "negate": false
+    "months": [
+     7
+    ],
+    "stat": "days_above",
+    "day_threshold": 35,
+    "test": {
+     "kind": "absolute",
+     "op": ">=",
+     "value": 1
+    }
    }
   ],
-  "climate": [],
   "output": "map"
  },
  "error": null

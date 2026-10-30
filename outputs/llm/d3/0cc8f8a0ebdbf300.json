@@ -8,102 +8,93 @@
    },
    {
     "role": "user",
-    "content": "In the North Dakota study area: cropland where spring 2022 was one of the wettest 10% since 2001"
+    "content": "In the Minnesota study area: Soybean fields at least 300 m from any wetland or water"
    }
   ],
   "temperature": 0,
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-0df192b3-c540-4b89-9661-ea79a2d5b5f5",
+  "id": "chatcmpl-4a0f8c7c-750e-4c01-94fc-a29441ab30ae",
   "choices": [
    {
     "finish_reason": "stop",
     "index": 0,
     "logprobs": null,
     "message": {
-     "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"cropland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"PRECTOTCORR\",\n      \"years\": [2022, 2022],\n      \"months\": [3, 4, 5],\n      \"stat\": \"total\",\n      \"day_threshold\": null,\n      \"test\": {\n        \"kind\": \"history_rank\",\n        \"side\": \"high\",\n        \"pct\": 10,\n        \"history\": [2001, 2025]\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
+     "content": "{\n  \"area\": \"minnesota\",\n  \"land\": {\n    \"classes\": [\"soybeans\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"wetland\", \"water\"],\n      \"distance_m\": 300,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
      "refusal": null,
      "role": "assistant",
      "annotations": null,
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Dakota study area: cropland where spring 2022 was one of the wettest 10% since 2001\"\n\nInterpretation:\n\n- area: \"north_dakota\"\n- land: classes: [\"cropland\"]; min_patch_ha: null (not specified)\n- near: none\n- climate: condition: wettest 10% of spring (months March, April, May?) Usually spring = March, April, May (months 3,4,5). Use precipitation variable: \"PRECTOTCORR\". Want wettest 10% => high side, pct 10, history from 2001 to 2025? The request says \"since 2001\". So history years [2001, 2025] (or up to 2025). The year of interest is 2022. So years: [2022,2022]. months: [3,4,5]. stat: \"total\" (sum of precipitation over spring). test: history_rank high 10% over history 2001-2025.\n\nThus climate condition:\n\n{\n  \"variable\": \"PRECTOTCORR\",\n  \"years\": [2022, 2022],\n  \"months\": [3,4,5],\n  \"stat\": \"total\",\n  \"day_threshold\": null,\n  \"test\": {\"kind\":\"history_rank\",\"side\":\"high\",\"pct\":10,\"history\":[2001,2025]}\n}\n\nOutput: likely \"map\" because they ask \"cropland where ...\". Not asking area. So output \"map\".\n\nThus final JSON:\n\n{\n  \"area\":\"north_dakota\",\n  \"land\":{\"classes\":[\"cropland\"],\"min_patch_ha\":null},\n  \"near\":[],\n  \"climate\":[{...}],\n  \"output\":\"map\"\n}\n\nMake sure formatting correct JSON.\n\n"
+     "reasoning": "We need to produce JSON plan.\n\nUser: \"In the Minnesota study area: Soybean fields at least 300 m from any wetland or water\"\n\nInterpretation: land class soybean, min_patch_ha null (not specified). Near condition: we need pixels that are at least 300 m from any wetland or water. That means we want NOT within 300 m of wetland or water. So we need two near entries? The spec: near is list of entries, each with classes, distance_m, negate. If we want to exclude both wetland and water within 300 m, we could combine classes list [\"wetland\",\"water\"] with distance 300 and negate true (i.e., keep pixels NOT within 300 m of any pixel of those classes). That satisfies \"at least 300 m from any wetland or water\". So near: [{\"classes\":[\"wetland\",\"water\"], \"distance_m\":300, \"negate\":true}].\n\nClimate: none.\n\nOutput: map (they didn't ask for area). So output \"map\".\n\nArea: \"minnesota\". Land classes: [\"soybeans\"].\n\nmin_patch_ha: null.\n\nThus JSON:\n\n{\n  \"area\":\"minnesota\",\n  \"land\":{\"classes\":[\"soybeans\"],\"min_patch_ha\":null},\n  \"near\":[{\"classes\":[\"wetland\",\"water\"],\"distance_m\":300,\"negate\":true}],\n  \"climate\":[],\n  \"output\":\"map\"\n}\n\nCheck formatting: keys order not required but follow example. Provide exactly one JSON object."
     }
    }
   ],
-  "created": 1793281501,
+  "created": 1793318333,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_c3da0d4bb9",
+  "system_fingerprint": "fp_27194a498a",
   "usage": {
-   "completion_tokens": 559,
-   "prompt_tokens": 1731,
-   "total_tokens": 2290,
+   "completion_tokens": 415,
+   "prompt_tokens": 1724,
+   "total_tokens": 2139,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 399,
+    "reasoning_tokens": 321,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
-   "prompt_tokens_details": null,
-   "queue_time": 0.24659703,
-   "prompt_time": 0.083385125,
-   "completion_time": 1.173366892,
-   "total_time": 1.256752017
+   "prompt_tokens_details": {
+    "audio_tokens": null,
+    "cache_write_tokens": null,
+    "cached_tokens": 1536,
+    "image_tokens": null,
+    "text_tokens": null
+   },
+   "queue_time": 0.243688128,
+   "prompt_time": 0.051900218,
+   "completion_time": 1.202706541,
+   "total_time": 1.254606759
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m63yg8m6et6thb0qm96jzd56",
-   "seed": 2063033719
+   "id": "req_01m651ma0he5fb22ptn8cjests",
+   "seed": 451028390
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.64,
- "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"cropland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"PRECTOTCORR\",\n      \"years\": [2022, 2022],\n      \"months\": [3, 4, 5],\n      \"stat\": \"total\",\n      \"day_threshold\": null,\n      \"test\": {\n        \"kind\": \"history_rank\",\n        \"side\": \"high\",\n        \"pct\": 10,\n        \"history\": [2001, 2025]\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
+ "seconds": 1.61,
+ "content": "{\n  \"area\": \"minnesota\",\n  \"land\": {\n    \"classes\": [\"soybeans\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"wetland\", \"water\"],\n      \"distance_m\": 300,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,
- "question": "In the North Dakota study area: cropland where spring 2022 was one of the wettest 10% since 2001",
+ "question": "In the Minnesota study area: Soybean fields at least 300 m from any wetland or water",
  "plan": {
-  "area": "north_dakota",
+  "area": "minnesota",
   "land": {
    "classes": [
-    "cropland"
+    "soybeans"
    ],
    "min_patch_ha": null
   },
-  "near": [],
-  "climate": [
+  "near": [
    {
-    "variable": "PRECTOTCORR",
-    "years": [
-     2022,
-     2022
+    "classes": [
+     "wetland",
+     "water"
     ],
-    "months": [
-     3,
-     4,
-     5
-    ],
-    "stat": "total",
-    "day_threshold": null,
-    "test": {
-     "kind": "history_rank",
-     "side": "high",
-     "pct": 10,
-     "history": [
-      2001,
-      2025
-     ]
-    }
+    "distance_m": 300,
+    "negate": true
    }
   ],
+  "climate": [],
   "output": "map"
  },
  "error": null

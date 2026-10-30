@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- a tiny globe with a red matched place, the page's icon -->
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ccircle cx='16' cy='16' r='14' fill='%231f6fd0'/%3E%3Cg fill='none' stroke='%23fff' stroke-width='1.8' stroke-linecap='round'%3E%3Ccircle cx='16' cy='16' r='14'/%3E%3Cellipse cx='16' cy='16' rx='6.5' ry='14'/%3E%3Cpath d='M2 16h28M4.6 9.5h22.8M4.6 22.5h22.8'/%3E%3C/g%3E%3Ccircle cx='21.5' cy='11.5' r='3.4' fill='%23ff1717' stroke='%23fff' stroke-width='1.2'/%3E%3C/svg%3E">
 <title>Ask the Map</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -22,18 +24,65 @@
   h1 { font-size: 18px; margin: 0 0 4px; }
   h2 { font-size: 13px; margin: 14px 0 4px; }
   p.sub { margin: 0 0 14px; color: var(--muted); }
+  #methodnote { font-size: 12px; color: var(--muted); margin-top: 4px; }
   label { display: block; font-weight: 600; margin: 12px 0 4px; }
   textarea, select, button { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--line);
          border-radius: 6px; background: var(--bg); color: var(--text); }
-  textarea { min-height: 70px; resize: vertical; }
-  button.go { margin-top: 12px; background: var(--accent); color: #fff; border: none; font-weight: 600;
+  /* the question box is the point of the page, so it stands out from the other controls */
+  label.ask { font-size: 16px; margin-top: 16px; }
+  textarea { min-height: 112px; resize: vertical; font-size: 16px; padding: 10px 12px; background: var(--panel);
+             border: 2px solid var(--accent); box-shadow: 0 1px 4px rgba(0, 0, 0, .08); }
+  textarea:focus { outline: none; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 30%, transparent); }
+  button.go { margin-top: 8px; background: var(--accent); color: #fff; border: none; font-weight: 600;
               cursor: pointer; }
   button.go:disabled { opacity: .6; cursor: wait; }
-  .examples { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
-  .examples button { width: auto; background: var(--chip); font-size: 12px; padding: 4px 8px; cursor: pointer; }
+  /* the example questions as equal-width boxes */
+  .examples { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 6px; margin-top: 6px; }
+  .examples-box { margin-top: 6px; }
+  .examples-box summary { cursor: pointer; color: var(--text); font-size: 14px; font-weight: 600; margin-top: 4px; }
+  .examples button { width: 100%; height: 100%; text-align: left; background: var(--chip); font-size: 12px;
+                     padding: 5px 8px; cursor: pointer; }
+  .examples .badge { display: inline-block; margin-top: 3px; padding: 1px 7px; border-radius: 999px; font-size: 10.5px;
+                     font-weight: 600; letter-spacing: .02em; color: #1f6fd0; background: #1f6fd01a;
+                     border: 1px solid #1f6fd04d; white-space: nowrap; }
   #status { margin-top: 10px; color: var(--muted); min-height: 1.4em; }
+  /* while a question is being answered: a thin ring in the accent colour that spins, in the status line and,
+     larger, over the map */
+  .spinner { display: inline-block; width: 16px; height: 16px; vertical-align: -3px; margin-right: 8px;
+             border-radius: 50%; border: 2px solid color-mix(in srgb, var(--accent) 25%, transparent);
+             border-top-color: var(--accent); animation: spin .8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .map-busy { position: absolute; inset: 0; z-index: 800; display: flex; flex-direction: column; gap: 12px;
+              align-items: center; justify-content: center; background: #00000026; pointer-events: none;
+              color: #fff; font-weight: 600; text-shadow: 0 1px 3px #000a; }
+  .map-busy[hidden] { display: none; }
+  .map-busy .spinner { width: 48px; height: 48px; border-width: 4px; margin: 0;
+                       border-color: #ffffff55; border-top-color: #fff; }
   #status.err { color: #dc2626; }
-  .facts { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+  .facts { margin-top: 8px; }
+  /* the tab hangs from the tile box's bottom edge, flush with its right side, like a folder tab */
+  .tile-tab-wrap { transform: translate(calc(-100% + 1px), -1px); }
+  /* when the box's bottom edge is off screen, the tab sits inside the visible part of the box instead */
+  .tile-tab-wrap.inside { transform: translate(calc(-100% + 1px), -100%); }
+  .tile-tab-wrap.inside .tile-tab { border-radius: 6px 0 0 0; }
+  .tile-tab { width: 100%; background: #ffffff; color: #111111; border: none; font-weight: 600; font-size: 12px;
+              padding: 4px 9px 5px; border-radius: 0 0 6px 6px; cursor: pointer; box-shadow: 0 2px 4px #0004;
+              white-space: nowrap; }
+  .tile-tab:hover { background: #f1efe9; }
+  /* the label inside the bottom-right corner of a NASA POWER cell that meets the climate conditions */
+  .cell-tag { transform: translate(-100%, -100%); width: max-content; background: #22c55e; color: #052e16;
+              font-weight: 600; font-size: 11px; padding: 2px 7px; border-radius: 4px 0 0 0; white-space: nowrap; }
+  .modal { position: fixed; inset: 0; background: #00000073; display: flex; align-items: center;
+           justify-content: center; z-index: 2000; }
+  .modal[hidden] { display: none; }
+  .modal-box { background: var(--panel); color: var(--text); width: min(600px, calc(100vw - 32px));
+               max-height: 82vh; overflow-y: auto; border-radius: 10px; border: 1px solid var(--line); padding: 16px; }
+  .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .modal-head h2 { font-size: 16px; margin: 0; }
+  .modal-close { width: auto; background: var(--chip); padding: 4px 10px; cursor: pointer; font-size: 16px; }
+  .q-top { font-size: 15px; font-weight: 600; margin: 12px 0 8px; }
+  .facts h2.section { font-size: 14px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 16px; }
+  .facts h3 { font-size: 12px; margin: 10px 0 4px; color: var(--muted); }
   .facts table { width: 100%; border-collapse: collapse; }
   .facts td, .facts th { padding: 2px 4px 2px 0; vertical-align: top; text-align: left; }
   .facts th { font-weight: 600; color: var(--muted); font-size: 12px; }
@@ -51,8 +100,6 @@
                 border-radius: 6px; border: 1px solid var(--line); }
   .map-legend .sw { display: inline-block; width: 14px; height: 10px; margin-right: 6px; vertical-align: -1px;
                     box-sizing: border-box; border-radius: 2px; }
-  .count-label { background: var(--accent); color: #fff; font: 600 12px/1 system-ui, sans-serif; padding: 4px 6px;
-                 border-radius: 10px; white-space: nowrap; box-shadow: 0 1px 3px rgba(0,0,0,.4); }
   #map { height: 100vh; }
   @media (max-width: 760px) { body { grid-template-columns: 1fr; grid-template-rows: auto 60vh; height: auto; }
     aside { border-right: none; border-bottom: 1px solid var(--line); } #map { height: 60vh; } }
@@ -62,28 +109,33 @@
 <aside>
   <h1>Ask the map</h1>
   <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
-     in four study areas (a feasibility demo).</p>
+     in four study areas.</p>
+  <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
+     queries. Be gentle, it's not production-grade, but it could be with more effort 🙂</p>
   <div id="live-controls">
-    <label for="q">Question</label>
-    <textarea id="q">wetlands next to crop fields</textarea>
-    <div class="examples" id="examples"></div>
+    <label for="q" class="ask">Go on, ask something</label>
+    <textarea id="q" autofocus autocomplete="off"
+              placeholder="Type a question in plain English, e.g. corn fields where July 2021 had at least 5 days above 35 C, or pick an example below"></textarea>
+    <button class="go" id="go">Search</button>
+    <details class="examples-box">
+      <summary>Examples: click one to run it</summary>
+      <div class="examples" id="examples"></div>
+    </details>
     <label for="area">Study area</label>
     <select id="area"></select>
     <label for="method">Method</label>
     <select id="method">
-      <option value="best">Best combination (from the stage 3 tests)</option>
-      <option value="aligned">Aligned space (text vs embeddings)</option>
-      <option value="classifier">Classifier per class + language model plan</option>
+      <option value="aligned">Method 1: Aligning text and satellite embeddings (AETHER's recipe)</option>
+      <option value="aligned_land_power_climate">Method 2: Aligning text and satellite embeddings, with NASA POWER for climate</option>
+      <option value="best" selected>Method 3: Using satellite embeddings to build a classifier with AI Planner</option>
     </select>
     <div id="methodnote" class="sub"></div>
-    <button class="go" id="go">Search</button>
   </div>
   <div id="static-controls" hidden>
     <label for="preset">Question (answered in advance)</label>
     <select id="preset"></select>
   </div>
   <div id="status"></div>
-  <div class="facts" id="facts"></div>
   <div class="credits">
     Data: AlphaEarth Foundations Satellite Embedding (Google and Google DeepMind), USDA NASS Cropland Data Layer,
     USFWS National Wetlands Inventory, USGS/LBNL US Large-Scale Solar PV Database, NASA POWER (NASA Langley
@@ -91,7 +143,16 @@
     openai/gpt-oss-120b (open weights) via Hugging Face. Answers come from automated maps and can be wrong.
   </div>
 </aside>
-<div id="map"></div>
+<div id="map"><div id="busy" class="map-busy" hidden><div class="spinner"></div>Asking the map…</div></div>
+<div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
+  <div class="modal-box">
+    <div class="modal-head">
+      <h2 id="info-title">Match information</h2>
+      <button class="modal-close" id="info-close" aria-label="Close match information">&times;</button>
+    </div>
+    <div class="facts" id="facts"></div>
+  </div>
+</div>
 <script>
 const STATIC = document.body.dataset.mode === "static";
 const map = L.map("map").setView([40, -90], 5);
@@ -103,18 +164,85 @@ sat.addTo(map);
 const overlays = L.layerGroup().addTo(map), labels = L.layerGroup().addTo(map),
       cells = L.layerGroup().addTo(map), outlines = L.layerGroup().addTo(map);
 L.control.layers({ "Satellite (USGS)": sat, "OpenStreetMap": osm },
-                 { "Matched places": overlays, "Counts per tile": labels, "NASA POWER cells": cells }).addTo(map);
+                 { "Matched places": overlays, "Counts per tile": labels,
+                   "NASA POWER cells": cells }).addTo(map);
 const legend = L.control({ position: "bottomleft" });
 legend.onAdd = () => {
   const div = L.DomUtil.create("div", "map-legend");
   div.innerHTML =
-    '<div><span class="sw" style="background:#e63c14"></span>Matched places (90 m)</div>' +
-    '<div><span class="sw" style="border:1px dashed #fff;background:#0006"></span>Study tile (20 km)</div>' +
-    '<div><span class="sw" style="border:3px solid #22c55e;background:#22c55e2e"></span>NASA POWER cell, meets climate</div>' +
-    '<div><span class="sw" style="border:2px dashed #9ca3af;background:#0000004d"></span>NASA POWER cell, does not</div>';
+    '<div><span class="sw" style="background:#ff1717"></span>Places matched</div>' +
+    '<div><span class="sw" style="border:1px dashed #fff;background:#0006"></span>Study tile (20km)</div>' +
+    '<div class="power-row"><span class="sw" style="border:3px solid #22c55e;background:#22c55e2e"></span>NASA POWER climate matched</div>' +
+    '<div class="power-row"><span class="sw" style="border:2px dashed #9ca3af;background:#0000004d"></span>NASA POWER climate unmatched</div>' +
+    '<div class="no-power" hidden>No climate condition: NASA POWER not used</div>';
   return div;
 };
 legend.addTo(map);
+// "Match information": a tab at the bottom right of every study-tile box; it opens that tile's details in a modal
+const infoModal = document.getElementById("info-modal");
+let LAST = null;  // the last answer and its question: { d, question }
+// the examples list starts open on a wide screen and collapsed on a small one
+document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
+// each tile's match image, drawn to a canvas so a click on the map can tell whether it hit a shown place
+let tileHits = [];
+function hitCanvas(t) {
+  const img = new Image();
+  img.onload = () => {
+    const c = document.createElement("canvas");
+    c.width = img.width; c.height = img.height;
+    const ctx = c.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    tileHits.push({ t, ctx, w: img.width, h: img.height });
+  };
+  img.src = "data:image/png;base64," + t.png;
+}
+map.on("click", e => {
+  const { lat, lng } = e.latlng;
+  for (const h of tileHits) {
+    const [w, s, ee, n] = h.t.bounds;
+    if (lng < w || lng > ee || lat < s || lat > n) continue;
+    const x = Math.min(h.w - 1, Math.floor((lng - w) / (ee - w) * h.w));
+    const y = Math.min(h.h - 1, Math.floor((n - lat) / (n - s) * h.h));
+    if (h.ctx.getImageData(x, y, 1, 1).data[3] > 0) { openInfo(h.t); return; }
+  }
+});
+function closeInfo() { infoModal.hidden = true; }
+// a tile's tab is never wider than its box: the longest label that fits the box's on-screen width, else hidden.
+// It hangs from the bottom-right corner of the part of the box that is on screen, so zooming or panning in never
+// loses it; when the box's bottom edge is off screen the tab sits inside the box instead of below it.
+let tileTabs = [];
+function sizeTabs() {
+  const size = map.getSize();
+  tileTabs.forEach(({ marker, t, labels: texts }) => {
+    const btn = marker.getElement() && marker.getElement().querySelector(".tile-tab");
+    if (!btn) return;
+    const sw = map.latLngToContainerPoint([t.bounds[1], t.bounds[0]]);
+    const ne = map.latLngToContainerPoint([t.bounds[3], t.bounds[2]]);
+    // a tab pinned to the screen edge keeps clear of it and of the attribution strip in the corner
+    const left = Math.max(sw.x, 0), right = Math.min(ne.x, size.x - 10), bottom = Math.min(sw.y, size.y - 28);
+    const width = Math.floor(right - left);
+    const wrap = btn.parentElement;
+    if (width <= 0 || bottom <= Math.max(ne.y, 0)) { wrap.hidden = true; return; }
+    marker.setLatLng(map.containerPointToLatLng([right, bottom]));
+    wrap.classList.toggle("inside", bottom < sw.y);
+    const span = width + 2;  // the box's visible width plus its 2 px line
+    wrap.style.width = span + "px";
+    wrap.hidden = false;
+    const fits = texts.find(x => { btn.textContent = x; return btn.scrollWidth <= span; });
+    if (fits === undefined) wrap.hidden = true;
+  });
+}
+map.on("zoomend moveend move zoom", sizeTabs);
+// matches are solid bright red when zoomed out and only turn see-through once you zoom in close, so the imagery
+// underneath shows through
+function matchOpacity() {
+  const z = map.getZoom();
+  return z <= 12 ? 1 : z >= 15 ? 0.45 : 1 - (z - 12) * 0.55 / 3;
+}
+map.on("zoomend", () => overlays.eachLayer(l => l.setOpacity(matchOpacity())));
+document.getElementById("info-close").onclick = closeInfo;
+infoModal.addEventListener("click", e => { if (e.target === infoModal) closeInfo(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !infoModal.hidden) closeInfo(); });
 let META = null;
 
 function esc(s) { return String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]); }
@@ -133,23 +261,123 @@ function showArea(name, fit = true) {
   if (fit) map.fitBounds(L.latLngBounds(all.flat()), { animate: false });
 }
 
-function render(d) {
-  overlays.clearLayers(); labels.clearLayers(); cells.clearLayers();
+function landTable(shares) {
+  return "<table>" + shares.map(x => `<tr><td>${esc(x.class.replace(/_/g, " "))}</td>` +
+    `<td class="n">${(x.share * 100).toFixed(1)}%</td></tr>`).join("") + "</table>";
+}
+const HA_PER_CELL = 0.81;  // a 90 m x 90 m display cell
+const METHOD_NAMES = { aligned: "Method 1, aligned space", aligned_land_power_climate: "Method 2, aligned space + NASA POWER numbers",
+                       classifier: "Method 3, classifier + AI planner" };
+// Methods 1 and 2: the aligned space's candidates are the most similar places in the whole study area; these
+// are the conditions a candidate must then also pass to be shown
+function gateWords(f) {
+  const parts = [];
+  if (f.distance_gate) parts.push("pass every distance rule (measured on the aligned space's land map)");
+  if (f.climate_gate) parts.push("lie in NASA POWER cells that meet the climate conditions");
+  return " in the study area" + (parts.length ? ", kept only where they " + parts.join(" and ") : "");
+}
+function km2(cells) { return (cells * HA_PER_CELL / 100).toLocaleString(undefined, { maximumFractionDigits: 1 }); }
+
+function openInfo(t) {
+  const d = LAST.d, f = d.facts, tf = t.facts || {};
+  let h = `<p class="q-top">“${esc(LAST.question)}”</p>`;
+  if (f.plan_words) h += `<p class="plan-words">${esc(f.plan_words)}</p>`;
+  if (f.empty_reason) h += `<p class="empty"><b>No places found.</b> ${esc(f.empty_reason)}</p>`;
+
+  // descriptive statistics of the match
+  const share = tf.cells ? `${(100 * t.count / tf.cells).toFixed(1)}%` : "–";
+  h += "<h2>Match</h2><table>" +
+    `<tr><td>Places in this tile (90 m cells)</td><td class="n">${t.count.toLocaleString()}</td></tr>` +
+    `<tr><td>Area in this tile</td><td class="n">${km2(t.count)} km²</td></tr>` +
+    `<tr><td>Share of this tile's land</td><td class="n">${share}</td></tr>` +
+    `<tr><td>Places in the whole study area</td><td class="n">${f.shown_pixels.toLocaleString()} (${km2(f.shown_pixels)} km²)</td></tr>` +
+    "</table>" + `<p class="small">${f.rule === "every step"
+      ? "Places that meet every part of the question"
+      : `The ${esc(f.rule)} most similar places${gateWords(f)}`}; method: ${esc(METHOD_NAMES[d.used] || d.used)}; ${d.seconds} s.</p>`;
+
+  // land attributes
+  h += "<h2 class=\"section\">Land attributes</h2>";
+  if (tf.land_of_shown_pixels && tf.land_of_shown_pixels.length)
+    h += "<h3>Official land cover of the places shown</h3>" + landTable(tf.land_of_shown_pixels) +
+      "<p class=\"small\">From the USDA crop map, the wetland inventory (North Dakota) and the solar-farm database: a check on the automated answer.</p>";
+  else h += "<p class=\"small\">No places shown in this tile.</p>";
+  const landNote = {
+    multinomial: "Land comes from one AlphaEarth classifier that picks each cell's most likely class.",
+    context_more: "Land comes from one AlphaEarth classifier that picks each cell's most likely class, looking at " +
+      "the cell and its surroundings (150 m and 450 m windows).",
+    one_vs_rest: "Land comes from AlphaEarth classifiers (probability above 0.5).",
+  };
+  // Methods 1 and 2 find land through the aligned space; Method 3 through the AlphaEarth classifier
+  h += `<p class="small">${esc(d.used === "classifier" ? landNote[META.land_method]
+    : `Land comes from the aligned space: how close each cell's AlphaEarth embedding is to the text “${f.text}”.` +
+      (f.distance_gate ? " Distances are measured on the aligned space's own land map: each cell takes the land " +
+        "class whose name its embedding is closest to." : ""))}</p>`;
+
+  // climate attributes (only when the question has a climate condition)
+  const pcells = d.power_cells || [];
+  if ((f.climate || []).length) {
+    h += "<h2 class=\"section\">Climate attributes</h2>";
+    if (f.comparison_only) h += '<p class="small"><b>For comparison only.</b> The aligned space ranks places by ' +
+      "similarity to the question's text, climate wording included, and does not use these NASA POWER cells; they show where the question's " +
+      "climate condition actually holds. In our tests its climate wording matched at chance.</p>";
+    if (t.count_meeting_climate !== undefined)
+      h += `<p>${t.count_meeting_climate.toLocaleString()} of the ${t.count.toLocaleString()} places in this tile are in NASA POWER cells that meet the condition.</p>`;
+    // the POWER cells over this tile (the cell list and the map boxes are in the same order)
+    const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
+    const onTile = pcells.map((c, i) => overlaps(c.bounds, t.bounds) ? i : -1).filter(i => i >= 0);
+    (f.climate || []).forEach(c => {
+      const rows = onTile.length ? onTile.map(i => c.cells[i]) : c.cells;
+      h += `<h3>NASA POWER: ${esc(c.quantity)}</h3><table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
+        `<th class="n">Needs ${c.op === ">=" ? "≥" : "≤"}</th><th></th></tr>` +
+        rows.map(x => `<tr><td>${x.lat.toFixed(2)}, ${x.lon.toFixed(2)}</td><td class="n">${fmt(x.value)}</td>` +
+          `<td class="n">${fmt(x.threshold)}</td><td class="${x.pass ? "pass" : "fail"}">${x.pass ? "meets" : "no"}</td></tr>`).join("") +
+        `</table><p class="small">${onTile.length ? "The ~50 km NASA POWER cells over this tile" : "All NASA POWER cells in the study area"}. Unit: ${esc(c.unit)}.</p>`;
+    });
+  }
+  if (d.plan) h += "<details><summary>The language model's plan (JSON)</summary><pre>" + esc(JSON.stringify(d.plan, null, 1)) + "</pre></details>";
+
+  document.getElementById("info-title").textContent = `Match information: tile ${t.name}`;
+  document.getElementById("facts").innerHTML = h;
+  infoModal.hidden = false;
+  document.getElementById("info-close").focus();
+}
+
+function render(d, question) {
+  overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
+  tileTabs = []; tileHits = [];
   const f = d.facts;
   let busiest = null;
+  // open on the tile with the most matches in passing NASA POWER cells when there are any, else the most matches
+  const green = t => t.count_meeting_climate || 0;
+  const anyGreen = d.tiles.some(t => green(t) > 0);
   d.tiles.forEach(t => {
-    L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: 1 }).addTo(overlays);
+    L.imageOverlay("data:image/png;base64," + t.png, box(t.bounds), { opacity: matchOpacity() }).addTo(overlays);
+    if (t.count > 0) hitCanvas(t);
     if (t.count > 0 && t.match_bounds) {
-      if (!busiest || t.count > busiest.count) busiest = t;
-      const b = t.match_bounds, c = [(b[1] + b[3]) / 2, (b[0] + b[2]) / 2];
-      L.marker(c, { icon: L.divIcon({ className: "", html: `<span class="count-label">${t.count.toLocaleString()} places</span>`,
-                                      iconSize: null }) })
-        .bindTooltip(`Tile ${esc(t.name)}: click to zoom to its matches`)
-        .on("click", () => map.fitBounds(box(t.match_bounds), { padding: [30, 30], maxZoom: 14 }))
-        .addTo(labels);
+      const key = x => anyGreen ? green(x) : x.count;
+      if (!busiest || key(t) > key(busiest)) busiest = t;
     }
+    // the tile box (solid white) with its "Match information" tab hanging from the bottom-right corner
+    // (bounds are W, S, E, N)
+    L.rectangle(box(t.bounds), { color: "#ffffff", weight: 2, fill: false, interactive: false }).addTo(labels);
+    const n = t.count.toLocaleString();
+    const full = f.comparison_only && t.count_meeting_climate !== undefined
+      ? `Match information · ${n} places, ${green(t).toLocaleString()} in green cells`
+      : `Match information · ${n} places`;
+    const m = L.marker([t.bounds[1], t.bounds[2]], { icon: L.divIcon({ className: "", iconSize: null,
+        html: '<div class="tile-tab-wrap"><button class="tile-tab"></button></div>' }) })
+      .on("click", () => openInfo(t))
+      .addTo(labels);
+    // always "Match information", shortened only by dropping the count; hidden if even that does not fit
+    tileTabs.push({ marker: m, t, labels: [full, `Match information · ${n} places`, `Match information · ${n}`,
+                                           "Match information"] });
   });
   const pcells = d.power_cells || [];
+  document.querySelectorAll(".map-legend .power-row").forEach(r => { r.hidden = !pcells.length; });
+  document.querySelectorAll(".map-legend .no-power").forEach(r => {
+    r.hidden = !!pcells.length;
+    r.textContent = "No climate condition: NASA POWER not used";
+  });
   pcells.forEach(c => {
     // pass: green edge and tint; fail: light dashed edge and a dark shade, so both read on satellite imagery
     L.rectangle(box(c.bounds), c.pass
@@ -157,55 +385,41 @@ function render(d) {
       : { color: "#f3f4f6", weight: 3, dashArray: "10 6", fillColor: "#000000", fillOpacity: 0.3 })
       .bindTooltip(c.pass ? "NASA POWER cell: meets the climate conditions" : "NASA POWER cell: does not meet them")
       .addTo(cells);
+    if (c.pass) {
+      L.marker([c.bounds[1], c.bounds[2]], { interactive: false, icon: L.divIcon({ className: "", iconSize: null,
+          html: '<div class="cell-tag">NASA POWER</div>' }) }).addTo(cells);
+    }
   });
   // 20 km tiles tens of km apart: fitting them all makes 90 m places invisible, so open on the tile with the most
-  // matches; the count labels on the other tiles zoom to them when clicked. A NASA POWER cell (~50 km) is larger
-  // than that view, so for a question with climate conditions open on the POWER cells around the matches instead,
-  // so the cells' edges are visible; with no matches, open on all the area's POWER cells.
+  // matches. A NASA POWER cell (~50 km) is larger than that view, so for a question with climate conditions open on
+  // the POWER cells around the matches instead, so the cells' edges are visible; with no matches, open on all the
+  // area's POWER cells.
   const overlaps = (a, b) => a[0] < b[2] && a[2] > b[0] && a[1] < b[3] && a[3] > b[1];
   const near = busiest ? pcells.filter(c => overlaps(c.bounds, busiest.match_bounds)) : pcells;
   if (near.length) map.fitBounds(L.latLngBounds(near.flatMap(c => box(c.bounds))), { padding: [20, 20], animate: false });
   else if (busiest) map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
   else showArea(d.area);
-  const many = d.tiles.filter(t => t.count > 0).length > 1;
+  sizeTabs();
 
   const st = document.getElementById("status");
   st.className = "";
-  st.textContent = (f.rule === "every step"
-    ? `${f.shown_pixels.toLocaleString()} places (90 m cells) meet every step of the plan (${d.seconds} s, method: ${d.used}).`
-    : `The ${f.rule} most similar places are shown: ${f.shown_pixels.toLocaleString()} 90 m cells (${d.seconds} s, method: ${d.used}).`)
-    + (many ? " The map opens on the tile with the most matches; click a count label to jump to another tile." : "");
+  st.textContent = f.shown_pixels
+    ? `${f.shown_pixels.toLocaleString()} places matched. Click a red place, or "Match information" on a tile, for details.`
+    : `No places matched. Click "Match information" on a tile to see why.`;
+  LAST = { d, question };
+}
 
-  let h = "";
-  if (f.plan_words) h += `<p class="plan-words">${esc(f.plan_words)}</p>`;
-  if (f.empty_reason) h += `<p class="empty"><b>No places found.</b> ${esc(f.empty_reason)}</p>`;
-  if (f.steps) {
-    h += "<h2>Places left after each step</h2><table><tr><th>Step</th><th class=\"n\">Places</th></tr>" +
-      f.steps.map((s, i) => `<tr><td>${i ? "+ " : ""}${esc(s.label)}</td><td class="n">${s.places.toLocaleString()}</td></tr>`).join("") +
-      "</table><p class=\"small\">Land comes from AlphaEarth classifiers (probability above 0.5); climate from NASA POWER, one value per ~50 km grid cell.</p>";
-  }
-  (f.climate || []).forEach(c => {
-    h += `<h2>NASA POWER: ${esc(c.quantity)}</h2><table><tr><th>Cell (lat, lon)</th><th class="n">Value</th>` +
-      `<th class="n">Needs ${c.op === ">=" ? "≥" : "≤"}</th><th></th></tr>` +
-      c.cells.map(x => `<tr><td>${x.lat.toFixed(2)}, ${x.lon.toFixed(2)}</td><td class="n">${fmt(x.value)}</td>` +
-        `<td class="n">${fmt(x.threshold)}</td><td class="${x.pass ? "pass" : "fail"}">${x.pass ? "meets" : "no"}</td></tr>`).join("") +
-      `</table><p class="small">Unit: ${esc(c.unit)}.</p>`;
-  });
-  if (f.land_of_shown_pixels.length) {
-    h += "<h2>Official land cover of the places shown</h2><table>" +
-      f.land_of_shown_pixels.map(x => `<tr><td>${esc(x.class.replace(/_/g, " "))}</td><td class="n">${(x.share * 100).toFixed(1)}%</td></tr>`).join("") +
-      "</table><p class=\"small\">From the USDA crop map, the wetland inventory (North Dakota) and the solar-farm database: a check on the automated answer.</p>";
-  }
-  if (f.share_meeting_climate_conditions !== undefined && f.share_meeting_climate_conditions !== null && f.rule !== "every step")
-    h += `<p>${(f.share_meeting_climate_conditions * 100).toFixed(0)}% of the places shown meet the plan's NASA POWER conditions.</p>`;
-  if (d.plan) h += "<details><summary>The language model's plan (JSON)</summary><pre>" + esc(JSON.stringify(d.plan, null, 1)) + "</pre></details>";
-  document.getElementById("facts").innerHTML = h;
+// a new study area or method re-runs the question in the box, if there is one
+function askAgain() {
+  if (document.getElementById("q").value.trim()) document.getElementById("go").click();
 }
 
 function setupAreas(m) {
   const sel = document.getElementById("area");
   Object.entries(m.areas).forEach(([k, a]) => { const o = document.createElement("option"); o.value = k; o.textContent = a.label; sel.appendChild(o); });
-  sel.onchange = () => { overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); };
+  sel.onchange = () => {
+    overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); askAgain();
+  };
   return sel;
 }
 
@@ -222,7 +436,7 @@ if (STATIC) {
       document.getElementById("status").textContent = "Loading…";
       const d = await (await fetch("data/" + a.file)).json();
       showArea(a.area, false);   // outlines only; render() sets the view
-      render(d);
+      render(d, a.question);
     };
     pre.onchange = load; load();
   });
@@ -231,25 +445,54 @@ if (STATIC) {
     META = m;
     const sel = setupAreas(m);
     const ex = document.getElementById("examples");
-    m.examples.forEach(t => { const b = document.createElement("button"); b.textContent = t; b.onclick = () => { document.getElementById("q").value = t; }; ex.appendChild(b); });
+    m.examples.forEach(e => {
+      const b = document.createElement("button");
+      // shown and asked with a capital first letter; the plan is the same either way
+      const question = e.question.charAt(0).toUpperCase() + e.question.slice(1);
+      // the question, then the study area as a small badge
+      b.textContent = question + " ";
+      const badge = document.createElement("span");
+      badge.className = "badge";
+      badge.textContent = m.areas[e.area].label.replace(" study area", "");
+      b.appendChild(badge);
+      b.onclick = () => {
+        document.getElementById("q").value = question;
+        sel.value = e.area; sel.onchange();  // which runs the search
+      };
+      ex.appendChild(b);
+    });
     const msel = document.getElementById("method"), note = document.getElementById("methodnote");
     [...msel.options].forEach(o => { if (m.not_ready[o.value]) o.textContent += " (not ready yet)"; });
-    const explain = () => { const why = m.not_ready[msel.value]; note.textContent = why ? "Not ready yet: " + why : ""; };
-    msel.onchange = explain; explain();
+    msel.value = "best";  // Method 3 on every load: browsers otherwise keep the last choice across reloads
+    // the menu cuts long names off, so the full name of the chosen method is shown underneath
+    const explain = () => {
+      const why = m.not_ready[msel.value];
+      note.textContent = why ? "Not ready yet: " + why : msel.selectedOptions[0].textContent;
+      msel.title = msel.selectedOptions[0].textContent;
+    };
+    msel.onchange = () => { explain(); askAgain(); }; explain();
     showArea(sel.value);
+    // the page opens on the first example's answer, so there is something to look at straight away
+    if (ex.firstChild && !document.getElementById("q").value) ex.firstChild.click();
+  });
+  // Enter in the question box searches; Shift+Enter still starts a new line
+  document.getElementById("q").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); document.getElementById("go").click(); }
   });
   document.getElementById("go").onclick = async () => {
     const btn = document.getElementById("go"), st = document.getElementById("status");
-    btn.disabled = true; st.className = ""; st.textContent = "Searching…";
+    const busy = document.getElementById("busy");
+    btn.disabled = true; st.className = "";
+    st.innerHTML = '<span class="spinner"></span>Asking the map…'; busy.hidden = false;
     const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
                    method: document.getElementById("method").value };
     try {
       const r = await fetch("/api/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const d = await r.json();
       if (!r.ok) throw new Error(d.detail || "Search failed");
-      render(d);
+      render(d, body.question);
     } catch (e) { st.className = "err"; st.textContent = e.message; }
-    btn.disabled = false;
+    busy.hidden = true; btn.disabled = false;
   };
 }
 </script>

@@ -8,89 +8,82 @@
    },
    {
     "role": "user",
-    "content": "In the Minnesota study area: soybean fields more than 300 m from any wetland or open water"
+    "content": "In the North Carolina study area: Wetlands at least 500 m from any cropland"
    }
   ],
   "temperature": 0,
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-93bbb9a8-0de5-472d-b2b7-28e5bb0560f4",
+  "id": "chatcmpl-814c9de9-f5f8-423e-9d51-4ebd5f0dfbf7",
   "choices": [
    {
     "finish_reason": "stop",
     "index": 0,
     "logprobs": null,
     "message": {
-     "content": "{\n  \"area\": \"minnesota\",\n  \"land\": {\n    \"classes\": [\"soybeans\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"wetland\", \"water\"],\n      \"distance_m\": 300,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+     "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 500,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
      "refusal": null,
      "role": "assistant",
      "annotations": null,
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to produce JSON plan.\n\nUser: \"In the Minnesota study area: soybean fields more than 300 m from any wetland or open water\"\n\nInterpretation: land class soybean, near rule: distance >300 m from any wetland or open water. That means we want pixels that are NOT within 300 m of wetland or water. So we need two near entries? The near list can have multiple entries; each entry is applied AND? The spec: \"one entry per distance rule\". For each entry, if negate false keep within distance; if true keep NOT within distance. So we need a single entry with classes [\"wetland\",\"water\"], distance_m 300, negate true. That will keep pixels not within 300 m of any pixel of those classes.\n\nland: classes [\"soybeans\"], min_patch_ha null (not specified). Output: map (they want map). No climate.\n\nThus JSON:\n\n{\n \"area\":\"minnesota\",\n \"land\":{\"classes\":[\"soybeans\"],\"min_patch_ha\":null},\n \"near\":[{\"classes\":[\"wetland\",\"water\"],\"distance_m\":300,\"negate\":true}],\n \"climate\":[],\n \"output\":\"map\"\n}\n\nCheck formatting: keys exactly. Use double quotes. Ensure no extra spaces? It's fine.\n\n"
+     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Carolina study area: Wetlands at least 500 m from any cropland\"\n\nInterpretation: They want wetlands that are at least 500 m away from any cropland. So land class = wetlands. Near rule: distance 500 m, classes = cropland, negate = true (since we want NOT within 500 m). Output? They didn't ask for map or area. Likely they want map (show the pixels). The question: \"Wetlands at least 500 m from any cropland\". Could be map. Usually if they ask \"where are\" it's map. We'll output map.\n\nThus JSON:\n\n{\n  \"area\": \"north_carolina\",\n  \"land\": {\"classes\": [\"wetland\"], \"min_patch_ha\": null},\n  \"near\": [{\"classes\": [\"cropland\"], \"distance_m\": 500, \"negate\": true}],\n  \"climate\": [],\n  \"output\": \"map\"\n}\n\nCheck syntax: classes list strings. distance_m number. negate boolean. Output \"map\". Good."
     }
    }
   ],
-  "created": 1793287298,
+  "created": 1793318340,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_27194a498a",
+  "system_fingerprint": "fp_c800245357",
   "usage": {
-   "completion_tokens": 358,
-   "prompt_tokens": 1724,
-   "total_tokens": 2082,
+   "completion_tokens": 323,
+   "prompt_tokens": 1722,
+   "total_tokens": 2045,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 264,
+    "reasoning_tokens": 232,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
-   "prompt_tokens_details": {
-    "audio_tokens": null,
-    "cache_write_tokens": null,
-    "cached_tokens": 1536,
-    "image_tokens": null,
-    "text_tokens": null
-   },
-   "queue_time": 0.230453235,
-   "prompt_time": 0.020309672,
-   "completion_time": 1.246580889,
-   "total_time": 1.266890561
+   "prompt_tokens_details": null,
+   "queue_time": 0.179600804,
+   "prompt_time": 0.105022897,
+   "completion_time": 0.675694793,
+   "total_time": 0.78071769
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m6441689ebr8aq9ww3jp4kwv",
-   "seed": 1211215677
+   "id": "req_01m651mh7seb6bbt3cevk9ndc5",
+   "seed": 1739974804
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.61,
- "content": "{\n  \"area\": \"minnesota\",\n  \"land\": {\n    \"classes\": [\"soybeans\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"wetland\", \"water\"],\n      \"distance_m\": 300,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+ "seconds": 1.07,
+ "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"wetland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"cropland\"],\n      \"distance_m\": 500,\n      \"negate\": true\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,
- "question": "In the Minnesota study area: soybean fields more than 300 m from any wetland or open water",
+ "question": "In the North Carolina study area: Wetlands at least 500 m from any cropland",
  "plan": {
-  "area": "minnesota",
+  "area": "north_carolina",
   "land": {
    "classes": [
-    "soybeans"
+    "wetland"
    ],
    "min_patch_ha": null
   },
   "near": [
    {
     "classes": [
-     "wetland",
-     "water"
+     "cropland"
     ],
-    "distance_m": 300,
+    "distance_m": 500,
     "negate": true
    }
   ],

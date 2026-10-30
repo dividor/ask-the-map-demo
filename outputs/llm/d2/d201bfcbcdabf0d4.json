@@ -15,7 +15,7 @@
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-bec10d59-0237-40f2-863b-5028bec0265f",
+  "id": "chatcmpl-5b2af25b-40ca-417f-9c50-78d981efd74c",
   "choices": [
    {
     "finish_reason": "stop",
@@ -29,43 +29,43 @@
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\"\n\nInterpretation:\n\n- area: north_dakota\n- land: classes: [\"corn\"]; min_patch_ha: null (no patch size requirement)\n- near: none\n- climate: condition: variable T2M_MAX? Actually \"above 35 C\" likely daily max temperature >35\u00b0C. Use variable T2M_MAX (daily maximum). Need days_above with threshold 35, count days. Condition: at least 5 days above 35\u00b0C in July 2021.\n\nSo climate condition:\n{\n  \"variable\": \"T2M_MAX\",\n  \"years\": [2021,2021],\n  \"months\": [7],\n  \"stat\": \"days_above\",\n  \"day_threshold\": 35,\n  \"test\": {\"kind\":\"absolute\",\"op\":\">=\",\"value\":5}\n}\n\nOutput: likely map (they want to see corn fields meeting condition). The question: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\". They didn't ask for area amount, just \"corn fields where ...\". So output map.\n\nThus final JSON:\n\n{\n  \"area\": \"north_dakota\",\n  \"land\": {\"classes\": [\"corn\"], \"min_patch_ha\": null},\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2021, 2021],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\"kind\": \"absolute\", \"op\": \">=\", \"value\": 5}\n    }\n  ],\n  \"output\": \"map\"\n}\n\nCheck format: JSON object with keys exactly. Ensure no trailing commas. Provide as single line or pretty? Probably pretty is okay but must be valid JSON. Provide only the plan."
+     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\"\n\nInterpretation:\n\n- area: north_dakota\n- land: classes: [\"corn\"]; min_patch_ha: null (no patch size requirement)\n- near: none\n- climate: condition: variable T2M_MAX? Actually \"above 35 C\" likely daily max temperature >35\u00b0C. Use variable T2M_MAX (daily maximum). Need days_above with threshold 35, count days >=? The spec says \"days_above\": number of days whose daily value is strictly above day_threshold. So we need days_above threshold 35. Need at least 5 days. So test absolute >= 5.\n\n- years: [2021,2021]\n- months: [7] (July)\n- stat: \"days_above\"\n- day_threshold: 35\n- test: {\"kind\":\"absolute\",\"op\":\">=\",\"value\":5}\n\nOutput: likely \"map\" because they want to see corn fields meeting condition. The question: \"In the North Dakota study area: corn fields where July 2021 had at least 5 days above 35 C\". Could be map. Not asking area. So output \"map\".\n\nThus JSON:\n\n{\n  \"area\": \"north_dakota\",\n  \"land\": {\"classes\": [\"corn\"], \"min_patch_ha\": null},\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2021, 2021],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\"kind\": \"absolute\", \"op\": \">=\", \"value\": 5}\n    }\n  ],\n  \"output\": \"map\"\n}\n\nCheck format: JSON object with keys exactly. Ensure no trailing commas. Provide as single JSON object."
     }
    }
   ],
-  "created": 1793239662,
+  "created": 1793317086,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_27194a498a",
+  "system_fingerprint": "fp_e5b4e54fbb",
   "usage": {
-   "completion_tokens": 576,
+   "completion_tokens": 566,
    "prompt_tokens": 1728,
-   "total_tokens": 2304,
+   "total_tokens": 2294,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 434,
+    "reasoning_tokens": 424,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
    "prompt_tokens_details": null,
-   "queue_time": 0.229930298,
-   "prompt_time": 0.104085492,
-   "completion_time": 1.192944083,
-   "total_time": 1.297029575
+   "queue_time": 0.083286533,
+   "prompt_time": 0.088842141,
+   "completion_time": 1.190840647,
+   "total_time": 1.2796827880000001
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m62pkdzeegyt2b91ev6mkpw5",
-   "seed": 138779819
+   "id": "req_01m650e80fej497esw7fxrf809",
+   "seed": 451883617
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.66,
+ "seconds": 1.48,
  "content": "{\n  \"area\": \"north_dakota\",\n  \"land\": {\n    \"classes\": [\"corn\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [],\n  \"climate\": [\n    {\n      \"variable\": \"T2M_MAX\",\n      \"years\": [2021, 2021],\n      \"months\": [7],\n      \"stat\": \"days_above\",\n      \"day_threshold\": 35,\n      \"test\": {\n        \"kind\": \"absolute\",\n        \"op\": \">=\",\n        \"value\": 5\n      }\n    }\n  ],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,

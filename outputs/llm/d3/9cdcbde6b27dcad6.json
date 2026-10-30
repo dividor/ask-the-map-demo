@@ -15,39 +15,39 @@
   "max_tokens": 4000
  },
  "response": {
-  "id": "chatcmpl-ec9fe431-7955-474a-8bb0-2d159bd2bb5a",
+  "id": "chatcmpl-750cd3e4-b29c-44ff-b76c-f33cf37e9864",
   "choices": [
    {
     "finish_reason": "stop",
     "index": 0,
     "logprobs": null,
     "message": {
-     "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"grassland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"solar_farm\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+     "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": { \"classes\": [\"grassland\"], \"min_patch_ha\": null },\n  \"near\": [ { \"classes\": [\"solar_farm\"], \"distance_m\": 100, \"negate\": false } ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
      "refusal": null,
      "role": "assistant",
      "annotations": null,
      "audio": null,
      "function_call": null,
      "tool_calls": null,
-     "reasoning": "We need to translate the user's request into the query language JSON.\n\nUser: \"In the North Carolina study area: grassland near an existing solar farm\"\n\nInterpretation: They want map (likely) of grassland near solar farms. No climate condition. Land classes: grassland. Near: solar_farm, distance? Not specified. Probably default near means within some distance, but we need a distance value. The language requires distance_m number. Since not specified, maybe we assume a typical distance like 1000 m? But we must follow instructions: we need to produce a plan. The user didn't specify distance, but the query language requires a distance number. We could set a default like 1000 meters, but that is arbitrary. Perhaps we can set distance_m to 0? That would be within 0 meters (i.e., overlapping). That seems not right.\n\nMaybe we can interpret \"near\" as within 500 meters? The examples used 100 m. Could choose 100 m as a generic near distance. Probably safe to use 100 m.\n\nOutput: likely \"map\". So produce JSON:\n\n{\n \"area\": \"north_carolina\",\n \"land\": {\"classes\": [\"grassland\"], \"min_patch_ha\": null},\n \"near\": [{\"classes\": [\"solar_farm\"], \"distance_m\": 100, \"negate\": false}],\n \"climate\": [],\n \"output\": \"map\"\n}\n\nYes."
+     "reasoning": "We need to produce JSON plan.\n\nUser: \"In the North Carolina study area: grassland near an existing solar farm\"\n\nInterpretation: Show grassland pixels that are near (within some distance?) The phrase \"near an existing solar farm\" but no distance given. In examples, they used near with distance. If distance unspecified, maybe default? The language requires distance_m number. We need to decide a reasonable default. Could assume 100 m? But not specified. Might need to include a near rule with some distance; maybe 500 m? The safest is to set a typical distance like 100 m. However the instruction: \"Reply with the plan only\". The user didn't specify distance, but the query language requires a distance. Could we set distance_m as null? Not allowed; must be number. Could we set distance_m to 0? That would be exactly adjacent. Might be okay.\n\nBetter to assume a default of 100 m. Many examples use 100 m. So produce:\n\n{\n \"area\": \"north_carolina\",\n \"land\": {\"classes\": [\"grassland\"], \"min_patch_ha\": null},\n \"near\": [{\"classes\": [\"solar_farm\"], \"distance_m\": 100, \"negate\": false}],\n \"climate\": [],\n \"output\": \"map\"\n}\n\nYes."
     }
    }
   ],
-  "created": 1793281498,
+  "created": 1793318324,
   "model": "openai/gpt-oss-120b",
   "object": "chat.completion",
   "metadata": null,
   "moderation": null,
   "service_tier": "on_demand",
-  "system_fingerprint": "fp_fe269835c7",
+  "system_fingerprint": "fp_a655021f7d",
   "usage": {
-   "completion_tokens": 385,
+   "completion_tokens": 350,
    "prompt_tokens": 1718,
-   "total_tokens": 2103,
+   "total_tokens": 2068,
    "completion_tokens_details": {
     "accepted_prediction_tokens": null,
     "audio_tokens": null,
-    "reasoning_tokens": 293,
+    "reasoning_tokens": 269,
     "rejected_prediction_tokens": null,
     "text_tokens": null
    },
@@ -58,21 +58,21 @@
     "image_tokens": null,
     "text_tokens": null
    },
-   "queue_time": 0.147316148,
-   "prompt_time": 0.014580951,
-   "completion_time": 0.815795028,
-   "total_time": 0.830375979
+   "queue_time": 0.24382735,
+   "prompt_time": 0.14222752,
+   "completion_time": 0.72741427,
+   "total_time": 0.86964179
   },
   "usage_breakdown": null,
   "x_groq": {
-   "id": "req_01m63yg62cehhrh8pqn1vzycjr",
-   "seed": 1910168487
+   "id": "req_01m651m0q9eaj8jh1z8zdjthxn",
+   "seed": 899184509
   }
  },
  "model_returned": "openai/gpt-oss-120b",
  "provider": "groq",
- "seconds": 1.2,
- "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": {\n    \"classes\": [\"grassland\"],\n    \"min_patch_ha\": null\n  },\n  \"near\": [\n    {\n      \"classes\": [\"solar_farm\"],\n      \"distance_m\": 100,\n      \"negate\": false\n    }\n  ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
+ "seconds": 1.23,
+ "content": "{\n  \"area\": \"north_carolina\",\n  \"land\": { \"classes\": [\"grassland\"], \"min_patch_ha\": null },\n  \"near\": [ { \"classes\": [\"solar_farm\"], \"distance_m\": 100, \"negate\": false } ],\n  \"climate\": [],\n  \"output\": \"map\"\n}",
  "finish_reason": "stop",
  "transport_attempts": 1,
  "question": "In the North Carolina study area: grassland near an existing solar farm",
