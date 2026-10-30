@@ -50,18 +50,37 @@ class Warmup:
         }
 
 
+def _answer(engine, q: Query) -> dict:
+    """One search, with every failure turned into a readable HTTP error."""
+    text = q.question.strip()
+    if not text:
+        raise HTTPException(status_code=400, detail="Please type a question.")
+    if len(text) > 500:
+        raise HTTPException(status_code=400, detail="Please keep the question under 500 characters.")
+    try:
+        return engine.search(text, q.area, q.method, q.share)
+    except UserError as e:
+        raise HTTPException(status_code=400, detail=str(e)) from e
+    except Unavailable as e:
+        raise HTTPException(status_code=503, detail=f"Not available yet: {e}") from e
+    except (ValueError, KeyError, IndexError, TypeError, RuntimeError) as e:
+        # a fault in the engine: logged in full here, shown to the user as a readable message, never a bare
+        # "Internal Server Error" the page cannot read
+        logging.getLogger("askmap.demo").exception("search failed for %r in %r (%s)", text, q.area, q.method)
+        raise HTTPException(
+            status_code=500,
+            detail=f"Something went wrong answering that ({type(e).__name__}); it has been logged.",
+        ) from e
+
+
 def create_app(engine, meta: dict | None, warmup: Warmup | None = None) -> FastAPI:
     """``engine`` answers ``search(question, area, method)``; ``meta`` lists areas, methods and examples.
     With a ``warmup``, both may be None at first: the app serves the page and reports the loading stage
     until ``warmup.ready()`` is called (the server listens while a cold container loads)."""
     app = FastAPI(title="Ask the map")
-    if warmup is not None and engine is not None:
-        warmup.ready(engine, meta or {})
-
-    def current():
-        if warmup is None:
-            return engine, meta
-        return warmup.engine, warmup.meta
+    warm = warmup or Warmup()
+    if engine is not None:
+        warm.ready(engine, meta or {})
 
     @app.get("/", response_class=HTMLResponse)
     def page() -> HTMLResponse:
@@ -70,37 +89,14 @@ def create_app(engine, meta: dict | None, warmup: Warmup | None = None) -> FastA
 
     @app.get("/api/meta")
     def get_meta() -> dict:
-        eng, m = current()
-        if eng is None:
-            return warmup.status() if warmup is not None else {"loading": True, "stage": "starting"}
-        return m or {}
+        return warm.status() if warm.engine is None else (warm.meta or {})
 
     @app.post("/api/search")
     def search(q: Query) -> dict:
-        eng, _ = current()
-        if eng is None:
-            stage = warmup.stage if warmup is not None else "starting"
-            raise HTTPException(status_code=503, detail=f"Still waking up: {stage}. Try again in a moment.")
-        text = q.question.strip()
-        if not text:
-            raise HTTPException(status_code=400, detail="Please type a question.")
-        if len(text) > 500:
-            raise HTTPException(status_code=400, detail="Please keep the question under 500 characters.")
-        try:
-            return eng.search(text, q.area, q.method, q.share)
-        except UserError as e:
-            raise HTTPException(status_code=400, detail=str(e)) from e
-        except Unavailable as e:
-            raise HTTPException(status_code=503, detail=f"Not available yet: {e}") from e
-        except (ValueError, KeyError, IndexError, TypeError, RuntimeError) as e:
-            # a fault in the engine: logged in full here, shown to the user as a readable message, never a
-            # bare "Internal Server Error" the page cannot read
-            logging.getLogger("askmap.demo").exception(
-                "search failed for %r in %r (%s)", text, q.area, q.method
-            )
+        if warm.engine is None:
             raise HTTPException(
-                status_code=500,
-                detail=f"Something went wrong answering that ({type(e).__name__}); it has been logged.",
-            ) from e
+                status_code=503, detail=f"Still waking up: {warm.stage}. Try again in a moment."
+            )
+        return _answer(warm.engine, q)
 
     return app
