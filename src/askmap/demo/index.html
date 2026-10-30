@@ -82,6 +82,10 @@
   .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .modal-head h2 { font-size: 16px; margin: 0; }
   .modal-close { width: auto; background: var(--chip); padding: 4px 10px; cursor: pointer; font-size: 16px; }
+  /* a question with no answer: the reason in a box over the middle of the map */
+  .err-box { width: min(460px, calc(100vw - 32px)); border: 2px solid #dc2626; }
+  .err-box h2 { color: #991b1b; }
+  .err-box p { margin: 10px 0 0; font-size: 15px; line-height: 1.45; }
   .q-top { font-size: 15px; font-weight: 600; margin: 12px 0 8px; }
   .facts h2.section { font-size: 14px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 16px; }
   .facts h3 { font-size: 12px; margin: 10px 0 4px; color: var(--muted); }
@@ -113,7 +117,7 @@
   <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
      in four geographical study areas.</p>
   <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
-     queries. Be gentle, it's not production-grade and will make mistakes, but maybe it could be with more follow-up work 🙂</p>
+     queries. Be gentle, it's not production-grade and will make mistakes, it needs further work for wider coverage of vocabulary and land types. 🙂</p>
   <div id="live-controls">
     <label for="q" class="ask">Go on, ask something</label>
     <textarea id="q" autofocus autocomplete="off"
@@ -146,6 +150,15 @@
   </div>
 </aside>
 <div id="map"><div id="busy" class="map-busy" hidden><div class="spinner"></div>Asking the map…</div></div>
+<div id="err-modal" class="modal" hidden role="alertdialog" aria-modal="true" aria-labelledby="err-title">
+  <div class="modal-box err-box">
+    <div class="modal-head">
+      <h2 id="err-title">No answer</h2>
+      <button class="modal-close" id="err-close" aria-label="Close">&times;</button>
+    </div>
+    <p id="err-text"></p>
+  </div>
+</div>
 <div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
   <div class="modal-box">
     <div class="modal-head">
@@ -182,6 +195,16 @@ legend.onAdd = () => {
 legend.addTo(map);
 // "Match information": a tab at the bottom right of every study-tile box; it opens that tile's details in a modal
 const infoModal = document.getElementById("info-modal");
+const errModal = document.getElementById("err-modal");
+function showError(message) {
+  document.getElementById("err-text").textContent = message;
+  errModal.hidden = false;
+  document.getElementById("err-close").focus();
+}
+function closeError() { errModal.hidden = true; }
+document.getElementById("err-close").addEventListener("click", closeError);
+errModal.addEventListener("click", e => { if (e.target === errModal) closeError(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !errModal.hidden) closeError(); });
 let LAST = null;  // the last answer and its question: { d, question }
 // the examples list starts open on a wide screen and collapsed on a small one
 document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
@@ -557,7 +580,7 @@ if (STATIC) {
   document.getElementById("go").onclick = async () => {
     const btn = document.getElementById("go"), st = document.getElementById("status");
     const busy = document.getElementById("busy");
-    btn.disabled = true; st.className = "";
+    btn.disabled = true; st.className = ""; closeError();
     st.innerHTML = '<span class="spinner"></span>Asking the map…'; busy.hidden = false;
     const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
                    method: document.getElementById("method").value };
@@ -573,6 +596,7 @@ if (STATIC) {
       tileTabs = []; tileHits = []; LAST = null;
       showArea(document.getElementById("area").value);  // back out to the whole study area
       st.className = "err"; st.textContent = e.message;
+      showError(e.message);
     }
     busy.hidden = true; btn.disabled = false;
   };
