@@ -108,6 +108,7 @@ demo:
   # language model on every call (notebook 28 rechecks the scores)
   page_examples:
     - {question: "Forest within 500 m of a solar farm", area: georgia}
+    - {question: "Cropland that had an unusually wet spring in 2025", area: georgia}
     - {question: "Corn fields that had a very dry summer in 2022", area: north_dakota}
     - {question: "Corn fields that had an unusually wet spring in 2022", area: north_dakota}
     - {question: "Grassland and hay fields that had a very dry summer in 2022", area: north_dakota}

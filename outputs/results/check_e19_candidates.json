@@ -1,0 +1,130 @@
+[
+ {
+  "question": "Cotton fields with at least ten days above 35 C in summer 2024",
+  "area": "georgia",
+  "type": "ga heat",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 7203,
+   "precision": 0.9507372654155496,
+   "f1": 0.5569843918719937,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 7203,
+   "precision": 0.9031501340482574,
+   "f1": 0.5291057229802689,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 8440,
+   "true": 7203,
+   "precision": 0.7740521327014218,
+   "f1": 0.8352617784312472,
+   "hit": true,
+   "plan_words": "Cotton, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland that had an unusually wet spring in 2025",
+  "area": "georgia",
+  "type": "ga wet spring",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 10050,
+   "precision": 0.7912198391420912,
+   "f1": 0.362283259168329,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2025: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2425,
+   "true": 10050,
+   "precision": 0.9958762886597938,
+   "f1": 0.3871743486973948,
+   "hit": false,
+   "plan_words": "Cropland, where March to May 2025: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 10670,
+   "true": 10050,
+   "precision": 0.9018744142455483,
+   "f1": 0.9288610038610039,
+   "hit": true,
+   "plan_words": "Cropland, where March to May 2025: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cotton fields that had an unusually dry autumn in 2025",
+  "area": "georgia",
+  "type": "ga dry autumn",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 7203,
+   "precision": 0.9490616621983914,
+   "f1": 0.5560027486011584,
+   "hit": true,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 7203,
+   "precision": 0.9031501340482574,
+   "f1": 0.5291057229802689,
+   "hit": true,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "M3": {
+   "shown": 8440,
+   "true": 7203,
+   "precision": 0.7740521327014218,
+   "f1": 0.8352617784312472,
+   "hit": true,
+   "plan_words": "Cotton, where September to November 2025: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ },
+ {
+  "question": "Cropland with at least ten days above 35 C in summer 2024",
+  "area": "georgia",
+  "type": "ga heat crop",
+  "persona": null,
+  "M1": {
+   "shown": 2984,
+   "true": 12527,
+   "precision": 0.9698391420911529,
+   "f1": 0.3731545354909419,
+   "hit": false,
+   "plan_words": "Cropland, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M2": {
+   "shown": 2984,
+   "true": 12527,
+   "precision": 0.9932975871313673,
+   "f1": 0.3821803881116627,
+   "hit": false,
+   "plan_words": "Cropland, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "M3": {
+   "shown": 12911,
+   "true": 12527,
+   "precision": 0.9012469986832933,
+   "f1": 0.914851796524884,
+   "hit": true,
+   "plan_words": "Cropland, where June to August 2024 had at least 10 days with daily high temperature above 35 \u00b0C (NASA POWER)."
+  },
+  "keep_by_hits": true,
+  "keep": true
+ }
+]

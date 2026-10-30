@@ -112,18 +112,18 @@
   <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
      in four geographical study areas.</p>
   <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
-     queries. Be gentle, it's not production-grade, but it could be with more effort 🙂</p>
+     queries. Be gentle, it's not production-grade and in this quick work will make mistakes, but maybe it could be with more follow-up work 🙂</p>
   <div id="live-controls">
     <label for="q" class="ask">Go on, ask something</label>
     <textarea id="q" autofocus autocomplete="off"
               placeholder="Type a question in plain English, e.g. corn fields where July 2021 had at least 5 days above 35 C, or pick an example below"></textarea>
     <button class="go" id="go">Search</button>
+    <label for="area">Study area</label>
+    <select id="area"></select>
     <details class="examples-box">
       <summary>Examples: click one to run it</summary>
       <div class="examples" id="examples"></div>
     </details>
-    <label for="area">Study area</label>
-    <select id="area"></select>
     <label for="method">Method</label>
     <select id="method">
       <option value="aligned">Method 1: Aligning text and satellite embeddings (AETHER's recipe)</option>
@@ -486,7 +486,11 @@ function askAgain() {
 
 function setupAreas(m) {
   const sel = document.getElementById("area");
-  Object.entries(m.areas).forEach(([k, a]) => { const o = document.createElement("option"); o.value = k; o.textContent = a.label; sel.appendChild(o); });
+  // the options are the state names; "study area" is already in the label above the list
+  Object.entries(m.areas).forEach(([k, a]) => {
+    const o = document.createElement("option"); o.value = k; o.textContent = a.label.replace(/ study area$/, "");
+    sel.appendChild(o);
+  });
   sel.onchange = () => {
     overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); askAgain();
   };
