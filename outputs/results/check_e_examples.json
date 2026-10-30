@@ -15,8 +15,8 @@
   "M2": {
    "shown": 2984,
    "true": 18959,
-   "precision": 0.9882707774798928,
-   "f1": 0.26878731258260036,
+   "precision": 0.982573726541555,
+   "f1": 0.267237843503623,
    "hit": false,
    "plan_words": "Corn, where July 2021 had at least 5 days with daily high temperature above 35 \u00b0C (NASA POWER)."
   },
@@ -73,16 +73,16 @@
   "M1": {
    "shown": 2984,
    "true": 48214,
-   "precision": 0.9755361930294906,
-   "f1": 0.113715379507012,
+   "precision": 0.7989276139410187,
+   "f1": 0.09312863783741553,
    "hit": false,
    "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 2052,
+   "shown": 1903,
    "true": 48214,
-   "precision": 0.9824561403508771,
-   "f1": 0.08021326542792345,
+   "precision": 0.9931686810299527,
+   "f1": 0.07542350898896583,
    "hit": false,
    "plan_words": "Cropland, where March to May 2022: total rainfall in the highest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -106,16 +106,16 @@
   "M1": {
    "shown": 2984,
    "true": 19397,
-   "precision": 0.22754691689008044,
-   "f1": 0.06067646664581565,
+   "precision": 0.7060991957104558,
+   "f1": 0.18828470577722176,
    "hit": false,
    "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
   "M2": {
-   "shown": 1592,
+   "shown": 1833,
    "true": 19397,
-   "precision": 0.6991206030150754,
-   "f1": 0.10605555290866645,
+   "precision": 0.701582105837425,
+   "f1": 0.12114931700423928,
    "hit": false,
    "plan_words": "Grassland, where June to August 2022: total rainfall in the lowest 10% of years 2001 to 2025 (NASA POWER)."
   },
@@ -137,18 +137,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 864,
+   "shown": 1328,
    "true": 3148,
-   "precision": 0.4988425925925926,
-   "f1": 0.21485543369890328,
+   "precision": 0.4427710843373494,
+   "f1": 0.26273458445040215,
    "hit": false,
    "plan_words": "Wetland, next to cropland."
   },
   "M2": {
-   "shown": 864,
+   "shown": 1328,
    "true": 3148,
-   "precision": 0.4988425925925926,
-   "f1": 0.21485543369890328,
+   "precision": 0.4427710843373494,
+   "f1": 0.26273458445040215,
    "hit": false,
    "plan_words": "Wetland, next to cropland."
   },
@@ -170,18 +170,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 77,
+   "shown": 132,
    "true": 197,
-   "precision": 0.5844155844155844,
-   "f1": 0.3284671532846715,
+   "precision": 0.5075757575757576,
+   "f1": 0.4072948328267477,
    "hit": false,
    "plan_words": "Hay, within 200 m of wetland."
   },
   "M2": {
-   "shown": 77,
+   "shown": 132,
    "true": 197,
-   "precision": 0.5844155844155844,
-   "f1": 0.3284671532846715,
+   "precision": 0.5075757575757576,
+   "f1": 0.4072948328267477,
    "hit": false,
    "plan_words": "Hay, within 200 m of wetland."
   },
@@ -203,18 +203,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 2602,
+   "shown": 2574,
    "true": 13853,
-   "precision": 0.9142966948501153,
-   "f1": 0.28915223336371926,
+   "precision": 0.9576534576534577,
+   "f1": 0.3001156632373531,
    "hit": false,
    "plan_words": "Soybeans, more than 300 m from any wetland or water."
   },
   "M2": {
-   "shown": 2602,
+   "shown": 2574,
    "true": 13853,
-   "precision": 0.9142966948501153,
-   "f1": 0.28915223336371926,
+   "precision": 0.9576534576534577,
+   "f1": 0.3001156632373531,
    "hit": false,
    "plan_words": "Soybeans, more than 300 m from any wetland or water."
   },
@@ -236,18 +236,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 197,
+   "shown": 229,
    "true": 469,
-   "precision": 0.5177664974619289,
-   "f1": 0.3063063063063063,
+   "precision": 0.5764192139737991,
+   "f1": 0.37822349570200575,
    "hit": false,
    "plan_words": "Grassland, within 300 m of solar farm."
   },
   "M2": {
-   "shown": 197,
+   "shown": 229,
    "true": 469,
-   "precision": 0.5177664974619289,
-   "f1": 0.3063063063063063,
+   "precision": 0.5764192139737991,
+   "f1": 0.37822349570200575,
    "hit": false,
    "plan_words": "Grassland, within 300 m of solar farm."
   },
@@ -269,18 +269,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 321,
+   "shown": 218,
    "true": 5679,
-   "precision": 0.7227414330218068,
-   "f1": 0.07733333333333334,
+   "precision": 0.7385321100917431,
+   "f1": 0.0546040359504833,
    "hit": false,
    "plan_words": "Wetland, within 100 m of developed."
   },
   "M2": {
-   "shown": 321,
+   "shown": 218,
    "true": 5679,
-   "precision": 0.7227414330218068,
-   "f1": 0.07733333333333334,
+   "precision": 0.7385321100917431,
+   "f1": 0.0546040359504833,
    "hit": false,
    "plan_words": "Wetland, within 100 m of developed."
   },
@@ -302,18 +302,18 @@
   "type": null,
   "persona": null,
   "M1": {
-   "shown": 28,
+   "shown": 33,
    "true": 735,
-   "precision": 0.10714285714285714,
-   "f1": 0.007863695937090432,
+   "precision": 0.0,
+   "f1": 0.0,
    "hit": false,
    "plan_words": "Forest, within 500 m of solar farm."
   },
   "M2": {
-   "shown": 28,
+   "shown": 33,
    "true": 735,
-   "precision": 0.10714285714285714,
-   "f1": 0.007863695937090432,
+   "precision": 0.0,
+   "f1": 0.0,
    "hit": false,
    "plan_words": "Forest, within 500 m of solar farm."
   },

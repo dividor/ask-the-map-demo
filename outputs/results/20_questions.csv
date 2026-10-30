@@ -1,6 +1,6 @@
 id,area,question,true,scored,f1_current,precision_current,predicted_current,f1_prior_corrected,precision_prior_corrected,predicted_prior_corrected,f1_multinomial,precision_multinomial,predicted_multinomial
 nd01,minnesota,"In the North Dakota study area, show cropland within 100 m of a wetland.",1549,True,0.2582034454470878,0.15348043398756553,8203,0.41042345276872966,0.4670510708401977,1214,0.3991400931565747,0.44847020933977455,1242
-nd02,minnesota,"In the North Dakota study area, show cropland within 30 m of a wetland.",0,False,0.0,0.0,1574,0.0,0.0,33,1.0,,0
+nd02,minnesota,"In the North Dakota study area, show cropland within 30 m of a wetland.",1549,True,0.2582034454470878,0.15348043398756553,8203,0.41042345276872966,0.4670510708401977,1214,0.3991400931565747,0.44847020933977455,1242
 nd03,minnesota,How much cropland in the North Dakota study area is within 100 m of a wetland?,1549,True,0.2582034454470878,0.15348043398756553,8203,0.41042345276872966,0.4670510708401977,1214,0.3991400931565747,0.44847020933977455,1242
 nd04,minnesota,"In the North Dakota study area, show cropland that is more than 300 m from any wetland or open water.",40291,True,0.7892410726390282,0.8696483523049804,33471,0.8790235819308246,0.8759365141955836,40576,0.8905259208304671,0.8975645421540944,39664
 nd05,minnesota,"In the North Dakota study area, show wetlands within 100 m of cropland.",1225,True,0.2510691823899371,0.1484014869888476,6725,0.41206896551724137,0.4365296803652968,1095,0.3906935908691835,0.4226020892687559,1053

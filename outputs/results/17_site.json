@@ -3,10 +3,10 @@
   {
    "question": "wetlands next to crop fields",
    "area": "north_dakota",
-   "places": 0,
-   "top official class": "",
-   "plan": "Wetland, within 30 m of cropland.",
-   "empty reason": "None of the wetland places is within 30 m of cropland."
+   "places": 4053,
+   "top official class": "wetland 40%",
+   "plan": "Wetland, next to cropland.",
+   "empty reason": ""
   },
   {
    "question": "corn fields where July 2021 had at least 5 days above 35 C",
@@ -27,9 +27,9 @@
   {
    "question": "grassland near an existing solar farm",
    "area": "north_carolina",
-   "places": 278,
-   "top official class": "grassland 36%",
-   "plan": "Grassland, within 100 m of solar farm.",
+   "places": 578,
+   "top official class": "grassland 46%",
+   "plan": "Grassland, within 300 m of solar farm.",
    "empty reason": ""
   },
   {

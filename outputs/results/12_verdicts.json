@@ -2,21 +2,21 @@
  "encoder": "clip",
  "C2": {
   "n": 23,
-  "median_diff_AP_numbers_minus_aligned": 0.24633018625697511,
-  "lo": 0.09261533527001065,
-  "hi": 0.41878407464199485,
-  "median_AP_aligned": 0.2234289148373464,
-  "median_AP_numbers": 0.5787828724684938,
+  "median_diff_AP_numbers_minus_aligned": 0.27653935914392613,
+  "lo": 0.10099873609088961,
+  "hi": 0.38230048548824075,
+  "median_AP_aligned": 0.27300720143485546,
+  "median_AP_numbers": 0.6396745922610111,
   "numbers_win": true
  },
  "C3": {
   "n": 40,
-  "median_diff_F1_classifier_minus_aligned": 0.12315210730578063,
-  "lo": 0.046690851636142144,
-  "hi": 0.25288330577206336,
-  "median_F1_aligned": 0.24723325632536308,
+  "median_diff_F1_classifier_minus_aligned": 0.1758815519137254,
+  "lo": 0.09723975762809711,
+  "hi": 0.2421381815669678,
+  "median_F1_aligned": 0.23198829073988117,
   "median_F1_classifier": 0.5630484083550265,
-  "median_F1_A2_alphaearth_maps": 0.5474189127952371,
+  "median_F1_A2_alphaearth_maps": 0.5474113927990403,
   "answer_key_F1": 1.0,
   "winner": "classifier per tag"
  }

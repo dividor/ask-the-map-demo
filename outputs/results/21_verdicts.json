@@ -28,22 +28,22 @@
  "dropped_by_V0": {},
  "eligible_pairs": 46,
  "eligible_words": 17,
- "K6_control_median_ratio": 1.487,
+ "K6_control_median_ratio": 1.483,
  "K6_pass": true,
- "U1_median_ratio": 1.878,
- "U1_lo": 1.522,
- "U1_hi": 8.083,
+ "U1_median_ratio": 1.941,
+ "U1_lo": 1.542,
+ "U1_hi": 9.855,
  "U1": "FAIL",
- "trained_median_ratio": 18.188,
- "trained_lo": 6.45,
- "trained_hi": 48.781,
+ "trained_median_ratio": 20.177,
+ "trained_lo": 6.53,
+ "trained_hi": 51.162,
  "difference_never_seen_minus_trained": [
-  -16.31,
-  -45.729,
-  -3.325
+  -18.236,
+  -49.966,
+  -4.207
  ],
  "median_AP_minus_chance": {
-  "never-seen": 0.0046,
-  "trained": 0.0666
+  "never-seen": 0.0053,
+  "trained": 0.0599
  }
 }

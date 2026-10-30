@@ -24,7 +24,6 @@
   h1 { font-size: 18px; margin: 0 0 4px; }
   h2 { font-size: 13px; margin: 14px 0 4px; }
   p.sub { margin: 0 0 14px; color: var(--muted); }
-  #methodnote { font-size: 12px; color: var(--muted); margin-top: 4px; }
   label { display: block; font-weight: 600; margin: 12px 0 4px; }
   textarea, select, button { width: 100%; font: inherit; padding: 8px; border: 1px solid var(--line);
          border-radius: 6px; background: var(--bg); color: var(--text); }
@@ -58,7 +57,8 @@
   .map-busy[hidden] { display: none; }
   .map-busy .spinner { width: 48px; height: 48px; border-width: 4px; margin: 0;
                        border-color: #ffffff55; border-top-color: #fff; }
-  #status.err { color: #dc2626; }
+  #status.err { color: #991b1b; background: #fef2f2; border: 1px solid #dc2626; border-radius: 6px; padding: 8px 10px;
+                font-weight: 600; }
   .facts { margin-top: 8px; }
   /* the tab hangs from the tile box's bottom edge, flush with its right side, like a folder tab */
   .tile-tab-wrap { transform: translate(calc(-100% + 1px), -1px); }
@@ -81,6 +81,10 @@
   .modal-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
   .modal-head h2 { font-size: 16px; margin: 0; }
   .modal-close { width: auto; background: var(--chip); padding: 4px 10px; cursor: pointer; font-size: 16px; }
+  /* a question with no answer: the reason in a box over the middle of the map */
+  .err-box { width: min(460px, calc(100vw - 32px)); border: 2px solid #dc2626; }
+  .err-box h2 { color: #991b1b; }
+  .err-box p { margin: 10px 0 0; font-size: 15px; line-height: 1.45; }
   .q-top { font-size: 15px; font-weight: 600; margin: 12px 0 8px; }
   .facts h2.section { font-size: 14px; border-top: 1px solid var(--line); padding-top: 12px; margin-top: 16px; }
   .facts h3 { font-size: 12px; margin: 10px 0 4px; color: var(--muted); }
@@ -112,7 +116,7 @@
   <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
      in four geographical study areas.</p>
   <p class="sub">Just a quick demo to explore using satellite embeddings with climate data for natural language
-     queries. Be gentle, it's not production-grade and will make mistakes, but maybe it could be with more follow-up work 🙂</p>
+     queries. Be gentle, it's not production-grade and will make mistakes, it needs further work for wider coverage of vocabulary and land types. 🙂</p>
   <div id="live-controls">
     <label for="q" class="ask">Go on, ask something</label>
     <textarea id="q" autofocus autocomplete="off"
@@ -120,17 +124,23 @@
     <button class="go" id="go">Search</button>
     <label for="area">Study area</label>
     <select id="area"></select>
-    <details class="examples-box">
-      <summary>Examples: click one to run it</summary>
-      <div class="examples" id="examples"></div>
-    </details>
     <label for="method">Method</label>
     <select id="method">
       <option value="aligned">Method 1: Aligning text and satellite embeddings (AETHER's recipe)</option>
       <option value="aligned_land_power_climate">Method 2: Aligning text and satellite embeddings, with NASA POWER for climate</option>
       <option value="best" selected>Method 3: Using satellite embeddings to build a classifier with AI Planner</option>
     </select>
-    <div id="methodnote" class="sub"></div>
+    <details class="examples-box">
+      <summary>Examples: click one to run it</summary>
+      <div class="examples" id="examples"></div>
+    </details>
+    <label for="share">How many places to show (most similar)</label>
+    <select id="share">
+      <option value="0.005">Top 0.5% of the study area</option>
+      <option value="0.01">Top 1%</option>
+      <option value="0.02" selected>Top 2%</option>
+      <option value="0.05">Top 5%</option>
+    </select>
   </div>
   <div id="static-controls" hidden>
     <label for="preset">Question (answered in advance)</label>
@@ -145,6 +155,23 @@
   </div>
 </aside>
 <div id="map"><div id="busy" class="map-busy" hidden><div class="spinner"></div>Asking the map…</div></div>
+<div id="err-modal" class="modal" hidden role="alertdialog" aria-modal="true" aria-labelledby="err-title">
+  <div class="modal-box err-box">
+    <div class="modal-head">
+      <h2 id="err-title">No answer</h2>
+      <button class="modal-close" id="err-close" aria-label="Close">&times;</button>
+    </div>
+    <p id="err-text"></p>
+    <p id="err-hint" class="small" hidden></p>
+  </div>
+</div>
+<div id="warm-modal" class="modal" hidden role="status" aria-live="polite">
+  <div class="modal-box">
+    <h2 style="margin:0 0 8px"><span class="spinner"></span>Waking up</h2>
+    <p id="warm-text" style="margin:0">The server was asleep and is loading the map tiles and the text encoder; this takes about a minute after a quiet spell.</p>
+    <p id="warm-stage" class="small" style="margin:8px 0 0"></p>
+  </div>
+</div>
 <div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
   <div class="modal-box">
     <div class="modal-head">
@@ -181,6 +208,24 @@ legend.onAdd = () => {
 legend.addTo(map);
 // "Match information": a tab at the bottom right of every study-tile box; it opens that tile's details in a modal
 const infoModal = document.getElementById("info-modal");
+const errModal = document.getElementById("err-modal");
+// the box over the middle of the map for a question with no answer or no matches; for Method 3 it suggests
+// Methods 1 and 2, which search by the question's own words and so cover land types the classifier lacks
+const METHOD_HINT = "Try Method 1 or Method 2: they search by your own words in the aligned space and support " +
+  "land types the classifier has no class for.";
+function showError(message, title = "No answer") {
+  document.getElementById("err-title").textContent = title;
+  document.getElementById("err-text").textContent = message;
+  const hint = document.getElementById("err-hint");
+  hint.textContent = METHOD_HINT;
+  hint.hidden = document.getElementById("method").value !== "best";
+  errModal.hidden = false;
+  document.getElementById("err-close").focus();
+}
+function closeError() { errModal.hidden = true; }
+document.getElementById("err-close").addEventListener("click", closeError);
+errModal.addEventListener("click", e => { if (e.target === errModal) closeError(); });
+document.addEventListener("keydown", e => { if (e.key === "Escape" && !errModal.hidden) closeError(); });
 let LAST = null;  // the last answer and its question: { d, question }
 // the examples list starts open on a wide screen and collapsed on a small one
 document.querySelector(".examples-box").open = window.matchMedia("(min-width: 1100px)").matches;
@@ -338,7 +383,7 @@ function openInfo(t) {
       }
     });
     h += `<p class="small">${d.used === "classifier"
-      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule)."
+      ? "A place passes a rule if it is within the distance of any cell of the named classes on the classifier's land map (or is not, for a \"not within\" rule). The map's cells are 90 m, so a distance below 90 m means the neighbouring cell."
       : "A place passes a rule if it is within the distance of any cell of the named classes on the aligned space's own land map (or is not, for a \"not within\" rule); the places shown are the most similar candidates that pass every rule."}</p>`;
   }
 
@@ -423,8 +468,9 @@ function render(d, question) {
       .on("click", () => openInfo(t))
       .addTo(labels);
     // always "Match information", shortened only by dropping the count; hidden if even that does not fit
-    tileTabs.push({ marker: m, t, labels: [full, `Match information · ${n} places`, `Match information · ${n}`,
-                                           "Match information"] });
+    // a tile with no match says so on its tab (same tab, still opens the window, which says why)
+    tileTabs.push({ marker: m, t, labels: t.count === 0 ? ["No matches"]
+      : [full, `Match information · ${n} places`, `Match information · ${n}`, "Match information"] });
   });
   const pcells = d.power_cells || [];
   document.querySelectorAll(".map-legend .power-row").forEach(r => { r.hidden = !pcells.length; });
@@ -477,6 +523,7 @@ function render(d, question) {
     : `<b>No places matched.</b> Understood as: ${esc(f.plan_words)} ` +
       esc(f.empty_reason || 'Click "Match information" on a tile to see why.');
   LAST = { d, question };
+  if (!f.shown_pixels) showError(f.empty_reason || "No place in this study area meets every part of the question.", "No matches");
 }
 
 // a new study area or method re-runs the question in the box, if there is one
@@ -515,7 +562,19 @@ if (STATIC) {
     pre.onchange = load; load();
   });
 } else {
-  fetch("/api/meta").then(r => r.json()).then(m => {
+  // a cold server answers /api/meta with its loading stage until it is ready: show that, and keep asking
+  const warm = document.getElementById("warm-modal"), warmStage = document.getElementById("warm-stage");
+  const whenReady = () => fetch("/api/meta", { cache: "no-store" }).then(r => r.json()).then(m => {
+    if (!m.loading) { warm.hidden = true; return m; }
+    if (m.error) {
+      warmStage.textContent = "Loading failed: " + m.error;
+      throw new Error("Loading failed: " + m.error);
+    }
+    warm.hidden = false;
+    warmStage.textContent = `${m.stage[0].toUpperCase()}${m.stage.slice(1)}… ${m.seconds} s so far`;
+    return new Promise(r => setTimeout(r, 2000)).then(whenReady);
+  });
+  whenReady().then(m => {
     META = m;
     const sel = setupAreas(m);
     const ex = document.getElementById("examples");
@@ -535,15 +594,12 @@ if (STATIC) {
       };
       ex.appendChild(b);
     });
-    const msel = document.getElementById("method"), note = document.getElementById("methodnote");
+    document.getElementById("share").onchange = askAgain;
+    const msel = document.getElementById("method");
     [...msel.options].forEach(o => { if (m.not_ready[o.value]) o.textContent += " (not ready yet)"; });
     msel.value = "best";  // Method 3 on every load: browsers otherwise keep the last choice across reloads
-    // the menu cuts long names off, so the full name of the chosen method is shown underneath
-    const explain = () => {
-      const why = m.not_ready[msel.value];
-      note.textContent = why ? "Not ready yet: " + why : msel.selectedOptions[0].textContent;
-      msel.title = msel.selectedOptions[0].textContent;
-    };
+    // the menu cuts long names off, so the full name of the chosen method is its tooltip
+    const explain = () => { msel.title = msel.selectedOptions[0].textContent; };
     msel.onchange = () => { explain(); askAgain(); }; explain();
     showArea(sel.value);
     // the page opens on the first example's answer, so there is something to look at straight away
@@ -556,10 +612,11 @@ if (STATIC) {
   document.getElementById("go").onclick = async () => {
     const btn = document.getElementById("go"), st = document.getElementById("status");
     const busy = document.getElementById("busy");
-    btn.disabled = true; st.className = "";
+    btn.disabled = true; st.className = ""; closeError();
     st.innerHTML = '<span class="spinner"></span>Asking the map…'; busy.hidden = false;
     const body = { question: document.getElementById("q").value, area: document.getElementById("area").value,
-                   method: document.getElementById("method").value };
+                   method: document.getElementById("method").value,
+                   share: parseFloat(document.getElementById("share").value) };
     try {
       const r = await fetch("/api/search", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
       const d = await r.json();
@@ -572,8 +629,11 @@ if (STATIC) {
       tileTabs = []; tileHits = []; LAST = null;
       showArea(document.getElementById("area").value);  // back out to the whole study area
       st.className = "err"; st.textContent = e.message;
+      showError(e.message);
+    } finally {
+      // whatever happened, the page is usable again: no stuck spinner, no disabled Search button
+      busy.hidden = true; btn.disabled = false;
     }
-    busy.hidden = true; btn.disabled = false;
   };
 }
 </script>

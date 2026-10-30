@@ -22,9 +22,10 @@ held-out Minnesota and Georgia):
 | **2. The same, with NASA POWER for climate** | the shared space | NASA POWER's daily numbers | geometry |
 | **3. A classifier with an AI planner** | one small classifier on AlphaEarth embeddings | NASA POWER's daily numbers | geometry |
 
-On the 40 questions in states the models never saw in training, Methods 2 and 3 are level (median F1 0.61 and
-0.56), and both more than double the published AETHER recipe (0.26). Checking climate against the numbers and
-measuring distances with geometry are what make the difference. Every result comes from the notebooks in this
+On the 40 questions in states the models never saw in training, Methods 2 and 3 are level (median F1 0.58 and
+0.56, or 0.64 with the context land model the demo uses), and both score two and a half times the published
+AETHER recipe (0.23). Checking climate against the numbers and measuring distances with geometry are what make
+the difference. Every result comes from the notebooks in this
 repository, and `outputs/results/` holds what they produced.
 
 ![Corn fields with a July 2021 heatwave in North Dakota](outputs/figures/16_demo_corn_heat_north_dakota_a4.jpg)
@@ -104,8 +105,10 @@ through Earth Engine; the solar-farm database, wetland inventory and state outli
 uv run python -m askmap.demo.serve      # then open http://127.0.0.1:8765
 ```
 
-Type a question (or pick one of the eleven examples), choose a study area and a method, and the places that meet
-every part of the question light up on a satellite map. The NASA POWER grid cells behind any climate condition
+Type a question (or pick one of the twelve examples), choose a study area and a method, and the places that meet
+every part of the question light up on a satellite map. Any land phrase works with Methods 1 and 2: a phrase the
+classifier has no class for ("a quarry", "barns") is ranked by similarity in the shared space, and the "how many
+places" control sets how many are shown. The NASA POWER grid cells behind any climate condition
 are drawn too, green where the condition holds. Each 20 km study tile has a **Match information** tab that shows
 the plan the language model wrote, how much land matched, the official land cover of the places shown, and the
 NASA POWER value of every grid cell against its threshold. An empty answer says which condition removed
@@ -156,7 +159,7 @@ scripts/run_pipeline.sh 13         # one notebook, by its number
 | 1. Get the data | `01_data` | USPVDB solar farms, state outlines, the North Dakota wetland inventory (1.5 GB download); 30 tiles of AlphaEarth and the Cropland Data Layer from Earth Engine (about 25 s each); NASA POWER daily data 2001–2025 for two regions | about 40 min |
 | | `10_aether_osm` | OpenStreetMap land-use tags for every tile (Overpass; saved replies reused) | 10–20 min |
 | 2. Climate facts | `02_climate_summaries` | NASA POWER facts per grid cell (wet springs, hot Julys, long-term climate) | minutes |
-| 3. Land maps and answer key | `03_land_maps`, `04_answer_key_and_land`, `04b_d0_diagnostic` | the first AlphaEarth land classifier; the official-map answers to about 50 persona questions | minutes |
+| 3. Land maps and answer key | `03_land_maps`, `04_answer_key_and_land`, `04b_d0_diagnostic` | the first AlphaEarth land classifier; the official-map answers to 58 persona questions | minutes |
 | 4. Questions to plans | `05_translation` | the open language models turn each question into a plan; scored against hand-written plans | minutes with saved replies |
 | 5. First comparison arm | `06_embedding_search`, `07_verdicts`, `08_wetland_signal` | an embedding-only search, its verdicts, and the wetland-signal check | minutes |
 | 6. The aligned space | `11_aether_us` | AETHER's recipe on US farm country: 510,930 captions for 85,000 locations, trained with a frozen CLIP text encoder | about 1 h |
@@ -164,7 +167,7 @@ scripts/run_pipeline.sh 13         # one notebook, by its number
 | 8. Demo grid | `13_aether_demo_data` | projected vectors, the official land cover and NASA POWER cell indices on a 90 m grid for the four demo areas (the classifier is marked "not ready" until step 9) | minutes |
 | 9. Better land maps | `20_general_land_maps`, `13_aether_demo_data`, `23_land_context`, `13_aether_demo_data` | one multinomial model for every class, then neighbourhood context and more training tiles (16 more Earth Engine tiles); each stage checks itself against the demo data the previous one built, so notebook 13 runs after each | 10 min |
 | 10. Demo checks | `16_demo_check_d2`, `22_demo_check_d3`, `24_demo_check_d4`, `28_page_examples` | the demo's answers scored against the official maps; the page examples chosen by a fixed rule | minutes each |
-| 11. The three methods | `21_unseen_words`, `25_three_methods`, `26_geometry_distances`, `27_aligned_retraining` | never-seen words against OpenStreetMap; the three methods side by side; distances by geometry; retraining the aligned space | about 40 min |
+| 11. The three methods | `21_unseen_words`, `25_three_methods`, `26_geometry_distances`, `27_aligned_retraining`, `29_free_words` | never-seen words against OpenStreetMap; the three methods side by side; distances by geometry; retraining the aligned space | about 40 min |
 | 12. Static page | `17_static_site` | the server-free page in `site/` | minutes |
 | Reproduction of the AETHER paper | `09_aether_reconstruction` | re-runs the authors' SatBird experiment with reconstructed configuration files; needs their code and data and about 7 hours of CPU: see [scripts/aether_stage1/](scripts/aether_stage1/) | 7 h |
 | Rebuild checks | `15_rebuild_check`, `15b_rebuild_check_ee` | rebuild a sample of the data into a fresh folder and compare it, byte for byte, with an existing one | 10 min |
@@ -184,8 +187,8 @@ it, and it continues from the tiles it has.
 2. **Land.** Method 3 scores every 30 m pixel with a multinomial classifier on its AlphaEarth embedding plus the
    mean embedding of its 150 m and 450 m surroundings (`askmap.landctx`, `askmap.landmaps`). Methods 1 and 2
    rank pixels by the similarity of their projected embedding to the plan's text in the shared space
-   (`askmap.aether_us`, `askmap.space`); for distances, each pixel takes the nearest of 15 fixed land phrases
-   (`askmap.zeroshot`).
+   (`askmap.aether_us`, `askmap.space`); for distances, each pixel takes the nearest of 16 fixed land phrases
+   (`askmap.zeroshot`). A land phrase with no class of its own is ranked by the question's own words.
 3. **Climate.** `askmap.power` computes each condition for every NASA POWER grid cell (about 50 km) from the
    daily data, and every pixel inherits its cell's pass or fail.
 4. **Distances.** `askmap.geo.within` measures distances on the land map; "within 500 m of a solar farm" means
