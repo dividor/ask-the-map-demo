@@ -460,7 +460,7 @@ function render(d, question) {
     // the densest window needs the busiest tile's canvas, so the view is set once the images are decoded
     map.fitBounds(box(busiest.match_bounds), { padding: [30, 30], maxZoom: 14, animate: false });
     Promise.all(drawn).then(() => {
-      if (LAST.d !== d) return;  // a newer answer has replaced this one
+      if (!LAST || LAST.d !== d) return;  // a newer answer (or none) has replaced this one
       map.fitBounds(densestWindow(busiest), { padding: [30, 30], maxZoom: 14, animate: false });
       sizeTabs();
     });
@@ -565,7 +565,13 @@ if (STATIC) {
       const d = await r.json();
       if (!r.ok) throw new Error(d.detail || "Search failed");
       render(d, body.question);
-    } catch (e) { st.className = "err"; st.textContent = e.message; }
+    } catch (e) {
+      // the question got no answer (a refusal, an invalid plan, a server fault): nothing from the previous
+      // answer stays on the map
+      overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
+      tileTabs = []; tileHits = []; LAST = null;
+      st.className = "err"; st.textContent = e.message;
+    }
     busy.hidden = true; btn.disabled = false;
   };
 }
