@@ -64,6 +64,13 @@ def make_contexts(cfg: dict, meta: dict, demo_dir: Path) -> dict[str, AreaContex
     return out
 
 
+def server_host(env: dict | None = None) -> str:
+    """The address the server listens on: ``ASKMAP_HOST`` if set, else localhost only. A container sets it to
+    ``0.0.0.0`` so the platform can reach the server; nothing else should."""
+    value = (os.environ if env is None else env).get("ASKMAP_HOST", "").strip()
+    return value or "127.0.0.1"
+
+
 def page_examples(examples: list[dict], areas: dict) -> list[dict]:
     """The page's clickable examples, ``{"question", "area"}``; fails on an empty question or unknown area."""
     out = []
@@ -158,7 +165,7 @@ def main() -> None:
                 "not_ready": engine.not_ready,
             },
         ),
-        host="127.0.0.1",
+        host=server_host(),
         port=au["demo"]["port"],
     )
 
