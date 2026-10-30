@@ -70,8 +70,12 @@ else
     --ingress external --target-port 8765 -o none
 fi
 
-# Loading the tiles and the text encoder takes a few minutes on a cold start, longer than the default startup
-# probe allows, so the probes are set from a template (the CLI has no flags for them). No secret is in it.
+# The probes are set from a template (the CLI has no flags for them). No secret is in it. The server listens
+# within seconds and loads the tiles and the text encoder in the background, so the startup probe checks early
+# and often: the ingress holds every request until it passes, and a late first check (20 s) kept the page, and
+# its "waking up" message, from the visitor for the whole cold start. Measured on 30 October 2026: 61 s from the
+# first request to the page, by which time the engine was already loaded. The liveness probe is safe while the
+# engine loads, because /api/meta answers 200 with the loading stage.
 PROBES=$(mktemp)
 {
   echo "properties:"
@@ -84,7 +88,7 @@ PROBES=$(mktemp)
   echo "          - {name: HF_TOKEN, secretRef: hf-token}"
   echo "        resources: {cpu: $CPU, memory: $MEM}"
   echo "        probes:"
-  echo "          - {type: Startup, tcpSocket: {port: 8765}, initialDelaySeconds: 20, periodSeconds: 10, failureThreshold: 90, timeoutSeconds: 5}"
+  echo "          - {type: Startup, tcpSocket: {port: 8765}, initialDelaySeconds: 2, periodSeconds: 3, failureThreshold: 240, timeoutSeconds: 2}"
   echo "          - {type: Liveness, httpGet: {path: /api/meta, port: 8765}, periodSeconds: 30, failureThreshold: 5, timeoutSeconds: 10}"
 } > "$PROBES"
 az containerapp update -n "$APP" -g "$RG" --yaml "$PROBES" -o none
