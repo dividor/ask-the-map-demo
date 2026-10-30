@@ -570,6 +570,7 @@ if (STATIC) {
       // answer stays on the map
       overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); closeInfo();
       tileTabs = []; tileHits = []; LAST = null;
+      showArea(document.getElementById("area").value);  // back out to the whole study area
       st.className = "err"; st.textContent = e.message;
     }
     busy.hidden = true; btn.disabled = false;
