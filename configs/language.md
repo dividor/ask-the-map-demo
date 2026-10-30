@@ -16,6 +16,9 @@ Meaning. The answer is the set of pixels (30 m) that satisfy every part (logical
   `min_patch_ha` is a number, keep only connected patches of these classes at least that many hectares.
 - `near`: one entry per distance rule. `negate: false` keeps pixels within `distance_m` metres of any pixel of
   the listed classes; `negate: true` keeps pixels that are NOT within that distance. Use `[]` if none.
+  `distance_m` is always a positive number: "in", "inside", "among", "surrounded by" and "next to" mean
+  within 100 m (adjacent cells); "near" and "close to" mean within 300 m; "far from" and "away from" mean not
+  within 1000 m, unless the question gives a distance.
 - `climate`: one entry per NASA POWER climate condition (see below). Use `[]` if none.
 - `output`: `"map"` to show the pixels; `"area"` when the question asks how much land (hectares).
 

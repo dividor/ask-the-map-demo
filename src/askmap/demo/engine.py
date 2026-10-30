@@ -237,13 +237,15 @@ class Engine:
             raise Unavailable("The best combination is not known yet.")
         if how in self.not_ready:
             raise Unavailable(f"The best combination uses '{how}', which is not ready: {self.not_ready[how]}")
+        shown_plan: dict | None
         try:
             plan = self._plan(question, area)
         except Unsupported as e:
             if how == "classifier":
                 raise
-            plan, out = None, self._answer_free_text(question, tiles, e.reason)
+            shown_plan, out = None, self._answer_free_text(question, tiles, e.reason)
         else:
+            shown_plan = plan
             if how == "classifier":
                 out = self._answer_plan(plan, tiles, self.contexts[area])
             else:
@@ -253,7 +255,7 @@ class Engine:
                 "area": area,
                 "method": method,
                 "used": how,
-                "plan": plan,
+                "plan": shown_plan,
                 "seconds": round(time.perf_counter() - t0, 2),
             }
         )
