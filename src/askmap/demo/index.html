@@ -410,7 +410,7 @@ function render(d, question) {
   st.className = "";
   st.textContent = f.shown_pixels
     ? `${f.shown_pixels.toLocaleString()} places matched. Click a red place, or "Match information" on a tile, for details.`
-    : `No places matched. Click "Match information" on a tile to see why.`;
+    : `No places matched. ${f.empty_reason || 'Click "Match information" on a tile to see why.'}`;
   LAST = { d, question };
 }
 
