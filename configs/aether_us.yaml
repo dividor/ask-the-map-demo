@@ -118,7 +118,7 @@ demo:
     - {question: "Corn fields with at least five days above 35 C in July 2022", area: north_carolina}
     - {question: "Cropland that had an unusually dry autumn in 2025", area: north_carolina}
     - {question: "Wetlands within 500 m of cropland", area: north_carolina}
-    - {question: "Towns and built-up land with the hottest summer in 2022", area: north_carolina}
+    - {question: "Towns that had an unusually hot summer in 2022", area: north_carolina}
   # land maps for every class: one_vs_rest (notebook 12), multinomial (A5, notebook 20) or context_more (A7,
   # notebook 23; chosen by Matt after A7, a post hoc decision: see PLAN.md)
   land_method: context_more
