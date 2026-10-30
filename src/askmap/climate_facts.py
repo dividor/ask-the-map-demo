@@ -179,25 +179,33 @@ def condition_fact(cond: dict, cap: dict) -> str:
     if months not in ss:
         raise ValueError(f"no caption season for months {cond['months']}")
     sk = ss[months]
-    var, stat, test = cond["variable"], cond["stat"], cond["test"]
-    y0, y1 = cond["years"]
     # the whole-year season exists only for the long-term facts; a fact worded with a season cannot use it
     seasonal = sk in cap["climate_year"]["seasons"]
+    test = cond["test"]
+    if test["kind"] in ("history_rank", "area_rank"):
+        return _rank_fact(cond, cap, sk, seasonal)
+    return _absolute_fact(cond, cap, sk, seasonal)
+
+
+def _rank_fact(cond: dict, cap: dict, sk: str, seasonal: bool) -> str:
+    var, test = cond["variable"], cond["test"]
     if test["kind"] == "history_rank":
         if not seasonal:
             raise ValueError(f"no caption season for months {cond['months']} in a year-specific fact")
-        return f"hist|{var}|{sk}|{y0}|{test['side']}|{int(test['pct'])}"
-    if test["kind"] == "area_rank":
-        if (
-            var not in cap["climate_long"]["variables"]
-            or cap["climate_long"]["variables"][var]["months"] != sk
-        ):
-            raise ValueError(f"no long-term caption fact for {var} over {sk}")
-        tiers = {round(v, 1): k for k, v in cap["climate_long"]["tiers"].items()}
-        pct = round(float(test["pct"]), 1)
-        if pct not in tiers:
-            raise ValueError(f"no long-term caption tier for {test['pct']}%")
-        return f"long|{var}|{test['side']}|{tiers[pct]}"
+        return f"hist|{var}|{sk}|{cond['years'][0]}|{test['side']}|{int(test['pct'])}"
+    long = cap["climate_long"]
+    if var not in long["variables"] or long["variables"][var]["months"] != sk:
+        raise ValueError(f"no long-term caption fact for {var} over {sk}")
+    tiers = {round(v, 1): k for k, v in long["tiers"].items()}
+    pct = round(float(test["pct"]), 1)
+    if pct not in tiers:
+        raise ValueError(f"no long-term caption tier for {test['pct']}%")
+    return f"long|{var}|{test['side']}|{tiers[pct]}"
+
+
+def _absolute_fact(cond: dict, cap: dict, sk: str, seasonal: bool) -> str:
+    var, stat, test = cond["variable"], cond["stat"], cond["test"]
+    y0, y1 = cond["years"]
     value = test["value"]
     if var == "T2M_MAX" and stat == "days_above" and seasonal:
         return f"heat|{sk}|{int(cond['day_threshold'])}|{y0}|{int(value)}"
