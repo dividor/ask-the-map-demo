@@ -409,10 +409,17 @@ function render(d, question) {
   LAST = { d, question };
 }
 
+// a new study area or method re-runs the question in the box, if there is one
+function askAgain() {
+  if (document.getElementById("q").value.trim()) document.getElementById("go").click();
+}
+
 function setupAreas(m) {
   const sel = document.getElementById("area");
   Object.entries(m.areas).forEach(([k, a]) => { const o = document.createElement("option"); o.value = k; o.textContent = a.label; sel.appendChild(o); });
-  sel.onchange = () => { overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); };
+  sel.onchange = () => {
+    overlays.clearLayers(); labels.clearLayers(); cells.clearLayers(); showArea(sel.value); askAgain();
+  };
   return sel;
 }
 
@@ -450,8 +457,7 @@ if (STATIC) {
       b.appendChild(badge);
       b.onclick = () => {
         document.getElementById("q").value = question;
-        sel.value = e.area; sel.onchange();
-        document.getElementById("go").click();
+        sel.value = e.area; sel.onchange();  // which runs the search
       };
       ex.appendChild(b);
     });
@@ -464,7 +470,7 @@ if (STATIC) {
       note.textContent = why ? "Not ready yet: " + why : msel.selectedOptions[0].textContent;
       msel.title = msel.selectedOptions[0].textContent;
     };
-    msel.onchange = explain; explain();
+    msel.onchange = () => { explain(); askAgain(); }; explain();
     showArea(sel.value);
     // the page opens on the first example's answer, so there is something to look at straight away
     if (ex.firstChild && !document.getElementById("q").value) ex.firstChild.click();
