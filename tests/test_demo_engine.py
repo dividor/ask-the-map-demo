@@ -1,5 +1,6 @@
 import base64
 from types import SimpleNamespace
+from typing import ClassVar
 
 import numpy as np
 import pytest
@@ -169,6 +170,22 @@ def test_errors():
         engine(planner=None).search("x", "a", "classifier")
     with pytest.raises(ValueError):
         engine(best="unknown")
+
+
+def test_app_turns_an_engine_fault_into_a_readable_error():
+    from fastapi.testclient import TestClient
+
+    from askmap.demo.app import create_app
+
+    class Broken:
+        not_ready: ClassVar[dict] = {}
+
+        def search(self, *a):
+            raise KeyError("all")
+
+    client = TestClient(create_app(Broken(), {"areas": {}, "examples": []}))
+    r = client.post("/api/search", json={"question": "x", "area": "a", "method": "aligned"})
+    assert r.status_code == 500 and "KeyError" in r.json()["detail"] and "Traceback" not in r.text
 
 
 def test_app_endpoints():
@@ -404,3 +421,34 @@ def test_method_3_ranks_by_the_words_when_no_class_fits_and_filters_by_geometry(
     assert e.search("barns", "a", "best", 0.1)["facts"]["shown_pixels"] <= f["shown_pixels"]
     with pytest.raises(UserError, match="between 0 and 20%"):
         e.search("barns", "a", "best", 0.5)
+
+
+def test_a_place_with_a_class_comes_from_the_map_and_one_without_from_its_words():
+    seen = []
+
+    def encode(texts):
+        seen.extend(texts)
+        return np.array([[1.0, 0.0]] * len(texts))
+
+    rule = {"classes": ["wetland"], "distance_m": 90, "negate": False, "words": "a marsh"}
+    plan = dict(PLAN, land=dict(PLAN["land"], words="corn fields"), near=[rule])
+    e = Engine(
+        {"a": [tile()]}, LEAVES, encode, lambda q, a: plan, {"a": Ctx()}, "classifier", CAP, top_share=0.25
+    )
+    e.search("corn fields near a marsh", "a", "aligned")
+    assert "a marsh" not in seen  # a place with a class comes from the land map, on every method
+    out = e.search("corn fields near a marsh", "a", "best")
+    assert "a marsh" not in seen and "word_near" not in out["facts"]
+    # a place with no class: Method 3 ranks it by the words too, and answer_masks agrees with the answer
+    free = dict(plan, near=[dict(rule, classes=[], words="a quarry")])
+    e2 = Engine(
+        {"a": [tile()]}, LEAVES, encode, lambda q, a: free, {"a": Ctx()}, "classifier", CAP, top_share=0.25
+    )
+    out2 = e2.search("corn fields near a quarry", "a", "best")
+    assert out2["facts"]["word_near"] == {0: "a quarry"} and "a quarry" in seen
+    assert out2["facts"]["steps"][1]["label"] == "within 90 m of places most like \u201ca quarry\u201d"
+    assert e2.answer_masks(free, "a")["t"].sum() == out2["facts"]["shown_pixels"]
+    assert (
+        e2.answer_masks(free, "a", "aligned")["t"].sum()
+        == e2.search("x", "a", "aligned")["facts"]["shown_pixels"]
+    )

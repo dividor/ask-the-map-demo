@@ -80,3 +80,18 @@ def test_a_condition_without_a_caption_fact_is_written_in_plain_english():
     assert (
         climate_text(third, CAP) == "in the fewest third of places by low-wind, low-sun days over 2001-2025"
     )
+
+
+def test_a_whole_year_condition_falls_back_to_plain_words():
+    from askmap.zeroshot import climate_text
+
+    cond = {
+        "variable": "PRECTOTCORR",
+        "years": [2025, 2025],
+        "months": list(range(1, 13)),
+        "stat": "total",
+        "day_threshold": None,
+        "test": {"kind": "history_rank", "side": "low", "pct": 10, "history": [2001, 2025]},
+    }
+    text = climate_text(cond, CAP)  # no caption season covers a whole year: plain English, not a crash
+    assert "2025" in text and "lowest 10%" in text

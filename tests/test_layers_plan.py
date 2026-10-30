@@ -228,3 +228,20 @@ def test_a_zero_distance_means_touching():
 
     assert near_words(plan["near"][0]) == "next to cropland"
     assert near_words(dict(plan["near"][0], negate=True)) == "not next to cropland"
+
+
+def test_distance_rule_words_and_empty_classes():
+    cat = area_classes(CFG)
+    base = {
+        "area": "north_dakota",
+        "land": {"classes": ["corn"], "min_patch_ha": None},
+        "climate": [],
+        "output": "map",
+    }
+    validate(
+        dict(base, near=[{"classes": [], "distance_m": 100, "negate": False, "words": "a river"}]),
+        cat,
+        (2001, 2025),
+    )
+    with pytest.raises(ValueError, match="only with words"):
+        validate(dict(base, near=[{"classes": [], "distance_m": 100, "negate": False}]), cat, (2001, 2025))

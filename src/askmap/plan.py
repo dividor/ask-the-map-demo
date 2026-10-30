@@ -19,7 +19,8 @@ from askmap.power import BASE_VARS, DERIVED_VARS, STATS, condition_cells, condit
 PLAN_KEYS = {"area", "land", "near", "climate", "output"}
 LAND_KEYS = {"classes", "min_patch_ha", "words"}
 LAND_REQUIRED = {"classes", "min_patch_ha"}
-NEAR_KEYS = {"classes", "distance_m", "negate"}
+NEAR_KEYS = {"classes", "distance_m", "negate", "words"}
+NEAR_REQUIRED = {"classes", "distance_m", "negate"}
 COND_KEYS = {"variable", "years", "months", "stat", "day_threshold", "test"}
 OUTPUTS = ("map", "area")
 EIGHT = np.ones((3, 3), dtype=int)
@@ -75,8 +76,16 @@ def _validate_land(land: dict, known: set[str]) -> None:
 
 
 def _validate_near(n: dict, known: set[str], what: str) -> None:
-    _keys(n, NEAR_KEYS, NEAR_KEYS, what)
-    _classes(n["classes"], known, what)
+    _keys(n, NEAR_KEYS, NEAR_REQUIRED, what)
+    words = n.get("words")
+    if words is not None and (not isinstance(words, str) or not words.strip()):
+        raise ValueError(f"{what}: words must be a non-empty string")
+    if n["classes"] == []:
+        # no class fits the place: the demo ranks places by similarity to the question's own words
+        if not words:
+            raise ValueError(f"{what}: classes may be empty only with words")
+    else:
+        _classes(n["classes"], known, what)
     # 0 means touching: a distance below one cell reaches the neighbouring cell (askmap.geo.within)
     if not isinstance(n["distance_m"], int | float) or n["distance_m"] < 0:
         raise ValueError(f"{what}: distance_m must be >= 0")

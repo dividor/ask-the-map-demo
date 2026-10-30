@@ -42,7 +42,7 @@ from askmap.demo.core import (
 )
 from askmap.layers import class_indices
 from askmap.plan import min_patch, within
-from askmap.zeroshot import climate_text, distance_ok, leaf_grid, leaf_phrases, zero_shot_leaf
+from askmap.zeroshot import climate_text, leaf_grid, leaf_phrases, zero_shot_leaf
 from askmap.zeroshot import plan_text as caption_plan_text
 
 LAND_THRESHOLD = 0.5  # the same threshold the plan's distance rules use on the class probabilities
@@ -157,12 +157,18 @@ class Engine:
         return self._zero_shot[t.name]
 
     def plan_steps(
-        self, plan: dict, t: TileData, ctx, word_land: tuple[np.ndarray, float] | None = None
+        self,
+        plan: dict,
+        t: TileData,
+        ctx,
+        word_land: tuple[np.ndarray, float] | None = None,
+        word_near: dict[int, tuple[np.ndarray, float]] | None = None,
     ) -> tuple[np.ndarray, list[tuple[str, str, np.ndarray]]]:
         """Land probability of the plan's classes on one tile, and one (kind, label, mask) per step: land
         (probability above ``LAND_THRESHOLD``, patch size), each distance rule, each climate condition. A plan
         with no land class ranks the land by similarity to the question's own words instead: ``word_land`` is
-        (this tile's similarity scores, the area-wide cut)."""
+        (this tile's similarity scores, the area-wide cut); ``word_near`` the same per distance rule whose
+        place has no class."""
         probs = t.probs.astype(np.float32)
         if plan["land"]["classes"]:
             land_idx = class_indices(plan["land"]["classes"], ctx.leaves, ctx.groups)
@@ -180,9 +186,15 @@ class Engine:
             if plan["land"]["min_patch_ha"] is not None:
                 land &= min_patch(land, plan["land"]["min_patch_ha"] * 10_000 / ctx.res_m**2)
         steps = [("land", land_words(plan), land)]
-        for n in plan["near"]:
-            near = within(target_mask(t, n["classes"], ctx), n["distance_m"], ctx.res_m)
-            steps.append(("near", near_words(n), ~near if n["negate"] else near))
+        for i, n in enumerate(plan["near"]):
+            if n["classes"]:
+                target = target_mask(t, n["classes"], ctx)
+            else:
+                if word_near is None or i not in word_near:
+                    raise ValueError("a distance rule without classes needs the words' similarity scores")
+                sc, cut = word_near[i]
+                target = t.valid & (sc >= cut)
+            steps.append(("near", near_words(n), self._rule_ok(n, target, ctx.res_m)))
         iy, ix = ctx.pixel_cell[t.name]
         for c in plan["climate"]:
             steps.append(("climate", climate_words(c), ctx.climate(c)[iy, ix]))
@@ -299,31 +311,55 @@ class Engine:
         out = {}
         for t in self.areas[area]:
             keep = t.valid.copy()
-            for _, _, mask in self.plan_steps(plan, t, ctx, self._word_land_for(plan, t, area))[1]:
+            land_r, near_r = self._word_rankings(plan, self.areas[area], self.top_share, every_place=False)
+            wl, wn = self._for_tile([x.name for x in self.areas[area]].index(t.name), land_r, near_r)
+            for _, _, mask in self.plan_steps(plan, t, ctx, wl, wn)[1]:
                 keep &= mask
             out[t.name] = keep
         return out
 
-    def _word_land_for(self, plan: dict, t: TileData, area: str) -> tuple[np.ndarray, float] | None:
-        """For ``answer_masks``: the word ranking of one tile when the plan has no land class."""
-        if plan["land"]["classes"]:
-            return None
-        tiles = self.areas[area]
-        scores, cut = self._ranked(plan["land"]["words"], tiles, self.top_share)
-        return scores[[x.name for x in tiles].index(t.name)], cut
+    def _word_rankings(
+        self, plan: dict, tiles: list[TileData], share: float, every_place: bool
+    ) -> tuple[tuple[list[np.ndarray], float] | None, dict[int, tuple[list[np.ndarray], float]]]:
+        """Similarity rankings (per-tile scores, area-wide cut) for the plan's places given in the question's
+        own words: the land when it has no class, and each distance rule's place when it has no class (or
+        every rule that has words if ``every_place``). A place with a class is taken from a land map: ranking
+        by words always finds "the most similar share" even where the place does not exist (measured: forest
+        within 500 m of a solar farm in North Dakota, 1,332 places by words, 0 by the class map)."""
+        land = None if plan["land"]["classes"] else self._ranked(plan["land"]["words"], tiles, share)
+        near = {}
+        for i, n in enumerate(plan["near"]):
+            if n.get("words") and (not n["classes"] or every_place):
+                near[i] = self._ranked(n["words"], tiles, share)
+        return land, near
+
+    @staticmethod
+    def _for_tile(
+        k: int,
+        land: tuple[list[np.ndarray], float] | None,
+        near: dict[int, tuple[list[np.ndarray], float]],
+    ) -> tuple[tuple[np.ndarray, float] | None, dict[int, tuple[np.ndarray, float]]]:
+        """The rankings of tile ``k`` alone."""
+        return (None if land is None else (land[0][k], land[1])), {
+            i: (sc[k], cut) for i, (sc, cut) in near.items()
+        }
+
+    @staticmethod
+    def _rule_ok(n: dict, target: np.ndarray, res_m: float) -> np.ndarray:
+        """Cells that pass one distance rule given its target cells."""
+        near = within(target, n["distance_m"], res_m)
+        return ~near if n["negate"] else near
 
     def _answer_plan(self, plan: dict, tiles: list[TileData], ctx, share: float | None = None) -> dict:
         """Places that meet every step of the plan. A plan with no land class takes the most similar
         ``share`` of the area to the question's own land words as its land step."""
         share = self.top_share if share is None else share
-        word_scores: list[np.ndarray] | None = None
-        cut = 0.0
-        if not plan["land"]["classes"]:
-            word_scores, cut = self._ranked(plan["land"]["words"], tiles, share)
+        land_r, near_r = self._word_rankings(plan, tiles, share, every_place=False)
         out_tiles, shown_leaf = [], []
         steps: list[dict[str, Any]] | None = None
         for i, t in enumerate(tiles):
-            _, tile_steps = self.plan_steps(plan, t, ctx, (word_scores[i], cut) if word_scores else None)
+            wl, wn = self._for_tile(i, land_r, near_r)
+            _, tile_steps = self.plan_steps(plan, t, ctx, wl, wn)
             if steps is None:
                 steps = [{"kind": k, "label": lab, "places": 0} for k, lab, _ in tile_steps]
             keep = t.valid.copy()
@@ -354,8 +390,10 @@ class Engine:
             "rule": "every step",
             "empty_reason": self._empty_reason(steps or [], climate) if codes.size == 0 else None,
         }
-        if word_scores is not None:
+        if land_r is not None:
             facts["word_land"] = {"words": plan["land"]["words"], "share": share}
+        if near_r:
+            facts["word_near"] = {i: plan["near"][i]["words"] for i in near_r}
         if plan["climate"]:
             facts["share_meeting_climate_conditions"] = 1.0 if codes.size else None
         return {"tiles": out_tiles, "facts": facts, "power_cells": boxes}
@@ -440,6 +478,24 @@ class Engine:
             )
         return {"tiles": out_tiles, "facts": facts, "power_cells": boxes}
 
+    def _distance_ok_by_words(
+        self, plan: dict, t: TileData, ctx, word_near: dict[int, tuple[np.ndarray, float]]
+    ) -> np.ndarray:
+        """Methods 1 and 2: cells that pass every distance rule, each rule's place taken from the aligned
+        space's own land map when it has a class, or found by similarity to its words (the most similar
+        ``share`` of the area) when it has none."""
+        ok = t.valid.copy()
+        zs = None
+        for i, n in enumerate(plan["near"]):
+            if i in word_near:
+                sc, cut = word_near[i]
+                target = t.valid & (sc >= cut)
+            else:
+                zs = self.zero_shot_map(t) if zs is None else zs
+                target = np.isin(zs, class_indices(n["classes"], ctx.leaves, ctx.groups))
+            ok &= self._rule_ok(n, target, ctx.res_m)
+        return ok
+
     def _search_text(self, plan: dict, how: str) -> str:
         """The text Methods 1 and 2 embed: the question's own land words when the plan carries them (the
         aligned space can score any text, so the wording the user chose is kept), else the plan's land in
@@ -462,12 +518,13 @@ class Engine:
         ctx = self.contexts[area]
         text = self._search_text(plan, how)
         scores, cut = self._ranked(text, tiles, share)
+        _, near_r = self._word_rankings(plan, tiles, share, every_place=False)
         shows, n = [], {"candidates": 0, "distance": 0, "candidates_distance": 0}
-        for s, t in zip(scores, tiles, strict=True):
+        for k, (s, t) in enumerate(zip(scores, tiles, strict=True)):
             candidate = t.valid & (s >= cut)
             ok = t.valid.copy()
             if plan["near"]:
-                ok &= distance_ok(plan, self.zero_shot_map(t), ctx)
+                ok &= self._distance_ok_by_words(plan, t, ctx, self._for_tile(k, None, near_r)[1])
             n["candidates"] += int(candidate.sum())
             n["distance"] += int(ok.sum())
             n["candidates_distance"] += int((candidate & ok).sum())

@@ -181,7 +181,11 @@ def condition_fact(cond: dict, cap: dict) -> str:
     sk = ss[months]
     var, stat, test = cond["variable"], cond["stat"], cond["test"]
     y0, y1 = cond["years"]
+    # the whole-year season exists only for the long-term facts; a fact worded with a season cannot use it
+    seasonal = sk in cap["climate_year"]["seasons"]
     if test["kind"] == "history_rank":
+        if not seasonal:
+            raise ValueError(f"no caption season for months {cond['months']} in a year-specific fact")
         return f"hist|{var}|{sk}|{y0}|{test['side']}|{int(test['pct'])}"
     if test["kind"] == "area_rank":
         if (
@@ -195,10 +199,10 @@ def condition_fact(cond: dict, cap: dict) -> str:
             raise ValueError(f"no long-term caption tier for {test['pct']}%")
         return f"long|{var}|{test['side']}|{tiers[pct]}"
     value = test["value"]
-    if var == "T2M_MAX" and stat == "days_above":
+    if var == "T2M_MAX" and stat == "days_above" and seasonal:
         return f"heat|{sk}|{int(cond['day_threshold'])}|{y0}|{int(value)}"
     op = "ge" if test["op"] == ">=" else "le"
-    if var == "PRECTOTCORR" and stat == "total":
+    if var == "PRECTOTCORR" and stat == "total" and seasonal:
         return f"rain|{sk}|{y0}|{op}|{int(value)}"
     if var == "GDD10":
         return f"gdd|{y0}|{op}|{int(value)}"

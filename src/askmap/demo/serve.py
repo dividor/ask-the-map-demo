@@ -100,6 +100,14 @@ def plan_key(area: str, text: str, prompt: str = "") -> str:
     return hashlib.sha256(f"{area}|{text}|{salt}".encode()).hexdigest()[:16]
 
 
+def tidy_words(plan: dict) -> None:
+    """The question's own words in a validated plan, lower-cased and single-spaced: the model copies them with
+    or without a capital, and the same words must give the same plan and the same embedding."""
+    for part in [plan["land"], *plan["near"]]:
+        if part.get("words"):
+            part["words"] = " ".join(part["words"].split()).lower()
+
+
 def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None = None, prompt: str = ""):
     """``planner(question, area)``: the main open model's plan for the question in the chosen area.
     ``leaves`` is the class list the plan may use (default: the configured one); ``prompt`` is the system
@@ -127,6 +135,7 @@ def make_planner(cfg: dict, translate, log_dir: Path, leaves: list[str] | None =
         plan = dict(plan, area=area)
         try:
             validate(plan, catalogue, (int(cfg["power"]["start"][:4]), int(cfg["power"]["end"][:4])))
+            tidy_words(plan)
         except (ValueError, KeyError, TypeError) as e:
             raise UserError(
                 f"The language model's plan was not valid ({e}); try rewording the question."

@@ -129,3 +129,15 @@ def test_saved_reply_key_changes_with_the_prompt(tmp_path):
     make_planner(CFG, translate, tmp_path, None, "prompt 1")("corn", "minnesota")
     make_planner(CFG, translate, tmp_path, None, "prompt 2")("corn", "minnesota")
     assert len(set(seen)) == 2  # a new prompt never reuses the old reply
+
+
+def test_the_questions_words_are_tidied_in_the_plan(tmp_path):
+    plan = {
+        "area": "x",
+        "land": {"classes": ["corn"], "min_patch_ha": None, "words": "  Corn   fields "},
+        "near": [{"classes": [], "distance_m": 0, "negate": False, "words": "A River"}],
+        "climate": [],
+        "output": "map",
+    }
+    got = make_planner(CFG, lambda t, p: {"plan": plan}, tmp_path)("corn fields next to a river", "minnesota")
+    assert got["land"]["words"] == "corn fields" and got["near"][0]["words"] == "a river"

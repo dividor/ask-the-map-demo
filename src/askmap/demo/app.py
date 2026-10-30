@@ -5,6 +5,7 @@ Run with ``uv run python -m askmap.demo.serve`` (loads the engine from the preco
 
 from __future__ import annotations
 
+import logging
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -48,7 +49,16 @@ def create_app(engine, meta: dict) -> FastAPI:
         except UserError as e:
             raise HTTPException(status_code=400, detail=str(e)) from e
         except Unavailable as e:
-            # the reason is our own fixed wording (which stage is missing), never an internal error
             raise HTTPException(status_code=503, detail=f"Not available yet: {e}") from e
+        except (ValueError, KeyError, IndexError, TypeError, RuntimeError) as e:
+            # a fault in the engine: logged in full here, shown to the user as a readable message, never a
+            # bare "Internal Server Error" the page cannot read
+            logging.getLogger("askmap.demo").exception(
+                "search failed for %r in %r (%s)", text, q.area, q.method
+            )
+            raise HTTPException(
+                status_code=500,
+                detail=f"Something went wrong answering that ({type(e).__name__}); it has been logged.",
+            ) from e
 
     return app
