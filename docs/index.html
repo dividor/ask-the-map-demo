@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask the map</title>
+<meta name="description" content="Front door for the Ask the Map demo: shows a message while the demo server wakes up, then takes you to it.">
+<!--
+The demo runs on a container that is removed when nobody is using it, so the first visit after a quiet spell
+gets a blank tab for about 45 seconds while the platform pulls the image and starts the container; nothing the
+demo page itself does can show during that time. This page is served from GitHub Pages, so it loads at once: it
+shows the message, asks the demo server for its page in the background, and goes there as soon as the server
+answers (the demo then shows its own "waking up" message for the last few seconds while its models load). The
+request is made without reading the reply (no CORS needed): a settled fetch means the server is up.
+-->
+<style>
+  :root { color-scheme: light; }
+  html, body { height: 100%; margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: #f4f1ea; color: #222; display: flex; align-items: center; justify-content: center;
+    padding: 16px; box-sizing: border-box;
+  }
+  .box {
+    background: #fff; border: 1px solid #ddd; border-radius: 10px; padding: 24px 28px; max-width: 520px;
+    box-shadow: 0 6px 24px rgba(0,0,0,.08);
+  }
+  h1 { font-size: 22px; margin: 0 0 12px; display: flex; align-items: center; gap: 10px; }
+  p { margin: 0 0 10px; line-height: 1.45; }
+  .small { color: #666; font-size: 14px; }
+  a { color: #b04a1a; }
+  .spinner {
+    width: 18px; height: 18px; border: 3px solid #e3d9c8; border-top-color: #b04a1a; border-radius: 50%;
+    display: inline-block; animation: spin 0.9s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+  <div class="box" role="status" aria-live="polite">
+    <h1><span class="spinner" aria-hidden="true"></span>Ask the map is waking up</h1>
+    <p>I am but a poor nerdy blogger and to save costs don't have this demo app running all the time. Get a cup of tea and a biscuit, it's waking up. Then you can search away!</p>
+    <p class="small">You will be taken to the demo as soon as it answers, usually within a minute.
+      If nothing happens, <a id="direct" href="https://askmap-demo.delightfulmoss-7e73fb67.eastus2.azurecontainerapps.io/">open it directly</a>.</p>
+    <p class="small">How it works, and how well: see the
+      <a href="https://medium.com/@astrobagel/ask-the-map-finding-places-using-satellite-map-embeddings-and-nasa-power-climate-data-fd5c1ca7e496">blog post</a>.</p>
+  </div>
+<script>
+  const APP = "https://askmap-demo.delightfulmoss-7e73fb67.eastus2.azurecontainerapps.io/";
+  // Ask the demo server for its page without reading the reply; the platform holds the request until the
+  // container is up, so the promise settles when the server is listening. Then go there.
+  const knock = () => fetch(APP + "api/meta?front=" + Date.now(), { mode: "no-cors", cache: "no-store" })
+    .then(() => { window.location.replace(APP); })
+    .catch(() => setTimeout(knock, 3000));
+  knock();
+</script>
+</body>
+</html>

@@ -6,7 +6,9 @@ get the answer as a map.
 
 The methods, results and limitations are written up in the blog post
 [Ask the Map: Finding Places Using Satellite Map Embeddings and NASA POWER Climate Data](https://medium.com/@astrobagel/ask-the-map-finding-places-using-satellite-map-embeddings-and-nasa-power-climate-data-fd5c1ca7e496);
-this repository holds the code, notebooks and demo behind it.
+this repository holds the code, notebooks and demo behind it. Try the demo at
+<https://dividor.github.io/ask-the-map-demo/> (a front page that shows a message while the demo server wakes up, then
+takes you to it).
 
 The answers combine three free resources:
 
