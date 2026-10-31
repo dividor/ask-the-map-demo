@@ -52,3 +52,12 @@ def test_waking_up_modal_shows_only_the_message():
     assert '<p id="warm-stage" class="small" style="margin:8px 0 0" hidden></p>' in page
     assert "s so far" not in page
     assert "Loading failed: " in page  # a failed load is still reported
+
+
+def test_page_links_to_the_blog_post():
+    from askmap.demo.app import PAGE
+
+    assert (
+        'href="https://medium.com/@astrobagel/ask-the-map-finding-places-using-satellite-map-embeddings-and-nasa-power-climate-data-fd5c1ca7e496"'
+        in PAGE.read_text()
+    )

@@ -4,6 +4,10 @@ Ask plain-English questions about land and climate, such as *"corn fields where 
 above 35 °C"*, *"wetlands more than 500 m from any cropland"* or *"forest within 500 m of a solar farm"*, and
 get the answer as a map.
 
+The methods, results and limitations are written up in the blog post
+[Ask the Map: Finding Places Using Satellite Map Embeddings and NASA POWER Climate Data](https://medium.com/@astrobagel/ask-the-map-finding-places-using-satellite-map-embeddings-and-nasa-power-climate-data-fd5c1ca7e496);
+this repository holds the code, notebooks and demo behind it.
+
 The answers combine three free resources:
 
 - **[AlphaEarth](https://deepmind.google/discover/blog/alphaearth-foundations-helps-map-our-planet-in-unprecedented-detail/)
