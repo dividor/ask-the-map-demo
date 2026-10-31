@@ -23,9 +23,10 @@ held-out Minnesota and Georgia):
 | **3. A classifier with an AI planner** | one small classifier on AlphaEarth embeddings | NASA POWER's daily numbers | geometry |
 
 On the 40 questions in states the models never saw in training, Methods 2 and 3 are level (median F1 0.58 and
-0.56, or 0.64 with the context land model the demo uses), and both score two and a half times the published
-AETHER recipe (0.23). Checking climate against the numbers and measuring distances with geometry are what make
-the difference. Every result comes from the notebooks in this
+0.56, or 0.64 with the context land model the demo uses), and both score two and a half times what the same
+shared space gets when the climate and distances go in as words (0.23). That 0.23 is our Method 1, AETHER's
+recipe trained on our captions, not AETHER's published results, which are on a different task. Checking climate
+against the numbers and measuring distances with geometry are what make the difference. Every result comes from the notebooks in this
 repository, and `outputs/results/` holds what they produced.
 
 ![Corn fields with a July 2021 heatwave in North Dakota](outputs/figures/16_demo_corn_heat_north_dakota_a4.jpg)
