@@ -61,3 +61,23 @@ def test_page_links_to_the_blog_post():
         'href="https://medium.com/@astrobagel/ask-the-map-finding-places-using-satellite-map-embeddings-and-nasa-power-climate-data-fd5c1ca7e496"'
         in PAGE.read_text()
     )
+
+
+def test_page_has_a_phone_layout():
+    """On narrow screens the map sits right under the question (the side panel's sections are placed around it),
+    the legend folds behind a Key button at the top right, method names are shortened, and a search scrolls the
+    question and map into view."""
+    from askmap.demo.app import PAGE
+
+    page = PAGE.read_text()
+    assert '"title" "ask" "map" "intro" "more"' in page
+    assert "aside { display: contents; }" in page
+    for section in ("side-title", "side-intro", "side-ask", "side-more"):
+        assert f'class="side {section}"' in page
+    assert page.count('class="live-only"') == 2  # hidden together on the static copy of the page
+    assert 'legend.setPosition(NARROW.matches ? "topright" : "bottomleft")' in page
+    assert '<button class="legend-toggle" type="button" aria-expanded="false">Key</button>' in page
+    assert page.count("data-short=") == 3
+    assert 'window.scrollTo({ top: 0, behavior: "smooth" })' in page
+    assert 'if (NARROW.matches) document.getElementById("q").after(box);' in page  # examples under the question
+    assert "100vh" not in page  # dvh units only, so the map fits the visible part of a phone screen
