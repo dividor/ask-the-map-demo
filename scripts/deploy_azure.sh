@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy the demo to Azure Container Apps (consumption plan, scales to zero when idle).
+# Deploy the demo to Azure Container Apps (consumption plan; scales to zero when idle unless AZ_MIN_REPLICAS=1).
 #
 # Needs: the Azure CLI logged in (`az login`), the containerapp extension, a .env with ASKMAP_DATA_ROOT and
 # HF_HOME (where notebook 13's demo data and the text encoder are), and the Hugging Face token in HF_TOKEN or the
@@ -10,6 +10,7 @@
 #   AZ_REGISTRY         container registry name, globally unique (default askmap + 6 random characters)
 #   AZ_APP              container app name                       (default askmap-demo)
 #   AZ_CPU / AZ_MEMORY  per replica                              (default 2 / 4Gi)
+#   AZ_MIN_REPLICAS     0 lets the app sleep when idle, 1 keeps it awake (default 0)
 #   AZ_DATA_ROOT        data folder, if not the one in .env
 #
 # Steps: stage the data under deploy/ (ignored by git), build the image in the registry (no local Docker
@@ -29,6 +30,7 @@ LOC="${AZ_LOCATION:-eastus2}"
 APP="${AZ_APP:-askmap-demo}"
 CPU="${AZ_CPU:-2}"
 MEM="${AZ_MEMORY:-4Gi}"
+MIN_REPLICAS="${AZ_MIN_REPLICAS:-0}"
 ENVNAME="$APP-env"
 if [ -z "${AZ_REGISTRY:-}" ]; then
   AZ_REGISTRY="askmap$(LC_ALL=C tr -dc a-z0-9 </dev/urandom | head -c 6)"
@@ -66,7 +68,7 @@ else
   az containerapp create -n "$APP" -g "$RG" --environment "$ENVNAME" --image "$IMAGE" \
     --registry-server "$AZ_REGISTRY.azurecr.io" --registry-identity system \
     --secrets "hf-token=$TOKEN" --env-vars "HF_TOKEN=secretref:hf-token" \
-    --cpu "$CPU" --memory "$MEM" --min-replicas 0 --max-replicas 1 \
+    --cpu "$CPU" --memory "$MEM" --min-replicas "$MIN_REPLICAS" --max-replicas 1 \
     --ingress external --target-port 8765 -o none
 fi
 
@@ -80,7 +82,7 @@ PROBES=$(mktemp)
 {
   echo "properties:"
   echo "  template:"
-  echo "    scale: {minReplicas: 0, maxReplicas: 1}"
+  echo "    scale: {minReplicas: $MIN_REPLICAS, maxReplicas: 1}"
   echo "    containers:"
   echo "      - name: $APP"
   echo "        image: $IMAGE"
