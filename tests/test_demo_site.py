@@ -40,3 +40,15 @@ def test_pooled_counts():
     assert c["precision"] == 0.5 and c["recall"] == 0.5 and c["f1"] == 0.5
     empty = pooled_counts({"t": np.zeros(3, bool)}, {"t": np.zeros(3, bool)}, {"t": np.ones(3, bool)})
     assert empty["precision"] is None and empty["recall"] is None and empty["f1"] == 1.0
+
+
+def test_waking_up_modal_shows_only_the_message():
+    """While the server wakes up, the modal shows the blogger's message and nothing else: the stage line is
+    hidden in the markup and the script no longer writes a loading stage or a timer into it."""
+    from askmap.demo.app import PAGE
+
+    page = PAGE.read_text()
+    assert "Get a cup of tea and a biscuit, it's waking up. Then you can search away!" in page
+    assert '<p id="warm-stage" class="small" style="margin:8px 0 0" hidden></p>' in page
+    assert "s so far" not in page
+    assert "Loading failed: " in page  # a failed load is still reported

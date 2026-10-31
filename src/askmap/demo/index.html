@@ -168,8 +168,8 @@
 <div id="warm-modal" class="modal" hidden role="status" aria-live="polite">
   <div class="modal-box">
     <h2 style="margin:0 0 8px"><span class="spinner"></span>Waking up</h2>
-    <p id="warm-text" style="margin:0">The server was asleep and is loading the map tiles and the text encoder; this takes about a minute after a quiet spell.</p>
-    <p id="warm-stage" class="small" style="margin:8px 0 0"></p>
+    <p id="warm-text" style="margin:0">I am but a poor nerdy blogger and to save costs don't have this demo app running all the time. Get a cup of tea and a biscuit, it's waking up. Then you can search away!</p>
+    <p id="warm-stage" class="small" style="margin:8px 0 0" hidden></p>
   </div>
 </div>
 <div id="info-modal" class="modal" hidden role="dialog" aria-modal="true" aria-labelledby="info-title">
@@ -567,11 +567,13 @@ if (STATIC) {
   const whenReady = () => fetch("/api/meta", { cache: "no-store" }).then(r => r.json()).then(m => {
     if (!m.loading) { warm.hidden = true; return m; }
     if (m.error) {
+      // the one thing worth showing besides the message: that loading failed, and why
       warmStage.textContent = "Loading failed: " + m.error;
+      warmStage.hidden = false;
       throw new Error("Loading failed: " + m.error);
     }
+    // only the message while it wakes up: no loading stage or timer
     warm.hidden = false;
-    warmStage.textContent = `${m.stage[0].toUpperCase()}${m.stage.slice(1)}… ${m.seconds} s so far`;
     return new Promise(r => setTimeout(r, 2000)).then(whenReady);
   });
   whenReady().then(m => {
