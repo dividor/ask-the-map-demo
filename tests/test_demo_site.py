@@ -81,3 +81,16 @@ def test_page_has_a_phone_layout():
     assert 'window.scrollTo({ top: 0, behavior: "smooth" })' in page
     assert 'if (NARROW.matches) document.getElementById("q").after(box);' in page  # examples under the question
     assert "100vh" not in page  # dvh units only, so the map fits the visible part of a phone screen
+
+
+def test_title_carries_the_page_icon():
+    """The title shows the same globe-and-red-place icon as the browser tab."""
+    from askmap.demo.app import PAGE
+
+    page = PAGE.read_text()
+    head, body = page.split("<body", 1)
+    assert "<h1 class=\"brand\"><svg viewBox=\"0 0 32 32\" aria-hidden=\"true\">" in body
+    # the drawing matches the favicon's: blue globe, white lines, red place
+    for part in ("fill=\"#1f6fd0\"", "rx=\"6.5\" ry=\"14\"", "cx=\"21.5\" cy=\"11.5\" r=\"3.4\" fill=\"#ff1717\""):
+        assert part in body
+    assert "%231f6fd0" in head and "%23ff1717" in head

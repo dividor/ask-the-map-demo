@@ -22,6 +22,9 @@
          color: var(--text); display: grid; grid-template-columns: minmax(300px, 380px) 1fr; height: 100dvh; }
   aside { background: var(--panel); border-right: 1px solid var(--line); padding: 16px; overflow-y: auto; }
   h1 { font-size: 18px; margin: 0 0 4px; }
+  /* the page's icon (a globe with a red matched place) beside the title */
+  h1.brand { display: flex; align-items: center; gap: 9px; font-size: 21px; letter-spacing: -.01em; }
+  h1.brand svg { width: 32px; height: 32px; flex: none; filter: drop-shadow(0 1px 2px #0003); }
   h2 { font-size: 13px; margin: 14px 0 4px; }
   p.sub { margin: 0 0 14px; color: var(--muted); }
   label { display: block; font-weight: 600; margin: 12px 0 4px; }
@@ -125,7 +128,7 @@
     .side-intro { grid-area: intro; padding-top: 12px; }
     .side-more { grid-area: more; padding-bottom: 16px; }
     #map { grid-area: map; height: 58dvh; }
-    h1 { font-size: 17px; }
+    h1.brand { font-size: 19px; } h1.brand svg { width: 28px; height: 28px; }
     label.ask { margin-top: 6px; font-size: 15px; }
     textarea { min-height: 64px; }
     #status { margin-top: 8px; }
@@ -138,7 +141,7 @@
 </head>
 <body data-mode="live">
 <aside>
-  <div class="side side-title"><h1>Ask the map</h1></div>
+  <div class="side side-title"><h1 class="brand"><svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#1f6fd0"/><g fill="none" stroke="#fff" stroke-width="1.8" stroke-linecap="round"><circle cx="16" cy="16" r="14"/><ellipse cx="16" cy="16" rx="6.5" ry="14"/><path d="M2 16h28M4.6 9.5h22.8M4.6 22.5h22.8"/></g><circle cx="21.5" cy="11.5" r="3.4" fill="#ff1717" stroke="#fff" stroke-width="1.2"/></svg>Ask the map</h1></div>
   <div class="side side-intro">
     <p class="sub">Plain-English search over AlphaEarth satellite embeddings, OpenStreetMap and NASA POWER climate,
        in four geographical study areas.</p>
