@@ -1,4 +1,4 @@
-"""Amendment A5: general land maps from AlphaEarth for every class at once, without class-specific rules.
+"""General land maps from AlphaEarth for every class at once, without class-specific rules.
 
 - one-vs-rest probabilities (the notebook 12 classifiers) and their prior correction: each intercept shifted
   by log-odds(true share) - log-odds(training share) (Saerens, Latinne & Decaestecker 2002, Neural
@@ -136,7 +136,7 @@ LAND_METHODS = ("one_vs_rest", "multinomial", "context_more")
 def land_probs(method: str, params: dict, ae: np.ndarray, stride: int = 1) -> np.ndarray:
     """(classes, rows, cols) land maps for the demo on every ``stride``-th pixel of the full-resolution tile
     ``ae`` (64, rows, cols): ``one_vs_rest`` probabilities (notebook 12), the ``multinomial`` model's one-hot
-    argmax (notebook 20), or ``context_more``, the A7 model on neighbourhood features fitted with the extra
+    argmax (notebook 20), or ``context_more``, the model on neighbourhood features fitted with the extra
     training tiles (notebook 23; features are computed on the full tile before thinning). ``params`` holds the
     arrays of ``land_methods.npz`` (and, for ``context_more``, those of ``land_methods_a7.npz``)."""
     if stride < 1:

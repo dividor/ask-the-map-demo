@@ -223,11 +223,11 @@ def test_not_ready_methods_are_refused_with_their_reason_not_replaced():
         None,
         CAP,
         top_share=0.25,
-        not_ready={"classifier": "Stage 3 classifiers missing."},
+        not_ready={"classifier": "The land classifiers are missing."},
     )
-    with pytest.raises(Unavailable, match="stage 3 has not finished"):
+    with pytest.raises(Unavailable, match="the method comparison has not run"):
         e.search("corn", "a", "best")
-    with pytest.raises(Unavailable, match="Stage 3 classifiers missing"):
+    with pytest.raises(Unavailable, match="The land classifiers are missing"):
         e.search("corn", "a", "classifier")
     assert e.search("corn", "a", "aligned")["used"] == "aligned"
     e2 = Engine(

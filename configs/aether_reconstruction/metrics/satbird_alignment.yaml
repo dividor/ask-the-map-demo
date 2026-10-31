@@ -1,4 +1,4 @@
-# RECONSTRUCTION written by the ask-the-map project, NOT by the AETHER authors (PLAN.md amendment A3.1).
+# RECONSTRUCTION written by the ask-the-map project, NOT by the AETHER authors.
 # The published AETHER repository (commit 7b382c5) names this file but does not contain it.
 # [guess, from the repository's configs/metrics/contrastive_similarities.yaml, the only alignment metrics config it
 # has]: the wrapper only logs cosine similarities per batch. The paper's concept-retrieval index is computed by

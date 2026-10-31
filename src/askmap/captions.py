@@ -22,8 +22,8 @@ def _dist_text(d: float) -> str:
 @dataclass
 class Vocab:
     """Everything the generator needs: caption wording, class lists and the climate fact ids. ``wordings`` is
-    how many parallel wordings every phrase list holds (3 in ``configs/captions.yaml``; more after A8's
-    paraphrases); each caption draws one uniformly."""
+    how many parallel wordings every phrase list holds (3 in ``configs/captions.yaml``; more with the
+    language model's paraphrases); each caption draws one uniformly."""
 
     cap: dict
     leaves: list[str]

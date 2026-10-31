@@ -1,6 +1,6 @@
 """``manifest.json``: one entry per downloaded or built file with its source, SHA-256 and time written.
 
-Adapted from Matt Harris's earlier NASA POWER downloader (``powerwm.data.power`` in the jepa-world-model
+Adapted from the author's earlier NASA POWER downloader (``powerwm.data.power`` in the jepa-world-model
 project). A file counts as done only if its SHA-256 still matches the manifest, so interrupted builds
 resume safely.
 """

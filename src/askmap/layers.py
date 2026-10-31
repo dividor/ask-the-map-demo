@@ -15,7 +15,7 @@ from askmap.nwi import NWI_WATER, NWI_WETLAND  # NWI rasters: 1 = wetland, 2 = w
 def annual_crop_codes(ranges: list[list[int]]) -> list[int]:
     """Expand inclusive ``[[lo, hi], ...]`` CDL class ranges into a sorted list of codes.
 
-    Adapted from Matt Harris's earlier code (``cropint.one_in_four``)."""
+    Adapted from the author's earlier code (``cropint.one_in_four``)."""
     codes = sorted({c for lo, hi in ranges for c in range(lo, hi + 1)})
     if not codes:
         raise ValueError("no CDL codes given")

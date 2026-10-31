@@ -1,4 +1,5 @@
-"""Tests for code adapted from Matt's earlier projects (cropint, powerwm), so this folder runs on its own."""
+"""Tests for code adapted from the author's earlier projects (cropint, powerwm), so this folder runs on its
+own."""
 
 import numpy as np
 import pytest

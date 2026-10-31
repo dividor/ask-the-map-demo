@@ -1,5 +1,4 @@
-# Ask-the-map feasibility check, embedding design (amendment A1, 2026-10-28): settings fixed before any results.
-# See PLAN.md.
+# Ask the Map: study areas, grid, land classes, NASA POWER, language model and scoring settings.
 
 grid:
   tile_size_m: 20000
@@ -95,7 +94,7 @@ question_areas:
 heldout_pools: {north_dakota: minnesota, north_carolina: georgia}
 
 # Main method, step 1: an open language model writes the plan (OpenAI-compatible API, Hugging Face router).
-# Model ids are pinned to the provider that answered the A2 connection probe.
+# Model ids are pinned to one inference provider (the ":provider" suffix).
 llm:
   base_url: https://router.huggingface.co/v1
   models:

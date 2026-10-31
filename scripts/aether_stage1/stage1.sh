@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Stage 1 end to end: the three seeds (skipping any that already finished), their best checkpoints, a check that
+# The AETHER reproduction end to end: the three seeds (skipping any that already finished), their best checkpoints, a check that
 # every seed finished, then notebook 09. Needs scripts/aether_stage1/setup.sh first and AETHER_RUN_DIR exported.
 set -euo pipefail
 cd "$(dirname "$0")/../.."

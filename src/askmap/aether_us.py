@@ -1,9 +1,10 @@
-"""A3 stage 2: AETHER's recipe on US farm country, with NASA POWER and OpenStreetMap facts.
+"""AETHER's recipe on US farm country, with NASA POWER and OpenStreetMap facts.
 
 A location = one 30 m pixel: its AlphaEarth vector plus the POWER summary vector of its cell, projected by
-AETHER's MLP into a frozen text space. Captions come from A2's generator plus OpenStreetMap tags. With
+AETHER's MLP into a frozen text space. Captions come from ``askmap.captions`` plus OpenStreetMap tags. With
 binary, standardised facts and AETHER's sigma 0.1 their soft target equals "caption j is true for location
-i" to within exp(-66) (see tests), so targets are built from A2's ``truth`` plus the OpenStreetMap check.
+i" to within exp(-66) (see tests), so targets are built from ``askmap.captions.truth`` plus the OpenStreetMap
+check.
 """
 
 from __future__ import annotations
@@ -44,7 +45,7 @@ def osm_caption(
     ocfg: dict,
     rng: np.random.Generator,
 ) -> tuple[str, dict, int]:
-    """Add an OpenStreetMap fact to an A2 caption (or replace it by a tag-only caption).
+    """Add an OpenStreetMap fact to a caption (or replace it by a tag-only caption).
 
     ``base`` is ``make_caption``'s output; ``osm_on`` lists the location's tag indices. Returns the text, the
     spec (land set to every class for a tag-only caption) and the tag index (-1 if none).
@@ -110,7 +111,7 @@ def targets(
     item_idx: torch.Tensor,
     cell_facts: torch.Tensor,
 ) -> torch.Tensor:
-    """(locations, captions) float: 1 where caption j is true for location i (A2 facts and its OSM tag)."""
+    """(locations, captions) float: 1 where caption j is true for location i (its facts and its OSM tag)."""
     t = truth(s, items, item_idx, cell_facts)  # (captions, locations)
     has = cap_osm >= 0
     tag_ok = osm[item_idx][:, cap_osm.clamp(min=0)].T  # (captions, locations)
@@ -368,7 +369,7 @@ def climate_ok_tile(plan: dict, tile: str, ctx) -> np.ndarray:
 
 
 def plan_scores_tile(plan: dict, probs: np.ndarray, tile: str, ctx) -> np.ndarray:
-    """C3 score of a plan on one tile from per-class probability maps ``probs`` (leaves, rows, cols).
+    """Score of a plan on one tile from per-class probability maps ``probs`` (leaves, rows, cols).
 
     The highest probability among the plan's land classes, times 1 where every distance, patch and climate
     condition holds (class maps for the conditions are the probabilities thresholded at 0.5).

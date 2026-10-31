@@ -1,4 +1,4 @@
-"""Amendment A8: land maps read straight from the aligned space, and distance rules measured on them.
+"""Land maps read straight from the aligned space, and distance rules measured on them.
 
 - zero-shot land map: each pixel's projected vector against the wording-0 phrase of every land class except
   "other"; the pixel takes the class of the most similar phrase (no per-class thresholds or weights);

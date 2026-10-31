@@ -1,6 +1,6 @@
 """Tiles on a fixed EPSG:5070 grid and the "within X metres of" operator.
 
-Adapted from Matt Harris's earlier wetland-query code (``cropint.wetlands`` in the
+Adapted from the author's earlier wetland-query code (``cropint.wetlands`` in the
 climate-embeddings-crop-integrity project), so this folder needs nothing outside itself.
 """
 

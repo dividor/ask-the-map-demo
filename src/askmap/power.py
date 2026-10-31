@@ -28,7 +28,7 @@ def open_store(url: str) -> xr.Dataset:
 def nearest_index(source: np.ndarray, target: np.ndarray) -> np.ndarray:
     """Index of the nearest ``source`` coordinate for each ``target`` coordinate.
 
-    ``open_store`` and ``nearest_index`` are adapted from Matt Harris's earlier POWER downloader
+    ``open_store`` and ``nearest_index`` are adapted from the author's earlier POWER downloader
     (``powerwm.data.power``)."""
     source = np.asarray(source, dtype=float)
     target = np.asarray(target, dtype=float)
@@ -151,7 +151,8 @@ def yearly_values(
 
 
 def condition_values(ds: xr.Dataset, cond: dict, area_cells: np.ndarray) -> dict:
-    """The numbers behind a climate condition (see the query language in PLAN.md), per grid cell (lat, lon).
+    """The numbers behind a climate condition, per grid cell (lat, lon); the query language is described in
+    ``configs/language.md``.
 
     Returns ``value`` (the period value: the mean over ``years`` of the yearly values), ``threshold`` (same
     shape) and ``op`` (">=" or "<="); a cell meets the condition when ``value op threshold``. Tests:

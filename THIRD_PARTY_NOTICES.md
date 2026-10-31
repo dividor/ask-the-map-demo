@@ -28,14 +28,14 @@ This repository's own code is released under the MIT licence (see `LICENSE`).
 | Model | Used for | Licence |
 |---|---|---|
 | `openai/clip-vit-large-patch14` (text tower) | aligned-space text vectors | no licence tag on the Hugging Face card; OpenAI's CLIP code repository is MIT (checked with the GitHub API) |
-| `Qwen/Qwen3-Embedding-0.6B` | stage 3 text-encoder comparison | Apache 2.0 |
+| `Qwen/Qwen3-Embedding-0.6B` | text-encoder comparison (notebook 11) | Apache 2.0 |
 | `openai/gpt-oss-120b`, `openai/gpt-oss-20b` (Hugging Face router) | turning questions into plans | Apache 2.0 |
 | `zai-org/GLM-5.3` (Hugging Face router) | model comparison (information only) | "other" on its Hugging Face card; read the card before reuse |
 
-## Code from Matt Harris's other projects
+## Code from the author's other projects
 
 `askmap/geo.py`, `askmap/nwi.py`, `askmap/earth_engine.py`, `askmap/manifest.py`, `layers.annual_crop_codes` and
-`power.open_store` / `power.nearest_index` are copied, with small edits, from Matt's earlier projects
+`power.open_store` / `power.nearest_index` are copied, with small edits, from the author's earlier projects
 (`cropint` in climate-embeddings-crop-integrity and `powerwm` in jepa-world-model), so this folder runs on its own.
 
 ## AETHER (WUR-AI/aether)
@@ -45,7 +45,7 @@ Athanasiadis, *Domain-specific language alignment of multimodal embeddings towar
 (arXiv 2610.23110), https://github.com/WUR-AI/aether, commit 7b382c55645fb5a1d3f11ec8ba81a46c523fca48.
 
 The files in `configs/aether_reconstruction/` are **ours**, not the authors': they reconstruct two configuration
-files that the published repository names but does not contain (see `PLAN.md`, amendment A3.1).
+files that the published repository names but does not contain (each value in them notes where it came from).
 
 The AETHER **data** (Zenodo record 23336313) are licensed CC BY-NC 4.0 (non-commercial). They are used only to
 check our set-up and our port; no AETHER data are included in this project or used in the demo.

@@ -1,4 +1,4 @@
-# Stage 1: reproducing the AETHER paper's SatBird result
+# Reproducing the AETHER paper's SatBird result
 
 Notebook `09_aether_reconstruction.ipynb` checks that this project's port of the AETHER method
 (`askmap.aether`) matches the authors' own code, by re-running their SatBird alignment experiment and comparing
@@ -37,6 +37,6 @@ loop, and save the tensors this project's port needs to recompute the same loss 
 
 ## Reading the result
 
-Over the three seeds this project's run scored 0.236 against the paper's 0.24. The notebook's rule, fixed before
-it ran: a three-seed mean within 0.02 of the paper is weak support that the set-up matches the authors'; a bigger
+Over the three seeds this project's run scored 0.236 against the paper's 0.24. The notebook's rule: a
+three-seed mean within 0.02 of the paper is weak support that the set-up matches the authors'; a bigger
 gap means the set-up is uncertain; it is not called a reproduction either way.

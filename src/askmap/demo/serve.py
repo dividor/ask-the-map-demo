@@ -1,6 +1,6 @@
 """Start the demo: ``uv run python -m askmap.demo.serve`` (after notebook 13 has written the demo data).
 
-Loads the precomputed tiles, the text encoder of the stage 2 model, the open language model (Hugging Face
+Loads the precomputed tiles, the text encoder of the aligned model, the open language model (Hugging Face
 router, token from the local login) and NASA POWER contexts, then serves the app on localhost.
 """
 

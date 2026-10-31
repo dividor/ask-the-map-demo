@@ -1,4 +1,4 @@
-"""Amendment A7: land maps that see each place's surroundings, and more training places.
+"""Land maps that see each place's surroundings, and more training places.
 
 - neighbourhood features: a pixel's AlphaEarth numbers plus the mean (and standard deviation) of the valid
   pixels in fixed square windows around it, the same for every class;

@@ -1,4 +1,4 @@
-# RECONSTRUCTION written by the ask-the-map project, NOT by the AETHER authors (PLAN.md amendment A3.1).
+# RECONSTRUCTION written by the ask-the-map project, NOT by the AETHER authors.
 # The published AETHER repository (commit 7b382c5) names this file in every alignment experiment but does not
 # contain it. Each value below is marked with where it came from:
 #   [sister]  the repository's other alignment model configs (geoclip_alignment.yaml, heat_tessera_alignment.yaml,

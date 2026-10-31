@@ -1,4 +1,4 @@
-# Questions and hand-written reference plans, fixed before any results (see PLAN.md).
+# Questions and hand-written reference plans.
 # Truth for each question = its reference plan run on the official layers (CDL 2024, NWI, USPVDB) + NASA POWER.
 
 sources:
@@ -360,7 +360,7 @@ queries:
     plan: {area: north_carolina, land: {classes: [wetland], min_patch_ha: null},
            near: [{classes: [solar_farm], distance_m: 500, negate: false}], climate: [], output: map}
 
-  # ---- added 2026-10-28 with amendment A1 (before any results): more questions that combine conditions ----
+  # ---- questions that combine conditions ----
   - id: nd33
     persona: fsa_pp
     source: rma_pp

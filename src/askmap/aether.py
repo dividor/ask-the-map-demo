@@ -7,7 +7,7 @@ THIRD_PARTY_NOTICES.md). Ported from
 ``src/models/components/loss_fns/soft_contrastive_loss.py``,
 ``src/models/components/metrics/contrastive_validation.py``, ``src/models/text_alignment_model.py``
 (index), ``src/data/base_datamodule.py`` (baselines, elbow threshold) and ``src/data/base_caption_builder.py``
-(templates, percentage adjectives). Checked against their code on their data (PLAN.md, R1b).
+(templates, percentage adjectives). Checked against their code on their data (notebook 09).
 """
 
 from __future__ import annotations

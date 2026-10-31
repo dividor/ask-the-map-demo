@@ -1,7 +1,7 @@
 """Earth Engine: log in with gcloud application-default credentials and download small tiles with
 ``computePixels`` (no asset storage needed).
 
-Adapted from Matt Harris's earlier code (``cropint.earth_engine``, ``cropint.tiles_ee`` and
+Adapted from the author's earlier code (``cropint.earth_engine``, ``cropint.tiles_ee`` and
 ``cropint.one_in_four_ee`` in the climate-embeddings-crop-integrity project). Requests stay under Earth
 Engine's per-request size limit by splitting bands into groups, and rate-limit errors are retried with a
 growing wait.

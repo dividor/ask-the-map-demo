@@ -1,4 +1,4 @@
-"""Amendment A6: OpenStreetMap answer keys for words the shared space never saw, and the scores used on them.
+"""OpenStreetMap answer keys for words the shared space never saw, and the scores used on them.
 
 Unlike ``askmap.osm`` (areas only, as used in training), an answer key here can also come from lines
 (railways, power lines, streams) and points (wind turbines, silos), each buffered by a fixed distance before

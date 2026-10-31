@@ -223,8 +223,6 @@ __marimo__/
 *.part
 *.part.npz
 .DS_Store
-# PLAN.md is a private working log
-PLAN.md
 # demo screenshots and GIF frames taken while checking the page (not part of the record)
 outputs/figures/demo_frames/
 

@@ -1,6 +1,6 @@
-"""R1b export, run in AETHER's own environment: reload their trained SatBird model (our reconstruction
-configs),
-run their test loop, and save what the ask-the-map port needs to recompute the same numbers.
+"""Export for the port check, run in AETHER's own environment: reload their trained SatBird model (our
+reconstruction configs), run their test loop, and save what the ask-the-map port needs to recompute the same
+numbers.
 
 Usage: python r1b_export.py <aether_repo> <reconstruction_configs_dir> <checkpoint> <seed> <out_dir>
 """

@@ -1,9 +1,10 @@
-"""Amendment A8 (test V): more wordings for the training captions, written once by the open language model.
+"""More wordings for the training captions, written once by the open language model.
 
 Every wording list of ``configs/captions.yaml`` that the caption generator indexes in parallel (land phrases,
 near classes and templates, patch templates, climate templates with their variable and season words) gets the
 same number of new wordings, so a caption can draw any wording index for every part. Candidates are checked
-before use: the same ``{placeholders}`` as the original, not an existing wording, and no A6 never-seen term.
+before use: the same ``{placeholders}`` as the original, not an existing wording, and no term from the
+never-seen word list (``configs/unseen_words.yaml``).
 """
 
 from __future__ import annotations

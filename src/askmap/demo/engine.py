@@ -1,16 +1,16 @@
 """Demo search engine: answers a plain-English question in one study area with one of three methods.
 
 - ``aligned`` (Method 1): the plan in caption wording without its distance rules (land, patch size and
-  climate as text) against every pixel's projected vector (A3 stage 2 model); every distance rule is
-  measured with geometry on the zero-shot land map of the aligned space (amendment A8).
+  climate as text) against every pixel's projected vector (the aligned model); every distance rule is
+  measured with geometry on the zero-shot land map of the aligned space.
 - ``aligned_land_power_climate`` (Method 2): the plan's land wording through the aligned space, distance
   rules by the same geometry, climate by NASA POWER numbers.
-- ``classifier``: the open language model writes a plan; one AlphaEarth classifier per land class, A2's
-  geometry and NASA POWER numbers answer it (A3 C3). Only places that meet every step of the plan are shown
+- ``classifier``: the open language model writes a plan; the AlphaEarth land classifier, the plan's
+  geometry and NASA POWER numbers answer it. Only places that meet every step of the plan are shown
   (land probability above 0.5, every distance rule, every climate condition), with the count left after each
   step, the POWER numbers behind each climate condition and, for an empty answer, the step that removed
-  everything (A4).
-- ``best``: whichever combination stage 3 measured best (recorded in the demo metadata).
+  everything.
+- ``best``: whichever combination the method comparison measured best (recorded in the demo metadata).
 
 Everything heavy (text encoder, language model, POWER contexts) is passed in, so the engine can be tested with
 stand-ins.
@@ -48,7 +48,7 @@ from askmap.zeroshot import plan_text as caption_plan_text
 LAND_THRESHOLD = 0.5  # the same threshold the plan's distance rules use on the class probabilities
 
 # aligned: Method 1; aligned_land_power_climate: Method 2 (aligned space for land, NASA POWER numbers for
-# climate); classifier: Method 3; best: the method chosen by the stage 3 tests (Method 3)
+# climate); classifier: Method 3; best: the method the comparison measured best (Method 3)
 METHODS = ("aligned", "aligned_land_power_climate", "classifier", "best")
 
 
@@ -103,9 +103,9 @@ class Engine:
         top_share: float = 0.02,
         not_ready: dict[str, str] | None = None,
     ):
-        """``best`` is the measured best combination (None until stage 3 has run); ``not_ready`` maps a
-        method to why it cannot run yet. A method that is not ready is refused with that reason, never
-        replaced by another."""
+        """``best`` is the measured best combination (None until the method comparison has run);
+        ``not_ready`` maps a method to why it cannot run yet. A method that is not ready is refused with that
+        reason, never replaced by another."""
         if best not in (None, "aligned", "classifier", "aligned_land_power_climate"):
             raise ValueError(f"unknown best method {best!r}")
         self.areas, self.leaves, self.encode, self.planner = areas, leaves, encode, planner
@@ -113,12 +113,12 @@ class Engine:
         self.not_ready = dict(not_ready or {})
         if best is None:
             self.not_ready.setdefault(
-                "best", "The best combination is not known yet: stage 3 has not finished."
+                "best", "The best combination is not known yet: the method comparison has not run."
             )
         if planner is None:
             for m in ("aligned", "aligned_land_power_climate", "classifier"):
                 self.not_ready.setdefault(m, "The language model is not configured.")
-        # zero-shot land maps of the aligned space (A8), built on first use: candidate leaves, their phrases
+        # zero-shot land maps of the aligned space, built on first use: candidate leaves, their phrases
         self._candidates, self._phrases = leaf_phrases(cap, leaves)
         self._phrase_vectors: np.ndarray | None = None
         self._zero_shot: dict[str, np.ndarray] = {}
@@ -434,7 +434,7 @@ class Engine:
         self, plan: dict, tiles: list[TileData], area: str, how: str, share: float | None = None
     ) -> dict:
         """The aligned space has no class map to threshold, so its candidates are the most similar
-        ``top_share`` of the whole study area, and the plan's geometry (A8) then filters them.
+        ``top_share`` of the whole study area, and the plan's geometry then filters them.
 
         Method 1 (``aligned``): the plan's land, patch size and climate in caption wording pick the
         candidates; only candidates that pass every distance rule (measured on the zero-shot land map) are

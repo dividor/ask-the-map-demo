@@ -1,4 +1,4 @@
-"""Check W: ways of finding one class (wetland) from AlphaEarth vectors, from one example to a classifier.
+"""Ways of finding one class (wetland) from AlphaEarth vectors, from one example to a classifier.
 
 Every method returns a score per pixel (higher = more like the class); scoring is average precision and the
 best F1 over thresholds.

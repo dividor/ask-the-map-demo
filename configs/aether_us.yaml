@@ -1,5 +1,4 @@
-# A3 stages 2-4: AETHER's recipe on US farm country with NASA POWER and OpenStreetMap (PLAN.md amendment A3.2).
-# Fixed before any stage 2 data or result.
+# AETHER's recipe on US farm country with NASA POWER and OpenStreetMap: data, model, training and demo settings.
 
 osm:
   url: https://overpass-api.de/api/interpreter
@@ -65,7 +64,7 @@ captions:
   osm_only_prob: 0.4          # of those, share that are OSM-only captions ("a golf course"); the rest add a clause
   seed: 0
 
-geo_input: [alphaearth, power_summary]   # AlphaEarth 64 values + A2's standardised POWER summary vector (907)
+geo_input: [alphaearth, power_summary]   # AlphaEarth 64 values + the standardised POWER summary vector (907)
 
 model:                        # AETHER's best SatBird settings (experiment satbird_alignment/aef_s01)
   layers: 3
@@ -76,7 +75,7 @@ model:                        # AETHER's best SatBird settings (experiment satbi
   weight_decay: 0.0
   batch: 512
   max_epochs: 60
-  plateau_patience: 10        # ReduceLROnPlateau on the validation loss, factor 0.1 (reconstruction, A3.1)
+  plateau_patience: 10        # ReduceLROnPlateau on the validation loss, factor 0.1 (as in the reconstructed AETHER config)
   plateau_factor: 0.1
   early_stop_patience: 15     # on the validation index, as their experiment
   val_share: 0.1              # training locations held back for validation (random, seed 0)
@@ -84,7 +83,7 @@ model:                        # AETHER's best SatBird settings (experiment satbi
 
 text_encoders:
   clip: openai/clip-vit-large-patch14      # their frozen text encoder (text features, 768)
-  modern: Qwen/Qwen3-Embedding-0.6B        # C1 challenger (1024), no instruction prompt for captions or questions
+  modern: Qwen/Qwen3-Embedding-0.6B        # alternative encoder compared in notebook 11 (1024), no instruction prompt for captions or questions
 
 concepts:
   near_distances_m: [100, 300]
@@ -119,7 +118,8 @@ demo:
     - {question: "Cropland that had an unusually dry autumn in 2025", area: north_carolina}
     - {question: "Wetlands within 500 m of cropland", area: north_carolina}
     - {question: "Towns that had an unusually hot summer in 2022", area: north_carolina}
-  # land maps for every class: one_vs_rest (notebook 12), multinomial (A5, notebook 20) or context_more (A7,
-  # notebook 23; chosen by Matt after A7, a post hoc decision: see PLAN.md)
+  # land maps for every class: one_vs_rest (notebook 12), multinomial (notebook 20) or context_more (notebook 23;
+  # used in the demo because it maps solar farms much better on the held-out states, although its macro-F1 gain,
+  # +0.008, is short of the +0.02 threshold and a few classes are very slightly worse)
   land_method: context_more
   port: 8765

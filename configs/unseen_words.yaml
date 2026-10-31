@@ -1,5 +1,4 @@
-# Amendment A6: does the shared (aligned) space find land types it never saw in training? (PLAN.md, A6)
-# Fixed before any model output was computed.
+# Does the shared (aligned) space find land types it never saw in training? Words, answer keys and settings.
 
 overpass:
   url: https://overpass-api.de/api/interpreter

@@ -1,5 +1,5 @@
-# Caption vocabulary and wording, fixed before training (amendment A1). The first wording of each list is the one
-# used to render questions "worded like the captions" (split S1/S3/S4).
+# Caption vocabulary and wording. The first wording of each list is the one used to render questions "worded like
+# the captions".
 
 prefixes: ["Show ", "", "Find ", "Places with "]
 area_phrase: ["in the {area} study area", "in {area}"]

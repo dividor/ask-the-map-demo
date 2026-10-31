@@ -1,6 +1,6 @@
 """National Wetlands Inventory (NWI) polygons for a tile, rasterised to wetland / water.
 
-Adapted from Matt Harris's earlier wetland-query code (``cropint.wetlands`` in the
+Adapted from the author's earlier wetland-query code (``cropint.wetlands`` in the
 climate-embeddings-crop-integrity project).
 """
 
